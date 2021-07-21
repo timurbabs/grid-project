@@ -1,0 +1,122 @@
+---
+# Jenkins:
+jenkins_home:       /var/lib/jenkins
+jenkins_username:   admin
+jenkins_password:   25447
+jenkins_cli_url:    http://{{ ansible_default_ipv4.address }}:8080/jnlpJars/jenkins-cli.jar
+jenkins_url:        http://{{ ansible_default_ipv4.address }}:8080
+jenkins_api_json:   http://{{ ansible_default_ipv4.address }}:8080/api/json
+
+# Jenkins Plugins
+jenkins_plugins:
+ - ant
+ - jjwt-api
+ - token-macro
+ - jackson2-api
+ - docker-commons
+ - bouncycastle-api
+ - pipeline-model-api
+ - lockable-resources
+ - script-security
+ - workflow-multibranch
+ - javadoc
+ - caffeine-api
+ - workflow-api
+ - workflow-basic-steps
+ - nexus-jenkins-plugin
+ - ace-editor
+ - branch-api
+ - pipeline-input-step
+ - jdk-tool
+ - workflow-step-api
+ - credentials
+ - pipeline-stage-view
+ - antisamy-markup-formatter
+ - durable-task
+ - pipeline-graph-analysis
+ - okhttp-api
+ - workflow-aggregator
+ - structs
+ - pipeline-milestone-step
+ - pipeline-stage-tags-metadata
+ - gradle-repo
+ - workflow-support
+ - scm-api
+ - mask-passwords
+ - workflow-job
+ - git-server
+ - github-branch-source
+ - handlebars
+ - jquery3-api
+ - pipeline-rest-api
+ - emailext-template
+ - workflow-durable-task-step
+ - pipeline-stage-step
+ - cloudbees-folder
+ - resource-disposer
+ - git-client
+ - timestamper
+ - snakeyaml-api
+ - matrix-auth
+ - git
+ - docker-plugin
+ - bootstrap5-api
+ - pipeline-model-extensions
+ - docker-java-api
+ - echarts-api
+ - matrix-project
+ - workflow-cps
+ - sshd
+ - command-launcher
+ - maven-plugin
+ - credentials-binding
+ - email-ext
+ - authentication-tokens
+ - popper-api
+ - workflow-scm-step
+ - ssh-credentials
+ - build-timeout
+ - pipeline-model-definition
+ - gradle
+ - pam-auth
+ - github
+ - popper2-api
+ - ssh-slaves
+ - pipeline-build-step
+ - checks-api
+ - jaxb
+ - plugin-util-api
+ - pipeline-github-lib
+ - apache-httpcomponents-client-4-api
+ - font-awesome-api
+ - github-api
+ - workflow-cps-global-lib
+ - junit
+ - docker-workflow
+ - trilead-api
+ - mailer
+ - ldap
+ - nexus-artifact-uploader
+ - plain-credentials
+ - pipeline-utility-steps
+ - jsch
+ - bootstrap4-api
+ - ws-cleanup
+ - momentjs
+ - display-url-api
+
+# Jobs
+github_project_url:     https://github.com/timurbabs/spring-petclinic.git/
+branch_build:           '*/main'
+branch_precommit:       '**'
+script_path_build:      Jenkinsfile_Build
+script_path_precommit:  Jenkinsfile_PreCommit
+script_path_deployment: jenkinsfile_Deployment
+
+# Credentials
+slave_id:               slave-1
+slave_username:         slave
+slave_private_ssh:      blablabla
+nexus_id:               nexus-admin
+nexus_username:         admin
+nexus_password:         25447

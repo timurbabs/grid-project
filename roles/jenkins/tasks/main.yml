@@ -1,0 +1,121 @@
+---
+
+- name: Install recommended packages
+  yum:
+          name:
+                  - wget
+                  - git
+                  - maven
+                  - java-1.8.0-openjdk
+
+- name: Install recommended python libraries
+  pip:
+          name:
+                  - python-jenkins
+
+- name: Install Jenkins Repository
+  get_url:
+          url: http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+          dest: /etc/yum.repos.d/jenkins.repo
+
+- name: Import Jenkins Key
+  rpm_key:
+          state: present
+          key: https://pkg.jenkins.io/redhat/jenkins.io.key
+
+- name: Install Jenkins
+  yum:
+          name: jenkins
+          state: present
+ 
+- name: Create initialization scripts directory
+  file: 
+        path: '{{ jenkins_home }}/init.groovy.d'
+        state: directory
+        owner: jenkins
+        group: jenkins
+        mode: 0775
+
+- name: Check that the script exists
+  stat:
+          path: '{{ jenkins_home }}/init.groovy.d/security.groovy'
+  register: stat_result
+
+- name: Add initialization script for password and login
+  template: 
+          src: jenkins_groovy/security.groovy
+          dest: '{{ jenkins_home }}/init.groovy.d/'
+  when: not stat_result.stat.exists
+  
+- name: Start & Enable Jenkins
+  systemd:
+          name: jenkins
+          state: started
+          enabled: true
+  notify: Wait until Jenkins is available
+
+- name: Delete script
+  file: 
+        path: '{{ jenkins_home }}/init.groovy.d/security.groovy'
+        state: absent
+  when: not stat_result.stat.exists
+
+- name: Install plugins
+  community.general.jenkins_plugin:
+          name: '{{ item }}'
+          state: present
+          url_username: '{{ jenkins_username }}'
+          url_password: '{{ jenkins_password }}'
+          url: '{{ jenkins_url }}'
+  with_items: '{{ jenkins_plugins }}'
+  register: installed_plugins
+
+- name: Jenkins restart fact after plugins installation
+  ansible.builtin.set_fact:
+          jenkins_restart_required: no
+
+- name: Check if restart is required by any of the plugins
+  ansible.builtin.set_fact:
+          jenkins_restart_required: yes
+  when: item.changed
+  with_items: "{{ installed_plugins.results }}"
+
+- name: Restart Jenkins
+  ansible.builtin.service:
+          name: jenkins
+          state: restarted
+  when: jenkins_restart_required
+  notify: Wait until Jenkins is available
+
+- name: Reset the fact after plugins installation to Jenkins
+  ansible.builtin.set_fact:
+          jenkins_restart_required: no
+  when: jenkins_restart_required
+
+- name: Plugin enabling
+  community.general.jenkins_plugin:
+          name: "{{ item }}"
+          state: enabled
+          url_username: '{{ jenkins_username }}'
+          url_password: '{{ jenkins_password }}'
+          url: '{{ jenkins_url }}'
+  with_items: "{{ jenkins_plugins }}"
+
+- name: Setup jobs
+  community.general.jenkins_job:
+    config: "{{ lookup('template', 'templates/jenkins_jobs/{{ item.value }}') }}"
+    name: "{{ item.key }}" 
+    password: "{{ jenkins_password }}"
+    url: "{{ jenkins_url }}"
+    user: "{{ jenkins_username }}"
+  with_dict: {PreCommit: pre_commit_job.xml, Deployment: deployment_job.xml, Build: build_job.xml}
+
+- name: Download Jenkins CLI for credentials
+  get_url:
+          url: "{{ jenkins_cli_url }}"
+          dest: /opt/jenkins-cli.jar
+
+- name: Upload credentials
+  shell: java -jar /opt/jenkins-cli.jar -s "{{ jenkins_url }}" -auth "{{ jenkins_username }}":"{{ jenkins_password }}" create-credentials-by-xml system::system::jenkins _ < "{{ lookup('template', '{{ item }}') }}" 
+  with_fileglob:
+          - templates/jenkins_cred/*

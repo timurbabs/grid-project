@@ -1,0 +1,9 @@
+<com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey plugin="ssh-credentials@1.13"> 
+  <scope>GLOBAL</scope> 
+  <id>{{ slave_id }}</id> 
+  <description></description> 
+  <username>{{ slave_username }}</username> 
+  <privateKeySource class="com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$DirectEntryPrivateKeySource"> 
+		  <privateKey>{{ slave_private_ssh }}</privateKey> 
+  </privateKeySource> 
+</com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey>

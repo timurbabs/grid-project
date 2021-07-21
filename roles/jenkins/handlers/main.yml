@@ -1,0 +1,12 @@
+---
+# handlers file for jenkins
+- name: Wait until Jenkins is available
+  shell: curl -I -u '{{ jenkins_username }}':'{{ jenkins_password }}' '{{ jenkins_url }}'
+  register: result
+  until: result.stdout.find("200 OK") != -1
+  retries: 12
+  delay: 5
+  changed_when: false
+  args:
+    warn: false
+
