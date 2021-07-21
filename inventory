@@ -1,0 +1,14 @@
+[jenkins_servers]
+jenkins_linux		ansible_host=18.224.138.199	
+
+
+[slaves_servers]
+slave_linux			ansible_host=3.133.131.100				
+
+
+[nexus_servers]
+nexus_linux			ansible_host=18.191.112.129				
+
+
+[production_servers]
+production_linux	ansible_host=18.119.110.146				
