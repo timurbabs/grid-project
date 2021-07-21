@@ -1,5 +1,58 @@
 ---
 
+- name: Get Jenkins crumb
+  shell: curl --silent --cookie-jar /tmp/cookies "{{ jenkins_url }}"'/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)' -u "{{ jenkins_username }}":"{{ jenkins_password }}"
+  register: jenkins_crumb
+
+- uri:
+        url: "http://18.224.138.199:8080/crumbIssuer/api/json"
+        user: "admin"
+        force_basic_auth: yes
+        password: "25447"
+  register: response
+
+- name: Debug
+  debug:
+          msg: "{{ response.json.crumb }}"
+
+- name: Uri
+  uri:
+          url: "http://18.224.138.199:8080/credentials/store/system/domain/_/createCredentials" 
+          user: "admin"
+          password: "25447"
+          force_basic_auth: yes
+          method: POST
+          headers: '{ "Cookie": "{{ response.set_cookie }}", "Jenkins-Crumb": "{{ response.json.crumb }}" }'
+          body: |
+                json={
+                "": "0",
+                "credentials": {
+                "scope": "GLOBAL",
+                "id": "jenkins_linux_slave1_auth",
+                "username": "admin",
+                "password": "25447",
+                "privateKeySource": {
+                "stapler-class": "com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$DirectEntryPrivateKeySource",
+                "privateKey": "blabla"
+                                },
+                "description": "Jenkins Linux Slave1 Authentication",
+                "stapler-class": "com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey"
+                        }
+                }
+
+
+- name: Credentials .xml
+  template: 
+      src: "{{ item }}"
+      dest: /var/lib/jenkins/credentials/
+  with_fileglob:
+          - "templates/jenkins_cred/*"
+
+- name: Upload credentials
+  shell: curl -X POST --cookie /tmp/cookies "{{ jenkins_url }}"/credentials/store/system/domain/_/createCredentials --data-binary @/var/lib/jenkins/credentials/nexus_cred.xml -H "{{ jenkins_crumb }}" -H "Content-Type:text/xml" -u "{{ jenkins_username }}":"{{ jenkins_password }}"
+  args:
+          warn: false
+
 - name: Install recommended packages
   yum:
           name:
@@ -110,12 +163,12 @@
     user: "{{ jenkins_username }}"
   with_dict: {PreCommit: pre_commit_job.xml, Deployment: deployment_job.xml, Build: build_job.xml}
 
-- name: Download Jenkins CLI for credentials
-  get_url:
-          url: "{{ jenkins_cli_url }}"
-          dest: /opt/jenkins-cli.jar
+- name: Get Jenkins crumb
+  shell: curl --silent --cookie-jar /tmp/cookies "{{ jenkins_url }}"/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb -u "{{ jenkins_username }}":"{{ jenkins_password }}"
+  register: jenkins_crumb
 
 - name: Upload credentials
-  shell: java -jar /opt/jenkins-cli.jar -s "{{ jenkins_url }}" -auth "{{ jenkins_username }}":"{{ jenkins_password }}" create-credentials-by-xml system::system::jenkins _ < "{{ lookup('template', '{{ item }}') }}" 
+  shell: curl -X POST --cookie /tmp/cookies "{{ jenkins_url }}"/credentials/store/system/domain/_/createCredentials --data-binary @"{{ lookup('template', '{{ item }}') }}" -H "{{ jenkins_crumb }}" -H "Content-Type:text/xml" -u "{{ jenkins_username }}":"{{ jenkins_password }}"
   with_fileglob:
-          - templates/jenkins_cred/*
+          - "templates/jenkins_cred/*"
+
