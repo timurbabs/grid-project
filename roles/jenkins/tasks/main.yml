@@ -1,0 +1,121 @@
+---
+
+- name: Install recommended packages
+  yum:
+          name:
+                  - wget
+                  - git
+                  - maven
+                  - java-1.8.0-openjdk
+
+- name: Install recommended python libraries
+  pip:
+          name:
+                  - python-jenkins
+
+- name: Install Jenkins Repository
+  get_url:
+          url: http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+          dest: /etc/yum.repos.d/jenkins.repo
+
+- name: Import Jenkins Key
+  rpm_key:
+          state: present
+          key: https://pkg.jenkins.io/redhat/jenkins.io.key
+
+- name: Install Jenkins
+  yum:
+          name: jenkins
+          state: present
+ 
+- name: Create initialization scripts directory
+  file: 
+        path: '{{ jenkins_home ***REMOVED******REMOVED***/init.groovy.d'
+        state: directory
+        owner: jenkins
+        group: jenkins
+        mode: 0775
+
+- name: Check that the script exists
+  stat:
+          path: '{{ jenkins_home ***REMOVED******REMOVED***/init.groovy.d/security.groovy'
+  register: stat_result
+
+- name: Add initialization script for password and login
+  template: 
+          src: jenkins_groovy/security.groovy
+          dest: '{{ jenkins_home ***REMOVED******REMOVED***/init.groovy.d/'
+  when: not stat_result.stat.exists
+  
+- name: Start & Enable Jenkins
+  systemd:
+          name: jenkins
+          state: started
+          enabled: true
+  notify: Wait until Jenkins is available
+
+- name: Delete script
+  file: 
+        path: '{{ jenkins_home ***REMOVED******REMOVED***/init.groovy.d/security.groovy'
+        state: absent
+  when: not stat_result.stat.exists
+
+- name: Install plugins
+  community.general.jenkins_plugin:
+          name: '{{ item ***REMOVED******REMOVED***'
+          state: present
+          url_username: '{{ jenkins_username ***REMOVED******REMOVED***'
+          url_password: '{{ jenkins_password ***REMOVED******REMOVED***'
+          url: '{{ jenkins_url ***REMOVED******REMOVED***'
+  with_items: '{{ jenkins_plugins ***REMOVED******REMOVED***'
+  register: installed_plugins
+
+- name: Jenkins restart fact after plugins installation
+  ansible.builtin.set_fact:
+          jenkins_restart_required: no
+
+- name: Check if restart is required by any of the plugins
+  ansible.builtin.set_fact:
+          jenkins_restart_required: yes
+  when: item.changed
+  with_items: "{{ installed_plugins.results ***REMOVED******REMOVED***"
+
+- name: Restart Jenkins
+  ansible.builtin.service:
+          name: jenkins
+          state: restarted
+  when: jenkins_restart_required
+  notify: Wait until Jenkins is available
+
+- name: Reset the fact after plugins installation to Jenkins
+  ansible.builtin.set_fact:
+          jenkins_restart_required: no
+  when: jenkins_restart_required
+
+- name: Plugin enabling
+  community.general.jenkins_plugin:
+          name: "{{ item ***REMOVED******REMOVED***"
+          state: enabled
+          url_username: '{{ jenkins_username ***REMOVED******REMOVED***'
+          url_password: '{{ jenkins_password ***REMOVED******REMOVED***'
+          url: '{{ jenkins_url ***REMOVED******REMOVED***'
+  with_items: "{{ jenkins_plugins ***REMOVED******REMOVED***"
+
+- name: Setup jobs
+  community.general.jenkins_job:
+    config: "{{ lookup('template', 'templates/jenkins_jobs/{{ item.value ***REMOVED******REMOVED***') ***REMOVED******REMOVED***"
+    name: "{{ item.key ***REMOVED******REMOVED***" 
+    password: "{{ jenkins_password ***REMOVED******REMOVED***"
+    url: "{{ jenkins_url ***REMOVED******REMOVED***"
+    user: "{{ jenkins_username ***REMOVED******REMOVED***"
+  with_dict: {PreCommit: pre_commit_job.xml, Deployment: deployment_job.xml, Build: build_job.xml***REMOVED***
+
+- name: Download Jenkins CLI for credentials
+  get_url:
+          url: "{{ jenkins_cli_url ***REMOVED******REMOVED***"
+          dest: /opt/jenkins-cli.jar
+
+- name: Upload credentials
+  shell: java -jar /opt/jenkins-cli.jar -s "{{ jenkins_url ***REMOVED******REMOVED***" -auth "{{ jenkins_username ***REMOVED******REMOVED***":"{{ jenkins_password ***REMOVED******REMOVED***" create-credentials-by-xml system::system::jenkins _ < "{{ lookup('template', '{{ item ***REMOVED******REMOVED***') ***REMOVED******REMOVED***" 
+  with_fileglob:
+          - templates/jenkins_cred/*

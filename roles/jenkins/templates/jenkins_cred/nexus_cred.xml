@@ -1,0 +1,7 @@
+<com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl >
+  <scope>GLOBAL</scope>
+  <id>{{ nexus_id ***REMOVED******REMOVED***</id> 
+  <username>{{ nexus_username ***REMOVED******REMOVED***</username>
+  <password>{{ nexus_password ***REMOVED******REMOVED***</password>
+  <description></description>
+</com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl> 
