@@ -1,5 +1,58 @@
 ---
 
+- name: Get Jenkins crumb
+  shell: curl --silent --cookie-jar /tmp/cookies "{{ jenkins_url ***REMOVED******REMOVED***"'/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)' -u "{{ jenkins_username ***REMOVED******REMOVED***":"{{ jenkins_password ***REMOVED******REMOVED***"
+  register: jenkins_crumb
+
+- uri:
+        url: "http://18.224.138.199:8080/crumbIssuer/api/json"
+        user: "admin"
+        force_basic_auth: yes
+        password: "25447"
+  register: response
+
+- name: Debug
+  debug:
+          msg: "{{ response.json.crumb ***REMOVED******REMOVED***"
+
+- name: Uri
+  uri:
+          url: "http://18.224.138.199:8080/credentials/store/system/domain/_/createCredentials" 
+          user: "admin"
+          password: "25447"
+          force_basic_auth: yes
+          method: POST
+          headers: '{ "Cookie": "{{ response.set_cookie ***REMOVED******REMOVED***", "Jenkins-Crumb": "{{ response.json.crumb ***REMOVED******REMOVED***" ***REMOVED***'
+          body: |
+                json={
+                "": "0",
+                "credentials": {
+                "scope": "GLOBAL",
+                "id": "jenkins_linux_slave1_auth",
+                "username": "admin",
+                "password": "25447",
+                "privateKeySource": {
+                "stapler-class": "com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$DirectEntryPrivateKeySource",
+                "privateKey": "blabla"
+                                ***REMOVED***,
+                "description": "Jenkins Linux Slave1 Authentication",
+                "stapler-class": "com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey"
+                        ***REMOVED***
+                ***REMOVED***
+
+
+- name: Credentials .xml
+  template: 
+      src: "{{ item ***REMOVED******REMOVED***"
+      dest: /var/lib/jenkins/credentials/
+  with_fileglob:
+          - "templates/jenkins_cred/*"
+
+- name: Upload credentials
+  shell: curl -X POST --cookie /tmp/cookies "{{ jenkins_url ***REMOVED******REMOVED***"/credentials/store/system/domain/_/createCredentials --data-binary @/var/lib/jenkins/credentials/nexus_cred.xml -H "{{ jenkins_crumb ***REMOVED******REMOVED***" -H "Content-Type:text/xml" -u "{{ jenkins_username ***REMOVED******REMOVED***":"{{ jenkins_password ***REMOVED******REMOVED***"
+  args:
+          warn: false
+
 - name: Install recommended packages
   yum:
           name:
@@ -110,12 +163,12 @@
     user: "{{ jenkins_username ***REMOVED******REMOVED***"
   with_dict: {PreCommit: pre_commit_job.xml, Deployment: deployment_job.xml, Build: build_job.xml***REMOVED***
 
-- name: Download Jenkins CLI for credentials
-  get_url:
-          url: "{{ jenkins_cli_url ***REMOVED******REMOVED***"
-          dest: /opt/jenkins-cli.jar
+- name: Get Jenkins crumb
+  shell: curl --silent --cookie-jar /tmp/cookies "{{ jenkins_url ***REMOVED******REMOVED***"/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb -u "{{ jenkins_username ***REMOVED******REMOVED***":"{{ jenkins_password ***REMOVED******REMOVED***"
+  register: jenkins_crumb
 
 - name: Upload credentials
-  shell: java -jar /opt/jenkins-cli.jar -s "{{ jenkins_url ***REMOVED******REMOVED***" -auth "{{ jenkins_username ***REMOVED******REMOVED***":"{{ jenkins_password ***REMOVED******REMOVED***" create-credentials-by-xml system::system::jenkins _ < "{{ lookup('template', '{{ item ***REMOVED******REMOVED***') ***REMOVED******REMOVED***" 
+  shell: curl -X POST --cookie /tmp/cookies "{{ jenkins_url ***REMOVED******REMOVED***"/credentials/store/system/domain/_/createCredentials --data-binary @"{{ lookup('template', '{{ item ***REMOVED******REMOVED***') ***REMOVED******REMOVED***" -H "{{ jenkins_crumb ***REMOVED******REMOVED***" -H "Content-Type:text/xml" -u "{{ jenkins_username ***REMOVED******REMOVED***":"{{ jenkins_password ***REMOVED******REMOVED***"
   with_fileglob:
-          - templates/jenkins_cred/*
+          - "templates/jenkins_cred/*"
+
