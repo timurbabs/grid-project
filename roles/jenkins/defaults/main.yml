@@ -114,9 +114,17 @@ script_path_precommit:  Jenkinsfile_PreCommit
 script_path_deployment: jenkinsfile_Deployment
 
 # Credentials
-slave_id:               slave-1
-slave_username:         slave
-slave_private_ssh:      blablabla
-nexus_id:               nexus-admin
-nexus_username:         admin
-nexus_password:         25447
+jenkins_ssh_credentials:
+  - name: Slave SSH
+    username: "{{ ansible_user ***REMOVED******REMOVED***"
+    private_key: |
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      ...
+      -----END OPENSSH PRIVATE KEY-----
+    passphrase:
+    description:
+jenkins_username_password_credentials:
+  - name: Nexus
+    description: Credentials for Nexus Server
+    username: Nexus
+    password: 25447
