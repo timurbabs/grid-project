@@ -6,6 +6,7 @@
   until: result.stdout.find("200 OK") != -1
   retries: 12
   delay: 5
+  listen: "Restart Jenkins"
   changed_when: false
   args:
     warn: false

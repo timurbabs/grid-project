@@ -1,7 +1,0 @@
-<com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl >
-  <scope>GLOBAL</scope>
-  <id>{{ nexus_id }}</id> 
-  <username>{{ nexus_username }}</username>
-  <password>{{ nexus_password }}</password>
-  <description></description>
-</com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl> 

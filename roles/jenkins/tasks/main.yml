@@ -1,58 +1,5 @@
 ---
 
-- name: Get Jenkins crumb
-  shell: curl --silent --cookie-jar /tmp/cookies "{{ jenkins_url }}"'/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)' -u "{{ jenkins_username }}":"{{ jenkins_password }}"
-  register: jenkins_crumb
-
-- uri:
-        url: "http://18.224.138.199:8080/crumbIssuer/api/json"
-        user: "admin"
-        force_basic_auth: yes
-        password: "25447"
-  register: response
-
-- name: Debug
-  debug:
-          msg: "{{ response.json.crumb }}"
-
-- name: Uri
-  uri:
-          url: "http://18.224.138.199:8080/credentials/store/system/domain/_/createCredentials" 
-          user: "admin"
-          password: "25447"
-          force_basic_auth: yes
-          method: POST
-          headers: '{ "Cookie": "{{ response.set_cookie }}", "Jenkins-Crumb": "{{ response.json.crumb }}" }'
-          body: |
-                json={
-                "": "0",
-                "credentials": {
-                "scope": "GLOBAL",
-                "id": "jenkins_linux_slave1_auth",
-                "username": "admin",
-                "password": "25447",
-                "privateKeySource": {
-                "stapler-class": "com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$DirectEntryPrivateKeySource",
-                "privateKey": "blabla"
-                                },
-                "description": "Jenkins Linux Slave1 Authentication",
-                "stapler-class": "com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey"
-                        }
-                }
-
-
-- name: Credentials .xml
-  template: 
-      src: "{{ item }}"
-      dest: /var/lib/jenkins/credentials/
-  with_fileglob:
-          - "templates/jenkins_cred/*"
-
-- name: Upload credentials
-  shell: curl -X POST --cookie /tmp/cookies "{{ jenkins_url }}"/credentials/store/system/domain/_/createCredentials --data-binary @/var/lib/jenkins/credentials/nexus_cred.xml -H "{{ jenkins_crumb }}" -H "Content-Type:text/xml" -u "{{ jenkins_username }}":"{{ jenkins_password }}"
-  args:
-          warn: false
-
 - name: Install recommended packages
   yum:
           name:
@@ -89,31 +36,35 @@
         group: jenkins
         mode: 0775
 
-- name: Check that the script exists
-  stat:
-          path: '{{ jenkins_home }}/init.groovy.d/security.groovy'
-  register: stat_result
-
-- name: Add initialization script for password and login
+- name: Put initialization script for admin
   template: 
-          src: jenkins_groovy/security.groovy
+          src: jenkins_groovy/initialization/security.groovy
           dest: '{{ jenkins_home }}/init.groovy.d/'
-  when: not stat_result.stat.exists
   
 - name: Start & Enable Jenkins
   systemd:
           name: jenkins
           state: started
           enabled: true
-  notify: Wait until Jenkins is available
+  notify: "Restart Jenkins"
+
+- name: Wait until Jenkins is available
+  shell: curl -I -u '{{ jenkins_username }}':'{{ jenkins_password }}' '{{ jenkins_url }}'
+  register: result
+  until: result.stdout.find("200 OK") != -1
+  retries: 12
+  delay: 5
+  changed_when: false
+  args:
+    warn: false
+
 
 - name: Delete script
   file: 
         path: '{{ jenkins_home }}/init.groovy.d/security.groovy'
         state: absent
-  when: not stat_result.stat.exists
 
-- name: Install plugins
+- name: Upload plugins
   community.general.jenkins_plugin:
           name: '{{ item }}'
           state: present
@@ -140,6 +91,16 @@
   when: jenkins_restart_required
   notify: Wait until Jenkins is available
 
+- name: Wait until Jenkins is available
+  shell: curl -I -u '{{ jenkins_username }}':'{{ jenkins_password }}' '{{ jenkins_url }}'
+  register: result
+  until: result.stdout.find("200 OK") != -1
+  retries: 12
+  delay: 5
+  changed_when: false
+  args:
+    warn: false
+
 - name: Reset the fact after plugins installation to Jenkins
   ansible.builtin.set_fact:
           jenkins_restart_required: no
@@ -154,7 +115,7 @@
           url: '{{ jenkins_url }}'
   with_items: "{{ jenkins_plugins }}"
 
-- name: Setup jobs
+- name: Upload jobs
   community.general.jenkins_job:
     config: "{{ lookup('template', 'templates/jenkins_jobs/{{ item.value }}') }}"
     name: "{{ item.key }}" 
@@ -163,12 +124,20 @@
     user: "{{ jenkins_username }}"
   with_dict: {PreCommit: pre_commit_job.xml, Deployment: deployment_job.xml, Build: build_job.xml}
 
-- name: Get Jenkins crumb
-  shell: curl --silent --cookie-jar /tmp/cookies "{{ jenkins_url }}"/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb -u "{{ jenkins_username }}":"{{ jenkins_password }}"
-  register: jenkins_crumb
+- name: Upload Slave credentials
+  jenkins_script:
+    url: "{{ jenkins_url }}"
+    script: '{{ lookup("template", "templates/jenkins_groovy/credentials/secret_ssh.groovy") }}'
+    user: '{{ jenkins_username }}'
+    password: '{{ jenkins_password }}'
+    validate_certs: false
+    timeout: "120"
 
-- name: Upload credentials
-  shell: curl -X POST --cookie /tmp/cookies "{{ jenkins_url }}"/credentials/store/system/domain/_/createCredentials --data-binary @"{{ lookup('template', '{{ item }}') }}" -H "{{ jenkins_crumb }}" -H "Content-Type:text/xml" -u "{{ jenkins_username }}":"{{ jenkins_password }}"
-  with_fileglob:
-          - "templates/jenkins_cred/*"
-
+- name: Upload Nexus credentials
+  jenkins_script:
+    url: "{{ jenkins_url }}"
+    script: '{{ lookup("template", "templates/jenkins_groovy/credentials/secret_password.groovy") }}'
+    user: '{{ jenkins_username }}'
+    password: '{{ jenkins_password }}'
+    validate_certs: false
+    timeout: "120"
