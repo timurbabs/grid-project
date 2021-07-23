@@ -33,7 +33,7 @@
         group: jenkins
         mode: 0775
 
-- name: Put initialization script for admin
+- name: Put initialization script
   template: 
           src: jenkins_groovy/initialization/security.groovy
           dest: '{{ jenkins_home ***REMOVED******REMOVED***/init.groovy.d/'
@@ -43,20 +43,12 @@
           name: jenkins
           state: started
           enabled: true
-  notify: "Restart Jenkins"
+  notify: "Wait Jenkins"
 
-- name: Wait until Jenkins is available
-  shell: curl -I -u '{{ jenkins_username ***REMOVED******REMOVED***':'{{ jenkins_password ***REMOVED******REMOVED***' '{{ jenkins_url ***REMOVED******REMOVED***'
-  register: result
-  until: result.stdout.find("200 OK") != -1
-  retries: 12
-  delay: 5
-  changed_when: false
-  args:
-    warn: false
+- name: Flush handlers
+  meta: flush_handlers
 
 - name: Delete script
   file: 
         path: '{{ jenkins_home ***REMOVED******REMOVED***/init.groovy.d/security.groovy'
         state: absent
-
