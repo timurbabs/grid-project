@@ -7,7 +7,7 @@ jenkins_protocol:   http
 jenkins_port:       8080
 jenkins_url:        "{{ jenkins_protocol }}://{{ ansible_default_ipv4.address }}:{{ jenkins_port }}"
 
-# Jobs
+# Jobs get from SCM
 github_project_url:     https://github.com/timurbabs/spring-petclinic.git
 branch_build:           '*/main'
 branch_precommit:       '**'
