@@ -3,9 +3,44 @@
 jenkins_home:       /var/lib/jenkins
 jenkins_username:   admin
 jenkins_password:   25447
-jenkins_cli_url:    http://{{ ansible_default_ipv4.address ***REMOVED******REMOVED***:8080/jnlpJars/jenkins-cli.jar
-jenkins_url:        http://{{ ansible_default_ipv4.address ***REMOVED******REMOVED***:8080
-jenkins_api_json:   http://{{ ansible_default_ipv4.address ***REMOVED******REMOVED***:8080/api/json
+jenkins_protocol:   http
+jenkins_port:       8080
+jenkins_url:        "{{ jenkins_protocol ***REMOVED******REMOVED***://{{ ansible_default_ipv4.address ***REMOVED******REMOVED***:{{ jenkins_port ***REMOVED******REMOVED***"
+
+# Jobs
+github_project_url:     https://github.com/timurbabs/spring-petclinic.git
+branch_build:           '*/main'
+branch_precommit:       '**'
+script_path_build:      Jenkinsfile_Build
+script_path_precommit:  Jenkinsfile_PreCommit
+script_path_deployment: jenkinsfile_Deployment
+
+# Credentials
+password_credentials:
+        nexus_credentials:
+                name: Blabla
+                description: BLABLA
+                username: BLABAL
+                password: BLABAL
+
+ssh_credentials:
+        jango_credentials:
+                name: BlablAAAa
+                private_key: BBLABLA
+                description: BLABLA
+                username: BLABaaaaaL
+                passphrase: BLABAL
+
+#Slaves
+slaves:
+        jango_configuration:
+                name: Jango2 
+                root_directory: /home/jenkins
+                label: slave
+                number_executors: 2
+                host: ec2-user
+                credentialsId: BlablAAAa
+
 
 # Jenkins Plugins
 jenkins_plugins:
@@ -104,27 +139,5 @@ jenkins_plugins:
  - ws-cleanup
  - momentjs
  - display-url-api
+ - chucknorris
 
-# Jobs
-github_project_url:     https://github.com/timurbabs/spring-petclinic.git/
-branch_build:           '*/main'
-branch_precommit:       '**'
-script_path_build:      Jenkinsfile_Build
-script_path_precommit:  Jenkinsfile_PreCommit
-script_path_deployment: jenkinsfile_Deployment
-
-# Credentials
-jenkins_ssh_credentials:
-  - name: Slave SSH
-    username: "{{ ansible_user ***REMOVED******REMOVED***"
-    private_key: |
-      -----BEGIN OPENSSH PRIVATE KEY-----
-      ...
-      -----END OPENSSH PRIVATE KEY-----
-    passphrase:
-    description:
-jenkins_username_password_credentials:
-  - name: Nexus
-    description: Credentials for Nexus Server
-    username: Nexus
-    password: 25447
