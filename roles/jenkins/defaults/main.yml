@@ -24,21 +24,21 @@ password_credentials:
                 password: BLABAL
 
 ssh_credentials:
-        jango_credentials:
+        slaves_credentials:
                 name: BlablAAAa
-                private_key: BBLABLA
+                private_key:
                 description: BLABLA
-                username: BLABaaaaaL
+                username: ec2-user
                 passphrase: BLABAL
 
 #Slaves
 slaves:
-        jango_configuration:
+        slaves_configuration:
                 name: Jango2 
                 root_directory: /home/jenkins
                 label: slave
                 number_executors: 2
-                host: ec2-user
+                host: Blablabla
                 credentialsId: BlablAAAa
 
 
