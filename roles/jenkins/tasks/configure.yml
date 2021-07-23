@@ -1,4 +1,21 @@
 ---
+- name: Generate an SSH keys for slaves
+  community.crypto.openssh_keypair:
+    path: /tmp/jenkins_slaves_ssh_rsa
+  register: public_slaves_ssh
+
+- name: Debug
+  debug:
+          msg: "{{ public_slaves_ssh.public_key ***REMOVED******REMOVED***"
+
+- name: Get private key for Jenkins slaves
+  shell: cat /tmp/jenkins_slaves_ssh_rsa
+  register: private_slaves_ssh
+
+- name: Debug
+  debug:
+          msg: "{{ private_slaves_ssh.stdout ***REMOVED******REMOVED***"
+
 - name: Upload plugins
   community.general.jenkins_plugin:
           name: '{{ item ***REMOVED******REMOVED***'
@@ -49,6 +66,9 @@
           url_password: '{{ jenkins_password ***REMOVED******REMOVED***'
           url: '{{ jenkins_url ***REMOVED******REMOVED***'
   with_items: "{{ jenkins_plugins ***REMOVED******REMOVED***"
+
+- name: Generate SSH
+  shell: ssh-
 
 - name: Upload jobs
   community.general.jenkins_job:
