@@ -1,0 +1,254 @@
+---
+# tasks file for nexus-server-setup
+- name: yum update
+  yum:
+    name: '*'
+    state: latest
+
+- name: yum install wget
+  yum:
+    name: wget
+    state: latest
+
+- name: groovy install
+  yum:
+    name: groovy
+    state: latest
+
+- name: yum install openjdk
+  yum:
+    name: java-1.8.0-openjdk.x86_64
+    state: latest
+
+- name: Check that nexus is installed
+  stat:
+    path: "{{ nexus_download_dir ***REMOVED******REMOVED***/nexus/bin/nexus"
+  register: stat_result
+
+- name: check nexus installed
+  debug:
+    msg: Nexus already installed
+  when: stat_result.stat.exists
+
+- name: create/check download folder
+  file:
+    path: "{{ nexus_download_dir ***REMOVED******REMOVED***"
+    state: directory
+  when: not stat_result.stat.exists
+
+- name: Delete content & directory
+  shell: "rm -rf {{ nexus_download_dir ***REMOVED******REMOVED***/*"
+  when: not stat_result.stat.exists
+
+- name: Download nexus_package
+  get_url:
+    url: "{{ nexus_download_url ***REMOVED******REMOVED***"
+    dest: "{{ nexus_download_dir ***REMOVED******REMOVED***/nexus.tar.gz"
+    force: no
+    timeout: 300
+  when: not stat_result.stat.exists
+
+- name: unpack nexus
+  unarchive:
+    src: "{{ nexus_download_dir ***REMOVED******REMOVED***/nexus.tar.gz"
+    dest: "{{ nexus_download_dir ***REMOVED******REMOVED***"
+    copy: false
+    mode: 0755
+  when: not stat_result.stat.exists
+
+- name: rename pack
+  shell: "mv -f {{ nexus_download_dir ***REMOVED******REMOVED***/nexus-3* {{ nexus_download_dir ***REMOVED******REMOVED***/nexus"
+  when: not stat_result.stat.exists
+
+- name: cleanup archieve
+  file:
+    path: "{{ nexus_download_dir ***REMOVED******REMOVED***/nexus.tar.gz"
+    state: absent
+  when: not stat_result.stat.exists
+
+- name: create/check group
+  group:
+    name: "{{ nexus_os_group ***REMOVED******REMOVED***"
+    state: present
+
+- name: create/check user
+  user:
+    name: "{{ nexus_os_user ***REMOVED******REMOVED***"
+    group: "{{ nexus_os_group ***REMOVED******REMOVED***"
+    home: "/home/{{ nexus_os_user ***REMOVED******REMOVED***"
+    shell: "/bin/bash"
+    state: present
+
+- name: ownable folders
+  file:
+    path: "{{ nexus_installation_dir ***REMOVED******REMOVED***/nexus"
+    owner: "{{ nexus_os_user ***REMOVED******REMOVED***"
+    group: "{{ nexus_os_group ***REMOVED******REMOVED***"
+    state: directory
+    recurse: yes
+
+- name: ownable folders
+  file:
+    path: "{{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work"
+    owner: "{{ nexus_os_user ***REMOVED******REMOVED***"
+    group: "{{ nexus_os_group ***REMOVED******REMOVED***"
+    state: directory
+    recurse: yes
+
+- name: change run as user
+  copy:
+    dest: /app/nexus/bin/nexus.rc
+    content: |
+      run_as_user="{{ nexus_os_user ***REMOVED******REMOVED***"
+
+- name: create nexus.service
+  file:
+    path: "/etc/systemd/system/nexus.service"
+    state: touch
+  when: not stat_result.stat.exists
+
+- name: config nexus.service
+  copy:
+    dest: "/etc/systemd/system/nexus.service"
+    content: |
+      [Unit]
+      Description=nexus service
+      After=network.target
+
+      [Service]
+      Type=forking
+      LimitNOFILE={{ nexus_os_max_filedescriptors ***REMOVED******REMOVED***
+      User={{ nexus_os_user ***REMOVED******REMOVED***
+      Group={{ nexus_os_group ***REMOVED******REMOVED***
+      ExecStart={{ nexus_installation_dir ***REMOVED******REMOVED***/nexus/bin/nexus start
+      ExecStop={{ nexus_installation_dir ***REMOVED******REMOVED***/nexus/bin/nexus stop
+      User={{ nexus_os_user ***REMOVED******REMOVED***
+      Restart=on-abort
+
+      [Install]
+      WantedBy=multi-user.target
+    when: not stat_result.stat.exists
+
+- name: selinux enable
+  lineinfile:
+    dest: "/etc/sysconfig/selinux"
+    regexp: "^SELINUX=.*"
+    line: "SELINUX=enforcing"
+  when: not stat_result.stat.exists
+
+- name: fix chcon
+  ansible.builtin.shell:
+    cmd: chcon -h system_u:object_r:httpd_sys_content_t:s0 {{ nexus_installation_dir ***REMOVED******REMOVED***/nexus/bin/nexus
+  when: not stat_result.stat.exists
+
+- name: fix selinux rules
+  ansible.builtin.shell:
+    cmd: chcon -R -t bin_t {{ nexus_installation_dir ***REMOVED******REMOVED***/nexus/bin/nexus
+  when: not stat_result.stat.exists
+
+- name: Get path to default settings
+  set_fact:
+    nexus_default_settings_file: "{{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/nexus.properties"
+
+- name: systemctl daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: start nexus
+  ansible.builtin.systemd:
+    name: nexus
+    state: started
+
+- name: wait until nexus start
+  wait_for:
+    port: 8081
+    delay: 10
+
+- name: Set nexus port
+  lineinfile:
+    dest: "{{ nexus_default_settings_file ***REMOVED******REMOVED***"
+    regexp: "^application-port=.*"
+    line: "application-port={{ nexus_default_port ***REMOVED******REMOVED***"
+
+- name: "Enable creating groovy scripts in nexus"
+  lineinfile:
+    dest: "{{ nexus_default_settings_file ***REMOVED******REMOVED***"
+    regexp: "^nexus.scripts.allowCreation=.*"
+    line: "nexus.scripts.allowCreation=true"
+
+- name: systemctl daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: restart nexus
+  ansible.builtin.systemd:
+    name: nexus
+    state: started
+
+- name: Check settings
+  stat:
+    path: "{{ nexus_installation_dir ***REMOVED******REMOVED***/nexus/bin/nexus"
+  register: stat_result
+
+- name: check nexus is not installed
+  debug:
+    msg: Nexus is not installed
+  when: not stat_result.stat.exists
+
+- name: check nexus is not installed - exit
+  meta: end_play
+  when: not stat_result.stat.exists
+
+- name: copying jsons
+  copy:
+    src: "rest_jsons"
+    dest: "{{ nexus_installation_dir ***REMOVED******REMOVED***"
+    owner: "{{ nexus_os_user ***REMOVED******REMOVED***"
+    group: "{{ nexus_os_group ***REMOVED******REMOVED***"
+    mode: 0644
+
+- name: Wait for port 8081 (until nexus will start)
+  wait_for:
+    port: 8081
+    delay: 10
+
+- name: Check that the admin password file exists
+  stat:
+    path: "{{ nexus_download_dir ***REMOVED******REMOVED***/nexus/bin/nexus"
+  register: adm_pass_exists
+
+- name: REST edit admin password (if exists)
+  shell: "curl -v -X PUT -u admin:\"$(cat {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/admin.password)\" --header \"Content-Type: text/plain\" \"{{ ansible_host ***REMOVED******REMOVED***:{{ nexus_default_port ***REMOVED******REMOVED***/service/rest/v1/security/users/admin/change-password\" --data \"{{ nexus_admin_password ***REMOVED******REMOVED***\""
+  register: result
+  when: not adm_pass_exists.stat.exists
+
+- debug:
+    var: result
+
+- name: REST create maven hosted repo
+  shell: "curl -v -X POST -u admin:{{ nexus_admin_password ***REMOVED******REMOVED*** -H \"accept: application/json\" --header \"Content-Type: application/json\" \"http://{{ ansible_host ***REMOVED******REMOVED***:{{ nexus_default_port ***REMOVED******REMOVED***/service/rest/v1/repositories/maven/hosted\" -d @{{ nexus_installation_dir ***REMOVED******REMOVED***/rest_jsons/maven_hosted_repo.json"
+  register: result
+
+- debug:
+    var: result
+
+- name: REST create maven proxy repo
+  shell: "curl -v -X POST -u admin:{{ nexus_admin_password ***REMOVED******REMOVED*** -H \"accept: application/json\" --header \"Content-Type: application/json\" \"http://{{ ansible_host ***REMOVED******REMOVED***:{{ nexus_default_port ***REMOVED******REMOVED***/service/rest/v1/repositories/maven/proxy\" -d @{{ nexus_installation_dir ***REMOVED******REMOVED***/rest_jsons/maven_proxy_repo.json"
+  register: result
+
+- debug:
+    var: result
+
+- name: REST add docker realm
+  shell: "curl -v -X PUT -u admin:{{ nexus_admin_password ***REMOVED******REMOVED*** -H \"accept: application/json\" --header \"Content-Type: application/json\" \"http://{{ ansible_host ***REMOVED******REMOVED***:{{ nexus_default_port ***REMOVED******REMOVED***/service/rest/v1/security/realms/active\" -d @{{ nexus_installation_dir ***REMOVED******REMOVED***/rest_jsons/realms.json"
+  register: result
+
+- debug:
+    var: result
+
+- name: REST create docker hosted repo
+  shell: "curl -v -X POST -u admin:{{ nexus_admin_password ***REMOVED******REMOVED*** -H \"accept: application/json\" --header \"Content-Type: application/json\" \"http://{{ ansible_host ***REMOVED******REMOVED***:{{ nexus_default_port ***REMOVED******REMOVED***/service/rest/v1/repositories/docker/hosted\" -d @{{ nexus_installation_dir ***REMOVED******REMOVED***/rest_jsons/docker_hosted_repo.json"
+  register: result
+
+- debug:
+    var: result

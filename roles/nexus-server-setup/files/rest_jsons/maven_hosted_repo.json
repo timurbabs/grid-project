@@ -1,0 +1,16 @@
+{
+  "name": "petclinic-maven-hosted",
+  "online": true,
+  "storage": {
+    "blobStoreName": "default",
+    "strictContentTypeValidation": "true",
+    "writePolicy": "ALLOW"
+  ***REMOVED***,
+  "component": {
+    "proprietaryComponents": "true"
+  ***REMOVED***,
+  "maven": {
+    "versionPolicy": "MIXED",
+    "layoutPolicy": "PERMISSIVE"
+  ***REMOVED***
+***REMOVED***
