@@ -12,7 +12,6 @@
 - name: Install recommended packages with Jenkins
   yum:
           name:
-                  - wget
                   - git
                   - maven
                   - java-1.8.0-openjdk
@@ -44,6 +43,7 @@
           state: started
           enabled: true
   notify: "Wait Jenkins"
+  become: yes
 
 - name: Flush handlers
   meta: flush_handlers
