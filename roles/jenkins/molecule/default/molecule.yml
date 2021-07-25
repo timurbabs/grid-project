@@ -15,5 +15,7 @@ platforms:
           privileged: True
 provisioner:
   name: ansible
+  #linter: |
+        #        ansible-linter
 verifier:
   name: ansible
