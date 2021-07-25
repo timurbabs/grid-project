@@ -1,0 +1,37 @@
+---
+- name: Prepare the container for Jenkins
+  become: yes
+  hosts: all
+  tasks:
+          - name: Install firewalld
+            yum:
+                    name:
+                            - firewalld
+                    state: present
+
+          - name: Install Java
+            dnf:
+                    name:
+                            - java-1.8.0-openjdk-devel
+                    state: present
+
+          - name: Start firewalld
+            systemd:
+                    name: firewalld
+                    state: started
+                    enabled: true
+
+          - name: Adding https
+            shell: firewall-cmd --permanent --add-service=https 
+
+          - name: Adding http
+            shell: firewall-cmd --permanent --add-service=http 
+
+          - name: Open port "8080"
+            shell: firewall-cmd --permanent --zone=public --add-port=8080/tcp
+
+          - name: Restart firewalld 
+            shell: firewall-cmd --reload
+
+          - name: Set Java PATH for Jankins
+            shell: PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/lib/jvm/java-8-openjdk-amd64/bin/
