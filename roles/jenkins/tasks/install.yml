@@ -31,7 +31,7 @@
         owner: jenkins
         group: jenkins
         mode: 0775
-
+ 
 - name: Put initialization script
   template: 
           src: jenkins_groovy/initialization/security.groovy
@@ -43,12 +43,6 @@
           state: started
           enabled: true
   notify: "Wait Jenkins"
-  become: yes
 
 - name: Flush handlers
   meta: flush_handlers
-
-- name: Delete script
-  file: 
-        path: '{{ jenkins_home }}/init.groovy.d/security.groovy'
-        state: absent

@@ -1,7 +1,13 @@
 ---
-- name: Install & Configure Jenkins
-  hosts: jenkins_servers
+- name: Configure Jenkins Slaves
+  hosts: slave_servers
   become: yes
   roles:
-          - jenkins
+          - slave
+
+            #- name: Install & Configure Jenkins
+            #  hosts: jenkins_servers
+            #  become: yes
+            #  roles:
+            #          - jenkins
 
