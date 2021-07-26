@@ -5,9 +5,9 @@
   roles:
           - slave
 
-            #- name: Install & Configure Jenkins
-            #  hosts: jenkins_servers
-            #  become: yes
-            #  roles:
-            #          - jenkins
+- name: Install & Configure Jenkins
+  hosts: jenkins_servers
+  become: yes
+  roles:
+          - jenkins
 
