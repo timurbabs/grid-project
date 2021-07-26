@@ -5,13 +5,8 @@ driver:
   name: docker
 platforms:
         - name: instance
-          image: centos:8
+          image: alekseychudov/centos8-systemd
           command: /sbin/init
-          tmpfs:
-            - /run
-            - /tmp
-          volumes:
-            - /sys/fs/cgroup:/sys/fs/cgroup:ro
           privileged: True
 provisioner:
   name: ansible

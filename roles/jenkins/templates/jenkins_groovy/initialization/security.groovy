@@ -2,10 +2,18 @@
 
 import jenkins.model.*
 import hudson.security.*
+import java.io.File
 
-def instance = Jenkins.getInstance()
-def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+def fileName = "jenkins_security"
+def inputFile = new File("/tmp/" + fileName)
 
-hudsonRealm.createAccount('{{ jenkins_username ***REMOVED******REMOVED***','{{ jenkins_password ***REMOVED******REMOVED***')
-instance.setSecurityRealm(hudsonRealm)
-instance.save()
+if(!inputFile.exists()) {
+		inputFile.createNewFile()
+
+		def instance = Jenkins.getInstance()
+		def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+		
+		hudsonRealm.createAccount('{{ jenkins_username ***REMOVED******REMOVED***','{{ jenkins_password ***REMOVED******REMOVED***')
+		instance.setSecurityRealm(hudsonRealm)
+		instance.save()
+***REMOVED***

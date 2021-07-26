@@ -2,8 +2,8 @@
 jenkins_linux		ansible_host=18.224.138.199	
 
 
-[slaves_servers]
-slave_linux			ansible_host=3.133.131.100				
+[slave_servers]
+slave_linux			ansible_host=3.15.206.203	
 
 
 [nexus_servers]

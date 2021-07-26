@@ -1,4 +1,16 @@
 ---
+
+- name: Upload Slaves
+  jenkins_script:
+    url: "{{ jenkins_url ***REMOVED******REMOVED***"
+    script: '{{ lookup("template", "templates/jenkins_groovy/slaves/slave.groovy") ***REMOVED******REMOVED***'
+    args: '{{ item.value ***REMOVED******REMOVED***'
+    user: '{{ jenkins_username ***REMOVED******REMOVED***'
+    password: '{{ jenkins_password ***REMOVED******REMOVED***'
+    validate_certs: false
+    timeout: "120"
+  with_dict: "{{ ssh_slaves ***REMOVED******REMOVED***"
+
 - name: Upload plugins
   community.general.jenkins_plugin:
           name: '{{ item ***REMOVED******REMOVED***'
@@ -13,19 +25,6 @@
 
 - name: Flush handlers
   meta: flush_handlers
-
-- name: Generate an SSH keys for slaves
-  community.crypto.openssh_keypair:
-    path: /tmp/jenkins_slaves_ssh_rsa
-  register: public_slaves_ssh
-
-- name: Get private key for Jenkins slaves
-  shell: cat /tmp/jenkins_slaves_ssh_rsa
-  register: private_slaves_ssh
-
-- name: Set private key for slaves
-  set_fact:
-          ssh_credentials: "{{ ssh_credentials | combine({'slaves_credentials': {'private_key': '{{ private_slaves_ssh.stdout ***REMOVED******REMOVED***'***REMOVED******REMOVED***, recursive=true) ***REMOVED******REMOVED***"
 
 - name: Upload jobs
   community.general.jenkins_job:
@@ -67,4 +66,4 @@
     password: '{{ jenkins_password ***REMOVED******REMOVED***'
     validate_certs: false
     timeout: "120"
-  with_dict: "{{ slaves ***REMOVED******REMOVED***"
+  with_dict: "{{ ssh_slaves ***REMOVED******REMOVED***"
