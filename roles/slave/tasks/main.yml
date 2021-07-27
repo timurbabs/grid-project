@@ -55,7 +55,7 @@
   copy:
           content: |
                {  
-                  "insecure-registries": ["192.168.43.50:8085"]
+                  "insecure-registries": ["{{ nexus_host ***REMOVED******REMOVED***:{{ nexus_port ***REMOVED******REMOVED***"]
                ***REMOVED***
           dest: /etc/docker/daemon.json
 
