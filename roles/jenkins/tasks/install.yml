@@ -23,7 +23,8 @@
           name:
                   - python-jenkins
           state: present
- 
+  become_user: root
+
 - name: Create initialization scripts directory
   file: 
         path: '{{ jenkins_home ***REMOVED******REMOVED***/init.groovy.d'

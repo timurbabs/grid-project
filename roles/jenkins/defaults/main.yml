@@ -1,7 +1,4 @@
 ---
-#Encrypted data
-import: encrypted-data.yml
-
 # Jenkins:
 jenkins_home:       /var/lib/jenkins
 jenkins_username:   admin
@@ -32,7 +29,14 @@ ssh_credentials:
                 private_key: "{{ encrypted_private_key_slaves ***REMOVED******REMOVED***"
                 description: Credentials for slaves that runs on AWS
                 username: jenkins
-                passphrase: nexus
+                passphrase: !vault |
+                            $ANSIBLE_VAULT;1.1;AES256
+                            31353931633031623563633965316535623338613663323234313036326232376161306236363539
+                            3134343238613339343661393862333034663431613963650a313066363865313866643132613136
+                            63613566393332663735616537383233653433636664396436393963623335363566393738313030
+                            3462633365666530390a323938326565313166363738613565616137646265333761613334643165
+                            3739
+
 
 # Slaves
 ssh_slaves:

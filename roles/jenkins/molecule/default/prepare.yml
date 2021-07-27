@@ -1,0 +1,23 @@
+---
+- name: Prepare the container for Jenkins
+  gather_facts: no
+  become: yes
+  hosts: instance
+  tasks:
+          - name: Start firewalld
+            systemd:
+                    name: firewalld
+                    state: started
+                    enabled: true
+
+          - name: Adding https
+            shell: firewall-cmd --permanent --add-service=https 
+
+          - name: Adding http
+            shell: firewall-cmd --permanent --add-service=http 
+
+          - name: Open port "8080"
+            shell: firewall-cmd --permanent --zone=public --add-port=8080/tcp
+
+          - name: Restart firewalld 
+            shell: firewall-cmd --reload 

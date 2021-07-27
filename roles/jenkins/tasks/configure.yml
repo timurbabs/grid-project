@@ -1,15 +1,14 @@
 ---
 
-- name: Upload Slaves
-  jenkins_script:
+- name: Upload jobs
+  community.general.jenkins_job:
+    config: "{{ lookup('template', 'templates/jenkins_jobs/{{ item.value ***REMOVED******REMOVED***') ***REMOVED******REMOVED***"
+    name: "{{ item.key ***REMOVED******REMOVED***" 
+    password: "{{ jenkins_password ***REMOVED******REMOVED***"
     url: "{{ jenkins_url ***REMOVED******REMOVED***"
-    script: '{{ lookup("template", "templates/jenkins_groovy/slaves/slave.groovy") ***REMOVED******REMOVED***'
-    args: '{{ item.value ***REMOVED******REMOVED***'
-    user: '{{ jenkins_username ***REMOVED******REMOVED***'
-    password: '{{ jenkins_password ***REMOVED******REMOVED***'
-    validate_certs: false
-    timeout: "120"
-  with_dict: "{{ ssh_slaves ***REMOVED******REMOVED***"
+    user: "{{ jenkins_username ***REMOVED******REMOVED***"
+    validate_certs: no
+  with_dict: {PreCommit: pre_commit_job.xml, Deployment: deployment_job.xml, Build: build_job.xml***REMOVED***
 
 - name: Upload plugins
   community.general.jenkins_plugin:
