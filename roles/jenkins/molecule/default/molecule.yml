@@ -3,14 +3,39 @@ dependency:
   name: galaxy
 driver:
   name: docker
+  options:
+          managed: False
+          ansible_connection_options:
+                  ansible_connection: local
 platforms:
-        - name: instance
-          image: alekseychudov/centos8-systemd
-          command: /sbin/init
-          privileged: True
+  - name: instance
+    image: centos:8
+    command: /sbin/init
+    capabilities:
+            - SYS_ADMIN
+    tmpfs:
+            - /run
+            - /tmp
+    volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+
 provisioner:
   name: ansible
-  #linter: |
-        #        ansible-linter
+  inventory:
+          hosts:
+                  all:
+                          children:
+                                  jenkins_servers:
+                                          hosts:
+                                                  jenkins_linux:
+                                                          ansible_host: localhost
+                                                          ansible_connection: local
+                                  slave_servers:
+                                          hosts:
+                                                  slave_linux:
+                                                          ansible_host: 0.0.0.0
+
+
 verifier:
   name: ansible

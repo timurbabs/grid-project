@@ -5,6 +5,6 @@
   hosts: all
   gather_facts: false
   tasks:
-          - name: "Include test-jenkins-role"
-            include_role:
-                    name: "test-jenkins-role"
+  - name: Example assertion
+    assert:
+      that: true

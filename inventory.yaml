@@ -1,0 +1,19 @@
+---
+all:
+  children:
+    jenkins_servers:
+            hosts:
+                jenkins_linux:
+                        ansible_host: 18.224.138.199
+    slave_servers:
+            hosts:
+                slave_linux:
+                        ansible_host: 3.15.206.203
+    nexus_servers:
+            hosts:
+                nexus_linux:
+                        ansible_host: 18.191.112.129
+    production_servers:
+            hosts:
+                production_linux:
+                        ansible_host: 18.119.110.146

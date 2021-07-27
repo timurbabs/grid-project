@@ -1,7 +1,7 @@
 ---
 - name: Converge
-  hosts: all
   gather_facts: no
+  hosts: instance
   tasks:
     - name: "Include jenkins"
       include_role:
