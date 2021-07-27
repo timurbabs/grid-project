@@ -12,10 +12,13 @@ nexus_os_max_filedescriptors: 65536
 nexus_installation_dir: '/app'
 
 
+nexus_default_host: 18.118.110.62
 nexus_default_port: 8081
 nexus_docker_hosted_port: 8085
 nexus_docker_proxy_port: 8086
 nexus_docker_group_port: 8087
+
+docker_default_image_name: petclinic
 
 nexus_anonymous_access: true
 
