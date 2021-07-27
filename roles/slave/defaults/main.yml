@@ -2,6 +2,9 @@
 #Info for slave
 jenkins_home:       /home/jenkins
 nexus_host:         NEED_TO_ADD
+nexus_port:         8080
+
+#Encrypted public key
 pulbic_key:         !vault |
                     $ANSIBLE_VAULT;1.1;AES256
                     64636231306562323463366134626437313435386164313238353764626562643265613833353061
