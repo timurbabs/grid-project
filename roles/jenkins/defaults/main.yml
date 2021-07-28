@@ -21,21 +21,15 @@ password_credentials:
                 name: nexus
                 description: Credentials for Nexus artifactors storage
                 username: admin
-                password: NEED_TO_ADD
+                password: "{{ encrypted_nexus_password }}"
 
 ssh_credentials:
         slaves_credentials:
                 name: slaves
-                private_key: "{{ encrypted_private_key_slaves }}"
                 description: Credentials for slaves that runs on AWS
                 username: jenkins
-                passphrase: !vault |
-                            $ANSIBLE_VAULT;1.1;AES256
-                            31353931633031623563633965316535623338613663323234313036326232376161306236363539
-                            3134343238613339343661393862333034663431613963650a313066363865313866643132613136
-                            63613566393332663735616537383233653433636664396436393963623335363566393738313030
-                            3462633365666530390a323938326565313166363738613565616137646265333761613334643165
-                            3739
+                private_key: "{{ encrypted_private_key_slaves }}"
+                passphrase: "{{ encrypted_slaves_ssh_passphrase }}" 
 
 
 # Slaves
@@ -45,8 +39,8 @@ ssh_slaves:
                 root_directory: /home/jenkins
                 label: slave-1
                 number_executors: 2
-                host: "{{ hostvars.slave_linux.ansible_host }}"
                 credentialsId: slaves
+                host: "{{ hostvars.slave_linux.ansible_host }}"
 
 
 # Jenkins Plugins
@@ -149,7 +143,6 @@ jenkins_plugins:
  - chucknorris
 
 # Encrypted data
-
 encrypted_private_key_slaves: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           61376232303731306136396332343037666537383838343238633430306532306232333030316164
@@ -297,3 +290,13 @@ encrypted_jenkins_password: !vault |
           63646366363563376432396666333761313439366165393065666665633561646539343365303339
           6462383664356630650a323564303933356561306532303666383237663735626132393765356136
           3761
+
+encrypted_slaves_ssh_passphrase: !vault |
+                            $ANSIBLE_VAULT;1.1;AES256
+                            31353931633031623563633965316535623338613663323234313036326232376161306236363539
+                            3134343238613339343661393862333034663431613963650a313066363865313866643132613136
+                            63613566393332663735616537383233653433636664396436393963623335363566393738313030
+                            3462633365666530390a323938326565313166363738613565616137646265333761613334643165
+                            3739
+
+encrypted_nexus_password: NEED_TO_ADD

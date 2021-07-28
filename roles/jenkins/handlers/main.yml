@@ -7,13 +7,14 @@
   listen: "Restart Jenkins"
 
 - name: Wait until Jenkins is available
-  shell: curl -I -u '{{ jenkins_username }}':'{{ jenkins_password }}' '{{ jenkins_url }}'
-  register: result
-  until: result.stdout.find("200 OK") != -1
-  retries: 12
-  delay: 5
+  uri:
+    url: '{{ jenkins_url }}'
+    url_username: '{{ jenkins_username }}'
+    url_password: '{{ jenkins_password }}'
+    validate_certs: False
+    force_basic_auth: yes
   listen: "Wait Jenkins"
-  changed_when: false
-  args:
-    warn: false
-
+  register: result
+  until: result.status == 200
+  retries: 16
+  delay: 5

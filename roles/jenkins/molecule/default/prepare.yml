@@ -10,14 +10,20 @@
                     state: started
                     enabled: true
 
-          - name: Adding https
-            shell: firewall-cmd --permanent --add-service=https 
+          - name: Enable HTTP connection
+            ansible.posix.firewalld:
+              service: http
+              permanent: yes
+              state: enabled
 
-          - name: Adding http
-            shell: firewall-cmd --permanent --add-service=http 
-
-          - name: Open port "8080"
-            shell: firewall-cmd --permanent --zone=public --add-port=8080/tcp
-
-          - name: Restart firewalld 
-            shell: firewall-cmd --reload 
+          - name: Open port 8080
+            ansible.posix.firewalld:
+                    port: 8080/tcp
+                    permanent: yes
+                    immediate: yes
+                    state: enabled
+            
+          - name: Restart firewalld
+            systemd:
+                    name: firewalld
+                    state: reloaded

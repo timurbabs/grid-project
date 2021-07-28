@@ -1,15 +1,4 @@
 ---
-
-- name: Upload jobs
-  community.general.jenkins_job:
-    config: "{{ lookup('template', 'templates/jenkins_jobs/{{ item.value }}') }}"
-    name: "{{ item.key }}" 
-    password: "{{ jenkins_password }}"
-    url: "{{ jenkins_url }}"
-    user: "{{ jenkins_username }}"
-    validate_certs: no
-  with_dict: {PreCommit: pre_commit_job.xml, Deployment: deployment_job.xml, Build: build_job.xml}
-
 - name: Upload plugins
   community.general.jenkins_plugin:
           name: '{{ item }}'
@@ -25,14 +14,23 @@
 - name: Flush handlers
   meta: flush_handlers
 
+- name: Enable plugins
+  community.general.jenkins_plugin:
+          name: '{{ item }}'
+          state: enabled
+          url_username: '{{ jenkins_username }}'
+          url_password: '{{ jenkins_password }}'
+          url: '{{ jenkins_url }}'
+  with_items: '{{ jenkins_plugins }}'
+
 - name: Upload jobs
   community.general.jenkins_job:
-    config: "{{ lookup('template', 'templates/jenkins_jobs/{{ item.value }}') }}"
+    config: "{{ lookup('template', item.value) }}"
     name: "{{ item.key }}" 
     password: "{{ jenkins_password }}"
     url: "{{ jenkins_url }}"
     user: "{{ jenkins_username }}"
-  with_dict: {PreCommit: pre_commit_job.xml, Deployment: deployment_job.xml, Build: build_job.xml}
+  with_dict: {PreCommit: templates/jenkins_jobs/pre_commit_job.xml, Deployment: templates/jenkins_jobs/deployment_job.xml, Build: templates/jenkins_jobs/build_job.xml}
 
 - name: Upload SSH credentials
   jenkins_script:
