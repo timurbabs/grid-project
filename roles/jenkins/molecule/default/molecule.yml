@@ -7,6 +7,9 @@ driver:
           managed: False
           ansible_connection_options:
                   ansible_connection: local
+lint: |
+        yamllint .
+        ansible-lint
 platforms:
   - name: instance
     image: centos:8
@@ -19,6 +22,10 @@ platforms:
     volumes:
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
     privileged: true
+    network_mode: host
+    port_bindings:
+            8080: 8080
+            22:   22
 
 provisioner:
   name: ansible

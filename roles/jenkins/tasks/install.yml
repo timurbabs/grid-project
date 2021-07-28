@@ -37,6 +37,7 @@
   template: 
           src: jenkins_groovy/initialization/security.groovy
           dest: '{{ jenkins_home ***REMOVED******REMOVED***/init.groovy.d/'
+          mode: 0775
   
 - name: Start & Enable Jenkins
   systemd:

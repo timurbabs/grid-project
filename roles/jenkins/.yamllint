@@ -19,7 +19,7 @@ rules:
   comments-indentation: disable
   document-start: disable
   empty-lines:
-    max: 3
+    max: 8
     level: error
   hyphens:
     level: error
