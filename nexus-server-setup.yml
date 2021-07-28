@@ -1,0 +1,7 @@
+---
+- name : install nexus server
+  hosts: nexus_servers
+  become: yes
+
+  roles:
+    - nexus-server-setup
