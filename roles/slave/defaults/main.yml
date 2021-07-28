@@ -1,8 +1,7 @@
 ---
 #Info for slave
 jenkins_home:       /home/jenkins
-nexus_host:         NEED_TO_ADD
-nexus_port:         8080
+nexus_host:         "{{ hostvars.nexus_linux.ansible_host ***REMOVED******REMOVED***"
 
 #Encrypted public key
 pulbic_key:         !vault |
