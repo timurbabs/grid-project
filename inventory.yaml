@@ -12,8 +12,8 @@ all:
     nexus_servers:
             hosts:
                 nexus_linux:
-                        ansible_host: 18.191.112.129
+                        ansible_host: 3.16.169.224
     production_servers:
             hosts:
                 production_linux:
-                        ansible_host: 18.119.110.146
+                        ansible_host: 3.22.242.155

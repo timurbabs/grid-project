@@ -21,7 +21,7 @@ password_credentials:
                 name: nexus
                 description: Credentials for Nexus artifactors storage
                 username: admin
-                password: "{{ encrypted_nexus_password }}"
+                password: "{{ nexus_admin_password }}"
 
 ssh_credentials:
         slaves_credentials:

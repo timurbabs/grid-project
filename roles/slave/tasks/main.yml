@@ -45,6 +45,11 @@
           src: templates/settings.xml
           dest: "{{ jenkins_home }}/.m2/"
 
+- name: Restart Docker socket
+  systemd:
+          name: docker.socket
+          state: restarted
+
 - name: Start Docker
   systemd:
           name: docker
@@ -55,7 +60,7 @@
   copy:
           content: |
                {  
-                  "insecure-registries": ["{{ nexus_host }}:{{ nexus_port }}"]
+                  "insecure-registries": ["{{ nexus_host }}:{{ nexus_docker_hosted_port }}"]
                }
           dest: /etc/docker/daemon.json
 
@@ -65,14 +70,3 @@
           name: docker
           state: restarted
 
-- name: Restart Docker socket
-  systemd:
-          name: docker.socket
-          state: restarted
-
-- name: Give needed permissions to docker.sock
-  ansible.builtin.file:
-    path: /var/run/docker.sock
-    owner: root
-    group: docker
-    mode: '777'
