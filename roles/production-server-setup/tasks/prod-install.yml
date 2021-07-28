@@ -1,0 +1,69 @@
+---
+# tasks file for nexus-server-setup
+- name: yum update
+  yum:
+    name: '*'
+    state: latest
+
+- name: Install and upgrade pip
+  pip:
+    name: pip
+    extra_args: --upgrade
+    executable: pip3
+
+- pip:
+    virtualenv: /tmp/py3
+    virtualenv_command: /usr/bin/python3 -m venv
+    name: boto
+
+- name: yum install docker
+  yum:
+    name: docker
+    state: latest
+
+- name: Install docker
+  pip:
+    name: docker
+    state: forcereinstall
+    executable: pip3
+
+- name: Allow access to insecure registry
+  copy:
+    content: "{\"insecure-registries\": [\"{{ nexus_default_host ***REMOVED******REMOVED***:{{ nexus_docker_hosted_port ***REMOVED******REMOVED***\"]***REMOVED***"
+    dest: "/etc/docker/daemon.json"
+
+- name: systemd restart
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: Stop Docker socket
+  service:
+    name: docker.socket
+    state: stopped
+    enabled: yes
+
+- name: Stop Docker service
+  service:
+    name: docker
+    state: stopped
+    enabled: yes
+
+- name: kill all dockers
+  shell: "echo 1"
+
+- name: delete old docker.pid
+  ansible.builtin.file:
+    path: /var/run/docker.pid
+    state: absent
+
+- name: Start Docker socket
+  service:
+    name: docker.socket
+    state: started
+    enabled: yes
+
+- name: Start Docker socket
+  service:
+    name: docker
+    state: started
+    enabled: yes
