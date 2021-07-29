@@ -127,7 +127,7 @@
 
       [Install]
       WantedBy=multi-user.target
-    when: not stat_result.stat.exists
+  when: not stat_result.stat.exists
 
 - name: selinux enable
   lineinfile:
@@ -220,7 +220,7 @@
 - name: REST edit admin password (if exists)
   shell: "curl -v -X PUT -u admin:\"$(cat {{ nexus_installation_dir }}/sonatype-work/nexus3/admin.password)\" --header \"Content-Type: text/plain\" \"{{ ansible_host }}:{{ nexus_default_port }}/service/rest/v1/security/users/admin/change-password\" --data \"{{ nexus_admin_password }}\""
   register: result
-  when: not adm_pass_exists.stat.exists
+  when: adm_pass_exists.stat.exists
 
 - debug:
     var: result

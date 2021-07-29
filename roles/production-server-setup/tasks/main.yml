@@ -1,6 +1,3 @@
 ---
 - name: Install prof
   include: prod-install.yml
-
-- name: pull & run
-  include: pull-and-run.yml

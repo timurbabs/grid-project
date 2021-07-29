@@ -1,9 +1,13 @@
 ---
-#Info for slave
-jenkins_home:       /home/jenkins
-nexus_host:         "{{ hostvars.nexus_linux.ansible_host }}"
+# Info for slave
+jenkins_home:               /home/jenkins
+nexus_protocol:             http://
+nexus_port:                 8081
+nexus_proxy_repository:     /repository/petclinic-maven-proxy
+nexus_proxy:                "{{ nexus_protocol }}{{ hostvars.nexus_linux.ansible_host }}:{{ nexus_port }}{{ nexus_proxy_repository }}"
+swap_file_size_gb:          1
 
-#Encrypted public key
+# Encrypted public key
 pulbic_key:         !vault |
                     $ANSIBLE_VAULT;1.1;AES256
                     64636231306562323463366134626437313435386164313238353764626562643265613833353061
