@@ -2,7 +2,7 @@
 # tasks file for nexus-server-setup
 - name: docker login
   docker_login:
-    registry: "{{ nexus_default_host ***REMOVED******REMOVED***:{{ nexus_docker_hosted_port ***REMOVED******REMOVED***"
+    registry: "{{ hostvars.nexus_linux.ansible_host ***REMOVED******REMOVED***:{{ nexus_docker_hosted_port ***REMOVED******REMOVED***"
     username: admin
     password: "{{ nexus_admin_password ***REMOVED******REMOVED***"
   vars:
@@ -21,7 +21,7 @@
 
 - name: pull latest
   docker_image:
-    name: "{{ nexus_default_host ***REMOVED******REMOVED***:{{ nexus_docker_hosted_port ***REMOVED******REMOVED***/{{ docker_default_image_name ***REMOVED******REMOVED***"
+    name: "{{ hostvars.nexus_linux.ansible_host ***REMOVED******REMOVED***:{{ nexus_docker_hosted_port ***REMOVED******REMOVED***/{{ docker_default_image_name ***REMOVED******REMOVED***"
     source: pull
     state: present
 
@@ -29,7 +29,7 @@
   community.docker.docker_container:
     state: started
     name: "{{ docker_default_image_name ***REMOVED******REMOVED***"
-    image: "{{ nexus_default_host ***REMOVED******REMOVED***:{{ nexus_docker_hosted_port ***REMOVED******REMOVED***/{{ docker_default_image_name ***REMOVED******REMOVED***"
+    image: "{{ hostvars.nexus_linux.ansible_host ***REMOVED******REMOVED***:{{ nexus_docker_hosted_port ***REMOVED******REMOVED***/{{ docker_default_image_name ***REMOVED******REMOVED***"
     ports:
       - "8080:8080"
       - "8081:8081"
