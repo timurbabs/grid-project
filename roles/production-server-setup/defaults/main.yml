@@ -12,7 +12,7 @@ nexus_os_max_filedescriptors: 65536
 nexus_installation_dir: '/app'
 
 
-nexus_default_host: 3.21.52.223
+nexus_default_host: "{{ hostvars.nexus_linux.ansible_host ***REMOVED******REMOVED***"
 nexus_default_port: 8081
 nexus_docker_hosted_port: 8085
 nexus_docker_proxy_port: 8086

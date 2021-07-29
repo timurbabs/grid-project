@@ -1,31 +1,25 @@
 ---
-# tasks file for nexus-server-setup
-- name: yum update
-  yum:
-    name: '*'
-    state: latest
 
 - name: Install and upgrade pip
-  pip:
-    name: pip
-    extra_args: --upgrade
-    executable: pip3
-
-- pip:
-    virtualenv: /tmp/py3
-    virtualenv_command: /usr/bin/python3 -m venv
-    name: boto
+  yum:
+    name:
+            - pip
+            - python-pip
+    state: present
 
 - name: yum install docker
   yum:
     name: docker
     state: latest
 
-- name: Install docker
+- name: Aba
   pip:
-    name: docker
-    state: forcereinstall
-    executable: pip3
+          name:
+                  - docker
+                  - six
+          state: present
+          extra_args: --ignore-installed
+  become_user: ec2-user
 
 - name: Allow access to insecure registry
   copy:
@@ -35,18 +29,6 @@
 - name: systemd restart
   ansible.builtin.systemd:
     daemon_reload: yes
-
-- name: Stop Docker socket
-  service:
-    name: docker.socket
-    state: stopped
-    enabled: yes
-
-- name: Stop Docker service
-  service:
-    name: docker
-    state: stopped
-    enabled: yes
 
 - name: kill all dockers
   shell: "echo 1"
@@ -59,11 +41,18 @@
 - name: Start Docker socket
   service:
     name: docker.socket
-    state: started
+    state: restarted
     enabled: yes
 
 - name: Start Docker socket
   service:
     name: docker
-    state: started
+    state: restarted
     enabled: yes
+
+- name: docker login
+  docker_login:
+    registry: "{{ nexus_default_host ***REMOVED******REMOVED***:{{ nexus_docker_hosted_port ***REMOVED******REMOVED***"
+    username: admin
+    password: "{{ nexus_admin_password ***REMOVED******REMOVED***"
+  become_user: ec2-user

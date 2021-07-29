@@ -34,6 +34,31 @@
                   - git
                   - docker
 
+- name: Check if swap file exists
+  stat:
+    path: swapfile
+  register: swap_file_check
+
+- name: Create swap file
+  command: "dd if=/dev/zero of=swapfile bs=1M count={{ swap_file_size_gb ***REMOVED******REMOVED***K"
+  when: not swap_file_check.stat.exists
+
+- name: Change swap file permissions
+  file:
+          path: swapfile
+          owner: root
+          group: root
+          mode: 0600
+  when: not swap_file_check.stat.exists
+
+- name: Make swap file
+  command: mkswap swapfile
+  when: not swap_file_check.stat.exists
+
+- name: Mount swap file
+  command: swapon swapfile
+  when: not swap_file_check.stat.exists
+
 - name: Create .m2 folder
   file:
           path: "{{ jenkins_home ***REMOVED******REMOVED***/.m2"
@@ -59,9 +84,7 @@
 - name: Open secured port 8085
   copy:
           content: |
-               {  
-                  "insecure-registries": ["{{ nexus_host ***REMOVED******REMOVED***:{{ nexus_docker_hosted_port ***REMOVED******REMOVED***"]
-               ***REMOVED***
+               { "insecure-registries: [{{ nexus_host ***REMOVED******REMOVED***:{{ nexus_docker_hosted_port ***REMOVED******REMOVED***]" ***REMOVED***
           dest: /etc/docker/daemon.json
 
 

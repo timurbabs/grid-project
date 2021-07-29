@@ -17,8 +17,8 @@
   roles:
           - jenkins
 
-- name: Production server
-  become: yes
-  hosts: production_servers
-  roles:
-          - production-server-setup
+#- name: Production server
+#  become: yes
+#  hosts: production_servers
+#  roles:
+#          - production-server-setup

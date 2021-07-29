@@ -16,6 +16,7 @@
                   - maven
                   - java-1.8.0-openjdk
                   - jenkins
+                  - pip
           state: present
 
 - name: Install recommended python libraries
