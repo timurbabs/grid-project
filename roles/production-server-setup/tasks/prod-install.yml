@@ -29,7 +29,7 @@
 
 - name: Allow access to insecure registry
   copy:
-    content: "{\"insecure-registries\": [\"{{ nexus_default_host }}:{{ nexus_docker_hosted_port }}\"]}"
+    content: "{\"insecure-registries\": [\"{{ hostvars.nexus_linux.ansible_host }}:{{ nexus_docker_hosted_port }}\"]}"
     dest: "/etc/docker/daemon.json"
 
 - name: systemd restart

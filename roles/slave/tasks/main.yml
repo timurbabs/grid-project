@@ -4,12 +4,12 @@
   user:
           name: jenkins
           comment: "Jenkins slave user"
-          home: "{{ jenkins_home }}" 
+          home: "{{ jenkins_home }}"
           shell: /bin/bash
 
 - name: Create .ssh folder
   file:
-          path: "{{ jenkins_home }}/.ssh" 
+          path: "{{ jenkins_home }}/.ssh"
           state: directory
           mode: 0700
           owner: jenkins
@@ -39,7 +39,7 @@
           path: "{{ jenkins_home }}/.m2"
           state: directory
           owner: jenkins
- 
+
 - name: Copy maven configuration
   template:
           src: templates/settings.xml
@@ -59,8 +59,8 @@
 - name: Open secured port 8085
   copy:
           content: |
-               {  
-                  "insecure-registries": ["{{ nexus_host }}:{{ nexus_docker_hosted_port }}"]
+               {
+                  "insecure-registries": ["{{ hostvars.nexus_linux.ansible_host }}:{{ nexus_docker_hosted_port }}"]
                }
           dest: /etc/docker/daemon.json
 
@@ -69,4 +69,3 @@
   systemd:
           name: docker
           state: restarted
-
