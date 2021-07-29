@@ -17,7 +17,13 @@
 #  register: docker_info
 
 - name: shell stop all conatiners
+  shell: "docker ps -a | wc -l"
+  register: hjhjh
+
+
+- name: shell stop all conatiners
   shell: "docker stop $(docker ps -a -q)"
+  when: "{{ hjhjh.stdout ***REMOVED******REMOVED***" != 0
 
 #- name: Stop running containers
 #  docker_container:
@@ -33,6 +39,10 @@
 
 - name: shell pull latest
   shell: "docker pull {{ hostvars.nexus_linux.ansible_host ***REMOVED******REMOVED***:{{ nexus_docker_hosted_port ***REMOVED******REMOVED***/{{ docker_default_image_name ***REMOVED******REMOVED***"
+  register: h
+
+- debug:
+    msg: "{{ h ***REMOVED******REMOVED***"
 
 #- name: run docker
 #  community.docker.docker_container:
@@ -45,3 +55,7 @@
 
 - name: shell run
   shell: "docker run -d --privileged=true -p 8080:8080 {{ hostvars.nexus_linux.ansible_host ***REMOVED******REMOVED***:{{ nexus_docker_hosted_port ***REMOVED******REMOVED***/{{ docker_default_image_name ***REMOVED******REMOVED***"
+  register: h
+
+- debug:
+    msg: "{{ h ***REMOVED******REMOVED***"
