@@ -18,7 +18,7 @@ nexus_docker_hosted_port: 8085
 nexus_docker_proxy_port: 8086
 nexus_docker_group_port: 8087
 
-docker_default_image_name: petclinic
+docker_default_image_name: petclinic-docker
 
 nexus_anonymous_access: true
 

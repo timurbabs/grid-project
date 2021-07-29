@@ -49,10 +49,3 @@
     name: docker
     state: restarted
     enabled: yes
-
-- name: docker login
-  docker_login:
-    registry: "{{ nexus_default_host }}:{{ nexus_docker_hosted_port }}"
-    username: admin
-    password: "{{ nexus_admin_password }}"
-  become_user: ec2-user
