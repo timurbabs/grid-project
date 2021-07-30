@@ -139,6 +139,10 @@
     cmd: chcon -R -t bin_t {{ nexus_installation_dir ***REMOVED******REMOVED***/nexus/bin/nexus
   when: not stat_result.stat.exists
 
+- name: Get path to default settings
+  set_fact:
+    nexus_default_settings_file: "{{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/nexus.properties"
+
 - name: Reloading systemd daemon
   ansible.builtin.systemd:
     daemon_reload: yes

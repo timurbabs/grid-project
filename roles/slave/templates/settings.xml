@@ -4,7 +4,7 @@
       <!--This sends everything else to /public -->
       <id>nexus</id>
       <mirrorOf>*</mirrorOf>
-	  <url>http://{{ nexus_proxy ***REMOVED******REMOVED***/repository/maven-public/</url>
+	  <url>{{ nexus_proxy ***REMOVED******REMOVED***</url>
     </mirror>
   </mirrors>
   <profiles>
