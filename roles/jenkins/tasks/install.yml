@@ -17,6 +17,7 @@
                   - java-1.8.0-openjdk
                   - jenkins
                   - pip
+                  - ec2-instance-connect
           state: present
 
 - name: Install recommended python libraries
