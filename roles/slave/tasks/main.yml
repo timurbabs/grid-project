@@ -19,7 +19,7 @@
           user: jenkins
           key: "{{ pulbic_key }}"
 
-- name: Update authorized_keys rights
+- name: Update authorized keys rights
   file:
           path: "{{ jenkins_home }}/.ssh/authorized_keys"
           state: file
@@ -81,6 +81,12 @@
           state: started
           enabled: true
 
+- name: Add Jenkins to Docker group
+  user:
+          name: jenkins
+          groups: docker
+          append: yes
+
 - name: Open secured port 8085
   copy:
           content: |
@@ -93,3 +99,8 @@
   systemd:
           name: docker
           state: restarted
+
+- name: Get permissions for Docker
+  file:
+          path: /var/run/docker.sock
+          mode: 0777

@@ -4,21 +4,23 @@
 #  hosts: nexus_servers
 #  roles:
 #          - nexus-server-setup
-
-- name: Configure Jenkins Slaves
-  become: yes
-  hosts: slave_servers
-  roles:
-          - slave
-
-- name: Install & Configure Jenkins
-  become: yes
-  hosts: jenkins_servers
-  roles:
-          - jenkins
-
-#- name: Production server
+#
+#- name: Configure Jenkins Slaves
 #  become: yes
-#  hosts: production_servers
+#  hosts:
+#          - slave_servers
+#          - production_servers
 #  roles:
-#          - production-server-setup
+#          - slave
+#
+#- name: Install & Configure Jenkins
+#  become: yes
+#  hosts: jenkins_servers
+#  roles:
+#          - jenkins
+
+- name: Production server
+  become: yes
+  hosts: production_servers
+  roles:
+          - production-server-setup

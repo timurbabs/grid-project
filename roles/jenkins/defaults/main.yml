@@ -7,13 +7,16 @@ jenkins_protocol:   http
 jenkins_port:       8080
 jenkins_url:        "{{ jenkins_protocol }}://{{ hostvars.jenkins_linux.ansible_host }}:{{ jenkins_port }}"
 
-# Jobs get from SCM
+# Jobs
 github_project_url:     https://github.com/timurbabs/spring-petclinic.git
-branch_build:           '*/main'
-branch_precommit:       '**'
+branch:           '*/main'
 script_path_build:      Jenkinsfile_Build
 script_path_precommit:  Jenkinsfile_PreCommit
 script_path_deployment: Jenkinsfile_Deployment
+
+# * Build
+build_label:            slave-1
+
 
 # Credentials
 password_credentials:
@@ -35,112 +38,124 @@ ssh_credentials:
 # Slaves
 ssh_slaves:
         slave_configuration:
-                name: Slave-1 
+                name: slave-1 
                 root_directory: /home/jenkins
                 label: slave-1
                 number_executors: 2
                 credentialsId: slaves
                 host: "{{ hostvars.slave_linux.ansible_host }}"
+        slave_production:
+                name: dev-prod
+                root_directory: /home/jenkins
+                label: dev-prod
+                number_executors: 2
+                credentialsId: slaves
+                host: "{{ hostvars.production_linux.ansible_host }}"
+
 
 
 # Jenkins Plugins
 jenkins_plugins:
- - ant
- - jjwt-api
- - token-macro
- - jackson2-api
- - docker-commons
- - bouncycastle-api
- - pipeline-model-api
- - lockable-resources
- - script-security
- - workflow-multibranch
- - javadoc
- - caffeine-api
- - workflow-api
- - workflow-basic-steps
- - nexus-jenkins-plugin
- - ace-editor
- - branch-api
- - pipeline-input-step
- - jdk-tool
- - workflow-step-api
- - credentials
- - pipeline-stage-view
- - antisamy-markup-formatter
- - durable-task
- - pipeline-graph-analysis
- - okhttp-api
- - workflow-aggregator
- - structs
- - pipeline-milestone-step
- - pipeline-stage-tags-metadata
- - gradle-repo
- - workflow-support
- - scm-api
- - mask-passwords
- - workflow-job
- - git-server
- - github-branch-source
- - handlebars
- - jquery3-api
- - pipeline-rest-api
- - emailext-template
- - workflow-durable-task-step
- - pipeline-stage-step
- - cloudbees-folder
- - resource-disposer
- - git-client
- - timestamper
- - snakeyaml-api
- - matrix-auth
- - git
- - docker-plugin
- - bootstrap5-api
- - pipeline-model-extensions
- - docker-java-api
- - echarts-api
- - matrix-project
- - workflow-cps
- - sshd
- - command-launcher
- - maven-plugin
- - credentials-binding
- - email-ext
- - authentication-tokens
- - popper-api
- - workflow-scm-step
- - ssh-credentials
- - build-timeout
- - pipeline-model-definition
- - gradle
- - pam-auth
- - github
- - popper2-api
- - ssh-slaves
- - pipeline-build-step
- - checks-api
- - jaxb
- - plugin-util-api
- - pipeline-github-lib
+ - sshd                              
+ - docker-workflow                   
+ - trilead-api                       
+ - ws-cleanup                        
+ - structs                           
+ - ant                               
+ - pipeline-graph-analysis           
+ - snakeyaml-api                     
+ - ldap                              
+ - jackson2-api                      
+ - jjwt-api                          
+ - jsch                              
+ - workflow-step-api                 
+ - token-macro                       
+ - run-condition                     
+ - credentials                       
+ - git-client                        
+ - plain-credentials                 
+ - git-server                        
+ - ssh-credentials                   
+ - workflow-cps-global-lib           
+ - credentials-binding               
+ - pipeline-input-step               
+ - authentication-tokens             
+ - workflow-aggregator               
+ - docker-commons                    
+ - gradle-repo                       
+ - bouncycastle-api                  
+ - mask-passwords                    
+ - pipeline-model-api                
+ - caffeine-api                      
+ - github-api                        
+ - script-security                   
+ - scm-api                           
+ - workflow-api                      
+ - git                               
+ - workflow-support                  
+ - github                            
+ - display-url-api                   
+ - mailer                            
+ - github-branch-source              
+ - plugin-util-api                   
+ - email-ext                         
+ - font-awesome-api                  
+ - popper-api                        
+ - jquery3-api                       
+ - emailext-template                 
+ - bootstrap4-api                    
+ - popper2-api                       
+ - resource-disposer                 
+ - bootstrap5-api                    
+ - echarts-api                       
+ - checks-api                        
+ - junit                             
+ - timestamper                       
+ - matrix-project                    
+ - matrix-auth                       
+ - lockable-resources                
+ - ssh-slaves                        
+ - workflow-scm-step                 
+ - docker-java-api                   
+ - cloudbees-folder                  
+ - docker-plugin                     
+ - command-launcher                  
+ - jdk-tool                          
+ - ace-editor                        
+ - workflow-cps                      
+ - branch-api                        
+ - workflow-job                      
+ - maven-plugin                      
+ - workflow-multibranch              
+ - javadoc                           
+ - durable-task                      
+ - pipeline-stage-step               
+ - workflow-durable-task-step        
+ - pipeline-milestone-step           
  - apache-httpcomponents-client-4-api
- - font-awesome-api
- - github-api
- - workflow-cps-global-lib
- - junit
- - docker-workflow
- - trilead-api
- - mailer
- - ldap
- - nexus-artifact-uploader
- - plain-credentials
- - pipeline-utility-steps
- - jsch
- - bootstrap4-api
- - ws-cleanup
- - momentjs
- - display-url-api
- - chucknorris
+ - build-timeout                     
+ - workflow-basic-steps              
+ - gradle                            
+ - nexus-jenkins-plugin              
+ - pipeline-rest-api                  
+ - handlebars                         
+ - momentjs                           
+ - pam-auth                           
+ - pipeline-stage-view                
+ - pipeline-build-step                
+ - antisamy-markup-formatter          
+ - okhttp-api                         
+ - jaxb                               
+ - pipeline-model-extensions          
+ - pipeline-stage-tags-metadata       
+ - pipeline-model-definition          
+ - pipeline-github-lib                
+ - nexus-artifact-uploader            
+ - pipeline-utility-steps             
+ - conditional-buildstep              
+ - parameterized-trigger              
+ - chucknorris                        
+ - readonly-parameters 
 
 # Encrypted data
 encrypted_private_key_slaves: !vault |
@@ -298,5 +313,3 @@ encrypted_slaves_ssh_passphrase: !vault |
                             63613566393332663735616537383233653433636664396436393963623335363566393738313030
                             3462633365666530390a323938326565313166363738613565616137646265333761613334643165
                             3739
-
-encrypted_nexus_password: NEED_TO_ADD
