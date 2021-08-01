@@ -13,9 +13,9 @@ branch:           '*/main'
 script_path_build:      Jenkinsfile_Build
 script_path_precommit:  Jenkinsfile_PreCommit
 script_path_deployment: Jenkinsfile_Deployment
-
-# * Build
 build_label:            slave-1
+deployment_label:       dev-prod
+pre_commit_label:       slave-1
 
 
 # Credentials
@@ -155,7 +155,9 @@ jenkins_plugins:
  - conditional-buildstep              
  - parameterized-trigger              
  - chucknorris                        
- - readonly-parameters 
+ - readonly-parameters
+ - github-pullrequest
+ - ghprb
 
 # Encrypted data
 encrypted_private_key_slaves: !vault |

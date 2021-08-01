@@ -1,5 +1,4 @@
-<?xml version='1.1' encoding='UTF-8'?>
-<flow-definition plugin="workflow-job@2.41">
+<?xml version="1.0" encoding="UTF-8"?><flow-definition plugin="workflow-job@2.41">
   <actions>
     <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.9.1"/>
     <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.9.1">
@@ -9,17 +8,17 @@
       <options/>
     </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
   </actions>
-  <description></description>
+  <description/>
   <keepDependencies>false</keepDependencies>
   <properties>
     <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.33.1">
 			<projectUrl>{{ github_project_url }}</projectUrl>
-      <displayName></displayName>
+      <displayName/>
     </com.coravy.hudson.plugins.github.GithubProjectProperty>
     <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
       <triggers>
         <com.cloudbees.jenkins.GitHubPushTrigger plugin="github@1.33.1">
-          <spec></spec>
+          <spec/>
         </com.cloudbees.jenkins.GitHubPushTrigger>
       </triggers>
     </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
@@ -28,41 +27,41 @@
     <script>
 pipeline {
     agent {
-		label &quot;{{ build_label }}&quot;
+		label "{{ build_label }}"
     }
     environment {
-        NEXUS_VERSION = &quot;nexus3&quot;
-        NEXUS_PROTOCOL = &quot;http&quot;
-		NEXUS_URL = &quot;{{ hostvars.nexus_linux.ansible_host }}:8081&quot;
-        NEXUS_REPOSITORY = &quot;petclinic-maven-hosted&quot;
-        NEXUS_URL_CONTAINERS = &quot;{{ hostvars.nexus_linux.ansible_host }}:8085&quot;
-        NEXUS_CREDENTIAL_ID = &quot;nexus&quot;
-        DOCKER_IMAGE_NAME = &quot;petclinic-docker&quot;
-        DOCKER_IMAGE = &quot;&quot;
+        NEXUS_VERSION = "nexus3"
+        NEXUS_PROTOCOL = "http"
+		NEXUS_URL = "{{ hostvars.nexus_linux.ansible_host }}:8081"
+        NEXUS_REPOSITORY = "petclinic-maven-hosted"
+        NEXUS_URL_CONTAINERS = "{{ hostvars.nexus_linux.ansible_host }}:8085"
+        NEXUS_CREDENTIAL_ID = "nexus"
+        DOCKER_IMAGE_NAME = "petclinic-docker"
+        DOCKER_IMAGE = ""
     }
     stages {
-        stage(&quot;Clone code from GitHub&quot;) {
+        stage("Clone code from GitHub") {
             steps {
-					git branch: &apos;main&apos;, url: &apos;{{ github_project_url }}&apos;
+					git branch: 'main', url: '{{ github_project_url }}'
             }
         }
-        stage(&quot;Maven Build&quot;) {
+        stage("Maven Build") {
             steps {
                 script {
-                    sh &quot;./mvnw clean package&quot;
+                    sh "./mvnw clean package"
                 }
             }
         }
-        stage(&quot;Publish to Nexus Repository Manager&quot;) {
+        stage("Publish to Nexus Repository Manager") {
             steps {
                 script {
-                    pom = readMavenPom file: &quot;pom.xml&quot;;
-                    filesByGlob = findFiles(glob: &quot;target/*.${pom.packaging}&quot;);
-                    echo &quot;${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}&quot;
+                    pom = readMavenPom file: "pom.xml";
+                    filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
+                    echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
                     artifactPath = filesByGlob[0].path;
                     artifactExists = fileExists artifactPath;
                     if(artifactExists) {
-                        echo &quot;*** File: ${artifactPath}, group: ${pom.groupId}, packaging: ${pom.packaging}, version ${pom.version}&quot;;
+                        echo "*** File: ${artifactPath}, group: ${pom.groupId}, packaging: ${pom.packaging}, version ${pom.version}";
                         nexusArtifactUploader(
                             nexusVersion: NEXUS_VERSION,
                             protocol: NEXUS_PROTOCOL,
@@ -73,56 +72,56 @@ pipeline {
                             credentialsId: NEXUS_CREDENTIAL_ID,
                             artifacts: [
                                 [artifactId: pom.artifactId,
-                                classifier: &apos;&apos;,
+                                classifier: '',
                                 file: artifactPath,
                                 type: pom.packaging],
                                 [artifactId: pom.artifactId,
-                                classifier: &apos;&apos;,
-                                file: &quot;pom.xml&quot;,
-                                type: &quot;pom&quot;]
+                                classifier: '',
+                                file: "pom.xml",
+                                type: "pom"]
                             ]
                         );
                     } else {
-                        error &quot;*** File: ${artifactPath}, could not be found&quot;;
+                        error "*** File: ${artifactPath}, could not be found";
                     }
                 }
             }
         }
 
-        stage(&quot;Create DockerFile&quot;) {
+        stage("Create DockerFile") {
             steps {
                 script {
-                    pom = readMavenPom file: &quot;pom.xml&quot;;
-                    def data = &apos;FROM openjdk:11\nWORKDIR /\nCOPY ./target/&apos;+pom.artifactId+&apos;-&apos;+pom.version+&apos;.jar&apos;+&apos; /target/\nEXPOSE 8080\nCMD java -jar /target/&apos;+pom.artifactId+&apos;-&apos;+pom.version+&apos;.jar&apos;
-                    writeFile(file: &apos;Dockerfile&apos;, text: data)
+                    pom = readMavenPom file: "pom.xml";
+                    def data = 'FROM openjdk:11\nWORKDIR /\nCOPY ./target/'+pom.artifactId+'-'+pom.version+'.jar'+' /target/\nEXPOSE 8080\nCMD java -jar /target/'+pom.artifactId+'-'+pom.version+'.jar'
+                    writeFile(file: 'Dockerfile', text: data)
                 }
             }
         }
         
-        stage(&quot;Create Docker Image&quot;) {
+        stage("Create Docker Image") {
             steps {
                 script {
-                    pom = readMavenPom file: &quot;pom.xml&quot;;
-                    DOCKER_IMAGE = docker.build(&quot;${DOCKER_IMAGE_NAME}-${pom.version}&quot;)
+                    pom = readMavenPom file: "pom.xml";
+                    DOCKER_IMAGE = docker.build("${DOCKER_IMAGE_NAME}-${pom.version}")
                 }
             }
         }
         
-        stage(&quot;Upload Docker Image to Nexus&quot;) {
+        stage("Upload Docker Image to Nexus") {
             steps {
                 script {
-                    docker.withRegistry( &apos;http://&apos;+NEXUS_URL_CONTAINERS, NEXUS_CREDENTIAL_ID ) {
-                        DOCKER_IMAGE.push(&apos;latest&apos;)
+                    docker.withRegistry( 'http://'+NEXUS_URL_CONTAINERS, NEXUS_CREDENTIAL_ID ) {
+                        DOCKER_IMAGE.push('latest')
                     }
                 }
             }
         }
         
-        stage(&apos;Throw parameters to Deployment job&apos;){
+        stage('Throw parameters to Deployment job'){
             steps{
                 script {
-                    pom = readMavenPom file: &quot;pom.xml&quot;;
-                    build job: &apos;Deployment&apos;, wait: false, parameters: [string(name: &apos;VERSION&apos;, value: &quot;${pom.version}&quot;)]
+                    pom = readMavenPom file: "pom.xml";
+                    build job: 'Deployment', wait: false, parameters: [string(name: 'VERSION', value: "${pom.version}")]
                 }
             }
         }
