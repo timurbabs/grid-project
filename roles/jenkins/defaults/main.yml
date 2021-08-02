@@ -10,13 +10,14 @@ jenkins_url:        "{{ jenkins_protocol }}://{{ hostvars.jenkins_linux.ansible_
 # Jobs
 github_project_url:     https://github.com/timurbabs/spring-petclinic.git
 branch:           '*/main'
+
 script_path_build:      Jenkinsfile_Build
 script_path_precommit:  Jenkinsfile_PreCommit
 script_path_deployment: Jenkinsfile_Deployment
+
 build_label:            slave-1
 deployment_label:       dev-prod
 pre_commit_label:       slave-1
-
 
 # Credentials
 password_credentials:
@@ -33,7 +34,6 @@ ssh_credentials:
                 username: jenkins
                 private_key: "{{ encrypted_private_key_slaves }}"
                 passphrase: "{{ encrypted_slaves_ssh_passphrase }}" 
-
 
 # Slaves
 ssh_slaves:
@@ -52,6 +52,12 @@ ssh_slaves:
                 credentialsId: slaves
                 host: "{{ hostvars.production_linux.ansible_host }}"
 
+# Run jobs
+run_jobs:
+        pre_commit:
+                job_name: PreCommit
+        build:
+                job_name: Build
 
 
 # Jenkins Plugins
