@@ -75,7 +75,7 @@
     groups: docker
     append: yes
 
-- name: Open secured port 8085
+- name: Open secured port for Nexus
   copy:
     content: |
       {
