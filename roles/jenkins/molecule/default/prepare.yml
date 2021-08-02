@@ -4,26 +4,26 @@
   become: yes
   hosts: instance
   tasks:
-          - name: Start firewalld
-            systemd:
-                    name: firewalld
-                    state: started
-                    enabled: true
+    - name: Start firewalld
+      systemd:
+        name: firewalld
+        state: started
+        enabled: true
 
-          - name: Enable HTTP connection
-            ansible.posix.firewalld:
-              service: http
-              permanent: yes
-              state: enabled
+    - name: Enable HTTP connection
+      ansible.posix.firewalld:
+        service: http
+        permanent: yes
+        state: enabled
 
-          - name: Open port 8080
-            ansible.posix.firewalld:
-                    port: 8080/tcp
-                    permanent: yes
-                    immediate: yes
-                    state: enabled
-            
-          - name: Restart firewalld
-            systemd:
-                    name: firewalld
-                    state: reloaded
+    - name: Open port 8080
+      ansible.posix.firewalld:
+        port: 8080/tcp
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: Restart firewalld
+      systemd:
+        name: firewalld
+        state: reloaded

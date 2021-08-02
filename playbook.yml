@@ -3,24 +3,24 @@
   become: yes
   hosts: nexus_servers
   roles:
-          - nexus-server-setup
+    - nexus-server-setup
 
 - name: Configure Jenkins Slaves
   become: yes
   hosts:
-          - slave_servers
-          - production_servers
+    - slave_servers
+    - production_servers
   roles:
-          - slave
+    - slave
 
 - name: Install & Configure Jenkins
   become: yes
   hosts: jenkins_servers
   roles:
-          - jenkins
+    - jenkins
 
 - name: Production server
   become: yes
   hosts: production_servers
   roles:
-          - production-server-setup
+    - production-server-setup

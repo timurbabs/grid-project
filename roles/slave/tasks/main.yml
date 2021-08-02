@@ -1,38 +1,37 @@
 ---
-
 - name: Create jenkins user
   user:
-          name: jenkins
-          comment: "Jenkins slave user"
-          home: "{{ jenkins_home ***REMOVED******REMOVED***"
-          shell: /bin/bash
+    name: jenkins
+    comment: "Jenkins slave user"
+    home: "{{ jenkins_home ***REMOVED******REMOVED***"
+    shell: /bin/bash
 
 - name: Create .ssh folder
   file:
-          path: "{{ jenkins_home ***REMOVED******REMOVED***/.ssh"
-          state: directory
-          mode: 0700
-          owner: jenkins
+    path: "{{ jenkins_home ***REMOVED******REMOVED***/.ssh"
+    state: directory
+    mode: 0700
+    owner: jenkins
 
 - name: Add passwordless connection for Jenkins
   authorized_key:
-          user: jenkins
-          key: "{{ pulbic_key ***REMOVED******REMOVED***"
+    user: jenkins
+    key: "{{ pulbic_key ***REMOVED******REMOVED***"
 
 - name: Update authorized keys rights
   file:
-          path: "{{ jenkins_home ***REMOVED******REMOVED***/.ssh/authorized_keys"
-          state: file
-          mode: 0600
-          owner: jenkins
+    path: "{{ jenkins_home ***REMOVED******REMOVED***/.ssh/authorized_keys"
+    state: file
+    mode: 0600
+    owner: jenkins
 
 - name: Install recommended packages
   yum:
-          name:
-                  - maven
-                  - java-1.8.0-openjdk
-                  - git
-                  - docker
+    name:
+      - maven
+      - java-1.8.0-openjdk
+      - git
+      - docker
 
 - name: Check if swap file exists
   stat:
@@ -45,10 +44,10 @@
 
 - name: Change swap file permissions
   file:
-          path: swapfile
-          owner: root
-          group: root
-          mode: 0600
+    path: swapfile
+    owner: root
+    group: root
+    mode: 0600
   when: not swap_file_check.stat.exists
 
 - name: Make swap file
@@ -61,46 +60,46 @@
 
 - name: Create .m2 folder
   file:
-          path: "{{ jenkins_home ***REMOVED******REMOVED***/.m2"
-          state: directory
-          owner: jenkins
+    path: "{{ jenkins_home ***REMOVED******REMOVED***/.m2"
+    state: directory
+    owner: jenkins
 
 - name: Copy maven configuration
   template:
-          src: templates/settings.xml
-          dest: "{{ jenkins_home ***REMOVED******REMOVED***/.m2/"
+    src: templates/settings.xml
+    dest: "{{ jenkins_home ***REMOVED******REMOVED***/.m2/"
 
 - name: Restart Docker socket
   systemd:
-          name: docker.socket
-          state: restarted
+    name: docker.socket
+    state: restarted
 
 - name: Start Docker
   systemd:
-          name: docker
-          state: started
-          enabled: true
+    name: docker
+    state: started
+    enabled: true
 
 - name: Add Jenkins to Docker group
   user:
-          name: jenkins
-          groups: docker
-          append: yes
+    name: jenkins
+    groups: docker
+    append: yes
 
 - name: Open secured port 8085
   copy:
-          content: |
-               {
-                  "insecure-registries": ["{{ hostvars.nexus_linux.ansible_host ***REMOVED******REMOVED***:{{ nexus_docker_hosted_port ***REMOVED******REMOVED***"]
-               ***REMOVED***
-          dest: /etc/docker/daemon.json
+    content: |
+      {
+         "insecure-registries": ["{{ hostvars.nexus_linux.ansible_host ***REMOVED******REMOVED***:{{ nexus_docker_hosted_port ***REMOVED******REMOVED***"]
+      ***REMOVED***
+    dest: /etc/docker/daemon.json
 
 - name: Restart Docker
   systemd:
-          name: docker
-          state: restarted
+    name: docker
+    state: restarted
 
 - name: Get permissions for Docker
   file:
-          path: /var/run/docker.sock
-          mode: 0777
+    path: /var/run/docker.sock
+    mode: 0777
