@@ -5,7 +5,7 @@ nexus_protocol: http://
 nexus_port: 8081
 nexus_proxy_repository: /repository/petclinic-maven-proxy/
 nexus_proxy: "{{ nexus_protocol }}{{ hostvars.nexus_linux.ansible_host }}:{{ nexus_port }}{{ nexus_proxy_repository }}"
-swap_file_size_gb: 1
+swap_file_size_gb: 2
 
 # Encrypted public key
 pulbic_key: !vault |

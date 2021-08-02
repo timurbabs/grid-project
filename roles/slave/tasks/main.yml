@@ -69,17 +69,6 @@
     src: templates/settings.xml
     dest: "{{ jenkins_home }}/.m2/"
 
-- name: Restart Docker socket
-  systemd:
-    name: docker.socket
-    state: restarted
-
-- name: Start Docker
-  systemd:
-    name: docker
-    state: started
-    enabled: true
-
 - name: Add Jenkins to Docker group
   user:
     name: jenkins
@@ -94,12 +83,13 @@
       }
     dest: /etc/docker/daemon.json
 
-- name: Restart Docker
+- name: Restart Docker socket
   systemd:
-    name: docker
+    name: docker.socket
     state: restarted
 
-- name: Get permissions for Docker
-  file:
-    path: /var/run/docker.sock
-    mode: 0777
+- name: Start Docker
+  systemd:
+    name: docker
+    state: started
+    enabled: true
