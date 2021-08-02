@@ -6,7 +6,7 @@ TODO list:
 - [ ] Multibranch pipeline
 - [ ] Bring the project structure and code to beauty
 
-Perfomance list:
+Improvement list:
 - [ ] JMeter - load test functional behavior and measure performance
 - [ ] Terraform - AWS infrastructure as code
 - [ ] Molecule - write tests, must have skill and tool 
