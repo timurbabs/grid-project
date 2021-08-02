@@ -31,7 +31,7 @@
 		label "{{ deployment_label }}"
     }
     environment {
-		NEXUS_URL_CONTAINERS = "{{ hostvars.nexus_linux.ansible_host }}"
+		NEXUS_URL_CONTAINERS = "{{ hostvars.nexus_linux.ansible_host }}:8085"
         NEXUS_CREDENTIAL_ID = "nexus"
         DOCKER_IMAGE_NAME = "petclinic-docker"
         DOCKER_IMAGE_TAG = "latest"

@@ -28,7 +28,9 @@
     agent {
 			label "{{ pre_commit_label }}"
     }
-
+    triggers {
+        githubPush()
+    }
     stages {
         stage("Clone code from GitHub") {
             steps {
