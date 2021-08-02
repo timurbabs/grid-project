@@ -3,9 +3,9 @@
   gather_facts: no
   hosts: instance
   roles:
-          - role: jenkins
+    - role: jenkins
   vars:
-          encrypted_private_key_slaves: test
-          encrypted_jenkins_password: test
-          encrypted_slaves_ssh_passphrase: test
-          encrypted_nexus_password: test
+    encrypted_private_key_slaves: test
+    encrypted_jenkins_password: test
+    encrypted_slaves_ssh_passphrase: test
+    encrypted_nexus_password: test

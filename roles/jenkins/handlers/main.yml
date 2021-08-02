@@ -2,15 +2,15 @@
 # handlers file for jenkins
 - name: Restart Jenkins
   systemd:
-          name: jenkins
-          state: restarted
+    name: jenkins
+    state: restarted
   listen: "Restart Jenkins"
 
 - name: Wait until Jenkins is available
   uri:
-    url: '{{ jenkins_url }}'
-    url_username: '{{ jenkins_username }}'
-    url_password: '{{ jenkins_password }}'
+    url: "{{ jenkins_url }}"
+    url_username: "{{ jenkins_username }}"
+    url_password: "{{ jenkins_password }}"
     validate_certs: False
     force_basic_auth: yes
   listen: "Wait Jenkins"

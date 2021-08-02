@@ -1,45 +1,49 @@
 ---
-
 - name: Upload plugins
   community.general.jenkins_plugin:
-          name: '{{ item }}'
-          state: present
-          url_username: '{{ jenkins_username }}'
-          url_password: '{{ jenkins_password }}'
-          url: '{{ jenkins_url }}'
-  with_items: '{{ jenkins_plugins }}'
+    name: "{{ item }}"
+    state: present
+    url_username: "{{ jenkins_username }}"
+    url_password: "{{ jenkins_password }}"
+    url: "{{ jenkins_url }}"
+  with_items: "{{ jenkins_plugins }}"
   notify:
-          - "Restart Jenkins"
-          - "Wait Jenkins"
+    - "Restart Jenkins"
+    - "Wait Jenkins"
 
 - name: Flush handlers
   meta: flush_handlers
 
 - name: Enable plugins
   community.general.jenkins_plugin:
-          name: '{{ item }}'
-          state: enabled
-          url_username: '{{ jenkins_username }}'
-          url_password: '{{ jenkins_password }}'
-          url: '{{ jenkins_url }}'
-  with_items: '{{ jenkins_plugins }}'
+    name: "{{ item }}"
+    state: enabled
+    url_username: "{{ jenkins_username }}"
+    url_password: "{{ jenkins_password }}"
+    url: "{{ jenkins_url }}"
+  with_items: "{{ jenkins_plugins }}"
 
 - name: Upload jobs
   community.general.jenkins_job:
     config: "{{ lookup('template', item.value) }}"
-    name: "{{ item.key }}" 
+    name: "{{ item.key }}"
     password: "{{ jenkins_password }}"
     url: "{{ jenkins_url }}"
     user: "{{ jenkins_username }}"
-  with_dict: {PreCommit: templates/jenkins_jobs/pre_commit_job.xml, Deployment: templates/jenkins_jobs/deployment_job.xml, Build: templates/jenkins_jobs/build_job.xml}
+  with_dict:
+    {
+      PreCommit: templates/jenkins_jobs/pre_commit_job.xml,
+      Deployment: templates/jenkins_jobs/deployment_job.xml,
+      Build: templates/jenkins_jobs/build_job.xml,
+    }
 
 - name: Upload SSH credentials
   jenkins_script:
     url: "{{ jenkins_url }}"
     script: '{{ lookup("template", "templates/jenkins_groovy/credentials/secret_ssh.groovy") }}'
     args: "{{ item.value }}"
-    user: '{{ jenkins_username }}'
-    password: '{{ jenkins_password }}'
+    user: "{{ jenkins_username }}"
+    password: "{{ jenkins_password }}"
     validate_certs: false
     timeout: "120"
   with_dict: "{{ ssh_credentials }}"
@@ -49,8 +53,8 @@
     url: "{{ jenkins_url }}"
     script: '{{ lookup("template", "templates/jenkins_groovy/credentials/secret_password.groovy") }}'
     args: "{{ item.value }}"
-    user: '{{ jenkins_username }}'
-    password: '{{ jenkins_password }}'
+    user: "{{ jenkins_username }}"
+    password: "{{ jenkins_password }}"
     validate_certs: false
     timeout: "120"
   with_dict: "{{ password_credentials }}"
@@ -59,9 +63,9 @@
   jenkins_script:
     url: "{{ jenkins_url }}"
     script: '{{ lookup("template", "templates/jenkins_groovy/slaves/slave.groovy") }}'
-    args: '{{ item.value }}'
-    user: '{{ jenkins_username }}'
-    password: '{{ jenkins_password }}'
+    args: "{{ item.value }}"
+    user: "{{ jenkins_username }}"
+    password: "{{ jenkins_password }}"
     validate_certs: false
     timeout: "120"
   with_dict: "{{ ssh_slaves }}"
@@ -70,9 +74,9 @@
   jenkins_script:
     url: "{{ jenkins_url }}"
     script: '{{ lookup("template", "templates/jenkins_groovy/jobs/run_jobs.groovy") }}'
-    args: '{{ item.value }}'
-    user: '{{ jenkins_username }}'
-    password: '{{ jenkins_password }}'
+    args: "{{ item.value }}"
+    user: "{{ jenkins_username }}"
+    password: "{{ jenkins_password }}"
     validate_certs: false
     timeout: "120"
   with_dict: "{{ run_jobs }}"
