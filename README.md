@@ -2,9 +2,9 @@
 TODO list:
 - [ ] Promotion job
 - [ ] Docker proxy
-- [ ] Job to genetate other jobs
+- [ ] Job to generate other jobs
 - [ ] Multibranch pipeline
-- [ ] Bring the project structure and code to beauty
+- [ ] Bring the project structure and code to beauty using Ansible best practices
 
 Improvement list:
 - [ ] JMeter - load test functional behavior and measure performance
