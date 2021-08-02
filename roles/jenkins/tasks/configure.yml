@@ -1,4 +1,5 @@
 ---
+
 - name: Upload plugins
   community.general.jenkins_plugin:
           name: '{{ item ***REMOVED******REMOVED***'
@@ -64,3 +65,14 @@
     validate_certs: false
     timeout: "120"
   with_dict: "{{ ssh_slaves ***REMOVED******REMOVED***"
+
+- name: Run jobs
+  jenkins_script:
+    url: "{{ jenkins_url ***REMOVED******REMOVED***"
+    script: '{{ lookup("template", "templates/jenkins_groovy/jobs/run_jobs.groovy") ***REMOVED******REMOVED***'
+    args: '{{ item.value ***REMOVED******REMOVED***'
+    user: '{{ jenkins_username ***REMOVED******REMOVED***'
+    password: '{{ jenkins_password ***REMOVED******REMOVED***'
+    validate_certs: false
+    timeout: "120"
+  with_dict: "{{ run_jobs ***REMOVED******REMOVED***"
