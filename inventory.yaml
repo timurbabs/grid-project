@@ -4,16 +4,16 @@ all:
     jenkins_servers:
             hosts:
                 jenkins_linux:
-                        ansible_host: 18.117.242.123
+                        ansible_host: 18.117.98.10
     slave_servers:
             hosts:
                 slave_linux:
-                        ansible_host: 3.138.187.74
+                        ansible_host: 18.119.110.240
     nexus_servers:
             hosts:
                 nexus_linux:
-                        ansible_host: 52.14.104.19
+                        ansible_host: 3.12.108.213
     production_servers:
             hosts:
                 production_linux:
-                        ansible_host: 3.17.14.67
+                        ansible_host: 18.119.123.93

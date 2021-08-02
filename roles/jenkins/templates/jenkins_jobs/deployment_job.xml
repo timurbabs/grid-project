@@ -31,7 +31,7 @@
 		label "{{ deployment_label ***REMOVED******REMOVED***"
     ***REMOVED***
     environment {
-		NEXUS_URL_CONTAINERS = "{{ hostvars.nexus_linux.ansible_host ***REMOVED******REMOVED***"
+		NEXUS_URL_CONTAINERS = "{{ hostvars.nexus_linux.ansible_host ***REMOVED******REMOVED***:8085"
         NEXUS_CREDENTIAL_ID = "nexus"
         DOCKER_IMAGE_NAME = "petclinic-docker"
         DOCKER_IMAGE_TAG = "latest"

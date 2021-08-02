@@ -56,8 +56,8 @@ ssh_slaves:
 
 # Jenkins Plugins
 jenkins_plugins:
- - sshd                              
- - docker-workflow                   
+ - sshd
+ - docker-workflow
  - trilead-api                       
  - ws-cleanup                        
  - structs                           

@@ -28,7 +28,9 @@
     agent {
 			label "{{ pre_commit_label ***REMOVED******REMOVED***"
     ***REMOVED***
-
+    triggers {
+        githubPush()
+    ***REMOVED***
     stages {
         stage("Clone code from GitHub") {
             steps {

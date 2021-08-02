@@ -29,6 +29,9 @@ pipeline {
     agent {
 		label "{{ build_label ***REMOVED******REMOVED***"
     ***REMOVED***
+    triggers {
+        githubPush()
+    ***REMOVED***
     environment {
         NEXUS_VERSION = "nexus3"
         NEXUS_PROTOCOL = "http"
