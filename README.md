@@ -7,7 +7,7 @@ TODO list:
 - [ ] Bring the project structure and code to beauty using Ansible best practices
 
 Improvement list:
-- [ ] JMeter - load test functional behavior and measure performance
+- [ ] ApacheBench - load test functional behavior and measure performance
 - [ ] Terraform - AWS infrastructure as code
 - [ ] Molecule - write tests, must have skill and tool 
 - [ ] Kubernetes - deploy using it, not Docker
