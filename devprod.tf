@@ -1,48 +1,23 @@
 resource "aws_security_group" "DevProdSG" {
     name = "DevProdSG"
-    ingress {
-        description = "SSH"
-        from_port   = 22
-        to_port     = 22
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-    egress {
-        description = "SSH"
-        from_port   = 22
-        to_port     = 22
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
+    dynamic "ingress" {
+        for_each = ["22", "8080", "8085", "8443", "8444", "8445"]
+        content {
+            from_port = ingress.value
+            to_port = ingress.value
+            protocol = "tcp"
+            cidr_blocks = ["0.0.0.0/0"]
+        }
     }
 
-    ingress {
-        description = "DevProd HTTP"
-        from_port   = 8080
-        to_port     = 8080
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-    egress {
-        description = "DevProd HTTP"
-        from_port   = 8080
-        to_port     = 8080
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    ingress {
-        description = "DevProd HTTPS"
-        from_port   = 8443
-        to_port     = 8443
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-    egress {
-        description = "DevProd HTTPS"
-        from_port   = 8443
-        to_port     = 8443
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
+    dynamic "egress" {
+        for_each = ["22", "8080", "8085", "8443", "8444", "8445"]
+        content {
+            from_port = egress.value
+            to_port = egress.value
+            protocol = "tcp"
+            cidr_blocks = ["0.0.0.0/0"]
+        }
     }
 
 
@@ -53,6 +28,8 @@ resource "aws_instance" "DevProd" {
     instance_type           = "t2.medium"
     key_name                = "tbaburin-test-linux-ohio"
     vpc_security_group_ids  = [aws_security_group.JenkinsSG.id]
+    subnet_id = aws_subnet.PetclinicNet.id
+    private_ip = "172.31.64.40"
 
     root_block_device {
         volume_size           = 10
@@ -70,4 +47,9 @@ resource "aws_eip" "DevProdEIP" {
     tags = {
         Name = "DevProdEIP"
     }
+}
+
+resource "aws_ami_from_instance" "DevProdAMIStock" {
+    name               = "DevProdAMIStock"
+    source_instance_id = aws_instance.DevProd.id
 }
