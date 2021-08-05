@@ -1,0 +1,177 @@
+---
+# tasks file for nexus-server-setup
+- name: yum update
+  yum:
+    name: '*'
+    state: latest
+
+- name: yum install wget
+  yum:
+    name: wget
+    state: latest
+
+- name: groovy install
+  yum:
+    name: groovy
+    state: latest
+
+- name: yum install openjdk
+  yum:
+    name: java-1.8.0-openjdk.x86_64
+    state: latest
+
+- name: Check that nexus is installed
+  stat:
+    path: "{{ nexus_download_dir }}/nexus/bin/nexus"
+  register: stat_result
+
+- name: check nexus installed
+  debug:
+    msg: Nexus already installed
+  when: stat_result.stat.exists
+
+- name: create/check download folder
+  file:
+    path: "{{ nexus_download_dir }}"
+    state: directory
+  when: not stat_result.stat.exists
+
+- name: Delete content & directory
+  shell: "rm -rf {{ nexus_download_dir }}/*"
+  when: not stat_result.stat.exists
+
+- name: Download nexus_package
+  get_url:
+    url: "{{ nexus_download_url }}"
+    dest: "{{ nexus_download_dir }}/nexus.tar.gz"
+    force: no
+    timeout: 300
+  when: not stat_result.stat.exists
+
+- name: unpack nexus
+  unarchive:
+    src: "{{ nexus_download_dir }}/nexus.tar.gz"
+    dest: "{{ nexus_download_dir }}"
+    copy: false
+    mode: 0755
+  when: not stat_result.stat.exists
+
+- name: rename pack
+  shell: "mv -f {{ nexus_download_dir }}/nexus-3* {{ nexus_download_dir }}/nexus"
+  when: not stat_result.stat.exists
+
+- name: cleanup archieve
+  file:
+    path: "{{ nexus_download_dir }}/nexus.tar.gz"
+    state: absent
+  when: not stat_result.stat.exists
+
+- name: create/check group
+  group:
+    name: "{{ nexus_os_group }}"
+    state: present
+
+- name: create/check user
+  user:
+    name: "{{ nexus_os_user }}"
+    group: "{{ nexus_os_group }}"
+    home: "/home/{{ nexus_os_user }}"
+    shell: "/bin/bash"
+    state: present
+
+- name: ownable folders
+  file:
+    path: "{{ nexus_installation_dir }}/nexus"
+    owner: "{{ nexus_os_user }}"
+    group: "{{ nexus_os_group }}"
+    state: directory
+    recurse: yes
+
+- name: ownable folders
+  file:
+    path: "{{ nexus_installation_dir }}/sonatype-work"
+    owner: "{{ nexus_os_user }}"
+    group: "{{ nexus_os_group }}"
+    state: directory
+    recurse: yes
+
+- name: change run as user
+  copy:
+    dest: /app/nexus/bin/nexus.rc
+    content: |
+      run_as_user="{{ nexus_os_user }}"
+
+- name: create nexus.service
+  file:
+    path: "/etc/systemd/system/nexus.service"
+    state: touch
+  when: not stat_result.stat.exists
+
+- name: config nexus.service
+  copy:
+    dest: "/etc/systemd/system/nexus.service"
+    content: |
+      [Unit]
+      Description=nexus service
+      After=network.target
+
+      [Service]
+      Type=forking
+      LimitNOFILE={{ nexus_os_max_filedescriptors }}
+      User={{ nexus_os_user }}
+      Group={{ nexus_os_group }}
+      ExecStart={{ nexus_installation_dir }}/nexus/bin/nexus start
+      ExecStop={{ nexus_installation_dir }}/nexus/bin/nexus stop
+      User={{ nexus_os_user }}
+      Restart=on-abort
+
+      [Install]
+      WantedBy=multi-user.target
+  when: not stat_result.stat.exists
+
+- name: selinux enable
+  lineinfile:
+    dest: "/etc/sysconfig/selinux"
+    regexp: "^SELINUX=.*"
+    line: "SELINUX=enforcing"
+  when: not stat_result.stat.exists
+
+- name: fix chcon
+  ansible.builtin.shell:
+    cmd: chcon -h system_u:object_r:httpd_sys_content_t:s0 {{ nexus_installation_dir }}/nexus/bin/nexus
+  when: not stat_result.stat.exists
+
+- name: fix selinux rules
+  ansible.builtin.shell:
+    cmd: chcon -R -t bin_t {{ nexus_installation_dir }}/nexus/bin/nexus
+  when: not stat_result.stat.exists
+
+- name: Get path to default settings
+  set_fact:
+    nexus_default_settings_file: "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/nexus.properties"
+
+- name: systemctl daemon-reload
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: start nexus
+  ansible.builtin.systemd:
+    name: nexus
+    state: started
+
+- name: wait until nexus start
+  wait_for:
+    port: 8081
+    delay: 10
+
+- name: Set nexus port
+  lineinfile:
+    dest: "{{ nexus_default_settings_file }}"
+    regexp: "^application-port=.*"
+    line: "application-port={{ nexus_default_port }}"
+
+- name: "Enable creating groovy scripts in nexus"
+  lineinfile:
+    dest: "{{ nexus_default_settings_file }}"
+    regexp: "^nexus.scripts.allowCreation=.*"
+    line: "nexus.scripts.allowCreation=true"
