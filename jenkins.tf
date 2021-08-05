@@ -24,21 +24,21 @@ resource "aws_security_group" "JenkinsSG" {
 }
 
 resource "aws_instance" "Jenkins" {
-    ami                     = "ami-0443305dabd4be2bc"
-    instance_type           = "t2.medium"
+    ami                     = var.jenkins_ami
+    instance_type           = var.jenkins_instance_type
     key_name                = "tbaburin-test-linux-ohio"
     vpc_security_group_ids  = [aws_security_group.JenkinsSG.id]
     subnet_id = aws_subnet.PetclinicNet.id
-    private_ip = "172.31.64.20"
+    private_ip = var.jenkins_private_ip
 
     root_block_device {
-        volume_size           = 10
+        volume_size           = var.jenkins_volume_size
         delete_on_termination = true
     }
 
     tags = {
         Name                = "Jenkins"
-        Owner               = "drozhdestvenskii"
+        Owner               = var.owner
     }
 }
 

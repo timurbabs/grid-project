@@ -24,21 +24,21 @@ resource "aws_security_group" "DevProdSG" {
 }
 
 resource "aws_instance" "DevProd" {
-    ami                     = "ami-0443305dabd4be2bc"
-    instance_type           = "t2.medium"
+    ami                     = var.devprod_ami
+    instance_type           = var.devprod_instance_type
     key_name                = "tbaburin-test-linux-ohio"
     vpc_security_group_ids  = [aws_security_group.JenkinsSG.id]
     subnet_id = aws_subnet.PetclinicNet.id
-    private_ip = "172.31.64.40"
+    private_ip = var.devprod_private_ip
 
     root_block_device {
-        volume_size           = 10
+        volume_size           = var.devprod_volume_size
         delete_on_termination = true
     }
 
     tags = {
         Name                = "DevProd"
-        Owner               = "drozhdestvenskii"
+        Owner               = var.owner
     }
 }
 

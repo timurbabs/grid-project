@@ -1,13 +1,13 @@
 provider "aws" {
-    access_key = "AKIAS2GU2XM33W2Q34JC"
-    secret_key = "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"
-    region = "us-east-2"
+    access_key = var.access_key
+    secret_key = var.secret_key
+    region = var.region
 }
 
 resource "aws_subnet" "PetclinicNet" {
     vpc_id     = "vpc-d1b531b8"
     cidr_block = "172.31.64.0/20"
-    availability_zone = "us-east-2b"
+    availability_zone = var.availability_zone
 
 
     tags = {
