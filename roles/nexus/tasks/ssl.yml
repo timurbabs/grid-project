@@ -1,0 +1,105 @@
+---
+- name: create ssl directory
+  ansible.builtin.file:
+      path: "{{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl"
+      state: directory
+      owner: "{{ nexus_os_user ***REMOVED******REMOVED***"
+      group: "{{ nexus_os_group ***REMOVED******REMOVED***"
+
+- name: Check ssl exists
+  stat:
+    path: "{{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/keystore.jks"
+  register: stat_result
+
+- name: gen keypair
+  shell: "keytool -genkeypair -keystore {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/keystore.jks -storepass {{ nexus_admin_password ***REMOVED******REMOVED*** -keypass {{ nexus_admin_password ***REMOVED******REMOVED*** -alias {{ nexus_ssl_name ***REMOVED******REMOVED*** -keyalg RSA -keysize 2048 -validity 5000 -dname \"CN=Nexus, OU=Nexus, O=GridDynamics, L=Unspecified, ST=Unspecified, C=US\" -ext \"SAN=DNS:{{ nexus_domain_name ***REMOVED******REMOVED***,IP:{{ ansible_host ***REMOVED******REMOVED***\" -ext \"BC=ca:true\""
+  ignore_errors: yes
+  when: not stat_result.exists
+
+- name: change owner
+  ansible.builtin.file:
+      path: {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/keystore.jks
+      owner: "{{ nexus_os_user ***REMOVED******REMOVED***"
+      group: "{{ nexus_os_group ***REMOVED******REMOVED***"
+
+- name: gen cert
+  shell: "keytool -printcert -sslserver {{ nexus_domain_name ***REMOVED******REMOVED***:{{ nexus_https_port ***REMOVED******REMOVED*** -rfc > {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.cert"
+  ignore_errors: yes
+  when: not stat_result.exists
+
+- name: change owner
+  ansible.builtin.file:
+      path: {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.cert
+      owner: "{{ nexus_os_user ***REMOVED******REMOVED***"
+      group: "{{ nexus_os_group ***REMOVED******REMOVED***"
+
+- name: gen keypair p12
+  shell: "keytool -importkeystore -deststorepass {{ nexus_admin_password ***REMOVED******REMOVED*** -srcstorepass {{ nexus_admin_password ***REMOVED******REMOVED*** -srckeystore {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/keystore.jks -destkeystore {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.p12 -deststoretype PKCS12"
+  ignore_errors: yes
+  when: not stat_result.exists
+
+- name: change owner
+  ansible.builtin.file:
+      path: {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.p12
+      owner: "{{ nexus_os_user ***REMOVED******REMOVED***"
+      group: "{{ nexus_os_group ***REMOVED******REMOVED***"
+
+- name: gen keypair pks12
+  shell: "keytool -list -storepass {{ nexus_admin_password ***REMOVED******REMOVED*** -keystore {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.p12 -storetype PKCS12"
+  ignore_errors: yes
+  when: not stat_result.exists
+
+- name: openssl
+  shell: "openssl pkcs12 -password pass:{{ nexus_admin_password ***REMOVED******REMOVED*** -nokeys -in {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.p12 -out {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.pem"
+  when: not stat_result.exists
+
+- name: change owner
+  ansible.builtin.file:
+      path: {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.pem
+      owner: "{{ nexus_os_user ***REMOVED******REMOVED***"
+      group: "{{ nexus_os_group ***REMOVED******REMOVED***"
+
+- name: Download ssl sertificate
+  ansible.builtin.fetch:
+    src: {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.pem
+    dest: ~/Documents/ssls/
+    flat: yes
+
+- name: openssls
+  shell: "openssl pkcs12 -password pass:{{ nexus_admin_password ***REMOVED******REMOVED*** -nocerts -nodes -in {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.p12 -out {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.key"
+  when: not stat_result.exists
+
+- name: change nexus properties
+  lineinfile:
+    dest: "{{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/nexus.properties"
+    regexp: "^# nexus-args=.*"
+    line: "nexus-args=${jetty.etc***REMOVED***/jetty.xml,${jetty.etc***REMOVED***/jetty-https.xml,${jetty.etc***REMOVED***/jetty-requestlog.xml"
+  ignore_errors: yes
+
+- name: add ssl
+  lineinfile:
+    dest: "{{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/nexus.properties"
+    line: "ssl.etc=${karaf.data***REMOVED***/etc/ssl"
+    create: yes
+
+- name: change nexus properties
+  lineinfile:
+    dest: "{{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/nexus.properties"
+    regexp: "^application-port=.*"
+    line: "application-port-ssl={{ nexus_https_port ***REMOVED******REMOVED***"
+
+- name: delete old jetty https
+  file:
+      path: "{{ nexus_installation_dir ***REMOVED******REMOVED***/nexus/etc/jetty/jetty-https.xml"
+      state: absent
+
+- name: copy new jetty https
+  template:
+      src: "jetty-https.j2"
+      dest: "{{ nexus_installation_dir ***REMOVED******REMOVED***/nexus/etc/jetty/jetty-https.xml"
+
+- name: change owner
+  ansible.builtin.file:
+      path: "{{ nexus_installation_dir ***REMOVED******REMOVED***/nexus/etc/jetty/jetty-https.xml"
+      owner: "{{ nexus_os_user ***REMOVED******REMOVED***"
+      group: "{{ nexus_os_group ***REMOVED******REMOVED***"

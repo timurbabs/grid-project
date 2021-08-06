@@ -2,5 +2,8 @@
 - name: Install Nexus
   include: install.yml
 
+- name: configure nexus ssl
+  include: ssl.yml
+
 - name: Configure Nexus
   include: configure.yml
