@@ -3,7 +3,7 @@
   become: yes
   hosts: nexus_servers
   roles:
-    - nexus-server-setup
+    - nexus
 
 - name: Configure Jenkins Slaves
   become: yes

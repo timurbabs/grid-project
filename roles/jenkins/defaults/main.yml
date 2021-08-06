@@ -3,9 +3,13 @@
 jenkins_home: /var/lib/jenkins
 jenkins_username: admin
 jenkins_password: "{{ encrypted_jenkins_password }}"
+jenkins_ssl_password: "112263"
 jenkins_protocol: http
 jenkins_port: 8080
+jenkins_https_port: 8443
 jenkins_url: "{{ jenkins_protocol }}://{{ hostvars.jenkins_linux.ansible_host }}:{{ jenkins_port }}"
+jenkins_domain_name: "ec2-3-14-71-4.us-east-2.compute.amazonaws.com"
+jenkins_ssl_name: "JenkinsSSL"
 
 # Jobs
 github_project_url: https://github.com/timurbabs/spring-petclinic.git

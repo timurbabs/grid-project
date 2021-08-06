@@ -8,6 +8,7 @@ nexus_installation_dir: "/app"
 nexus_anonymous_access: true
 
 nexus_default_port: 8081
+nexus_https_port: 8443
 nexus_docker_hosted_port: 8085
 nexus_docker_proxy_port: 8086
 nexus_docker_group_port: 8087
