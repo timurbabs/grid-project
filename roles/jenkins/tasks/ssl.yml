@@ -109,7 +109,7 @@
   shell: "update-ca-trust force-enable"
 
 - name: copy cert
-  file:
+  copy:
       src: "/etc/jenkins/{{ jenkins_ssl_name ***REMOVED******REMOVED***.pem"
       dest: "/etc/pki/ca-trust/source/anchors/"
 
