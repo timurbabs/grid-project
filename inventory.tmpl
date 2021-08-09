@@ -1,0 +1,27 @@
+---
+all:
+  children:
+    jenkins_servers:
+      hosts:
+        jenkins_linux:
+          ansible_host: ${jenkins-ip}
+          ansible_host_dns: ${jenkins-dns}
+          ansible_host_private_ip: ${jenkins-private-ip}
+    slave_servers:
+      hosts:
+        slave_linux:
+          ansible_host: ${slave-ip}
+          ansible_host_dns: ${slave-dns}
+          ansible_host_private_ip: ${slave-private-ip}
+    nexus_servers:
+      hosts:
+        nexus_linux:
+          ansible_host: ${nexus-ip}
+          ansible_host_dns: ${nexus-dns}
+          ansible_host_private_ip: ${nexus-private-ip}
+    production_servers:
+      hosts:
+        production_linux:
+          ansible_host: ${devprod-ip}
+          ansible_host_dns: ${devprod-dns}
+          ansible_host_private_ip: ${devprod-private-ip}
