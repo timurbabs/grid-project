@@ -75,31 +75,46 @@
     regexp: "^# nexus-args=.*"
     line: "nexus-args=${jetty.etc***REMOVED***/jetty.xml,${jetty.etc***REMOVED***/jetty-https.xml,${jetty.etc***REMOVED***/jetty-requestlog.xml"
   ignore_errors: yes
+  when: not stat_result.stat.exists
 
 - name: add ssl
   lineinfile:
     dest: "{{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/nexus.properties"
     line: "ssl.etc=${karaf.data***REMOVED***/etc/ssl"
     create: yes
+  when: not stat_result.stat.exists
 
 - name: change nexus properties
   lineinfile:
     dest: "{{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/nexus.properties"
     regexp: "^application-port=.*"
     line: "application-port-ssl={{ nexus_https_port ***REMOVED******REMOVED***"
+  when: not stat_result.stat.exists
 
 - name: delete old jetty https
   file:
       path: "{{ nexus_installation_dir ***REMOVED******REMOVED***/nexus/etc/jetty/jetty-https.xml"
       state: absent
+  when: not stat_result.stat.exists
 
 - name: copy new jetty https
   template:
       src: "jetty-https.j2"
       dest: "{{ nexus_installation_dir ***REMOVED******REMOVED***/nexus/etc/jetty/jetty-https.xml"
+  when: not stat_result.stat.exists
 
 - name: change owner
   ansible.builtin.file:
       path: "{{ nexus_installation_dir ***REMOVED******REMOVED***/nexus/etc/jetty/jetty-https.xml"
       owner: "{{ nexus_os_user ***REMOVED******REMOVED***"
       group: "{{ nexus_os_group ***REMOVED******REMOVED***"
+
+- name: trust cert
+  shell: "update-ca-trust force-enable"
+
+- name: copy cert
+  file:
+      src: "{{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.pem"
+
+- name: trust cert
+  shell: "update-ca-trust extract"
