@@ -14,7 +14,7 @@
 - name: gen keypair
   shell: "keytool -genkeypair -keystore {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/keystore.jks -storepass {{ nexus_admin_password }} -keypass {{ nexus_admin_password }} -alias {{ nexus_ssl_name }} -keyalg RSA -keysize 2048 -validity 5000 -dname \"CN=Nexus, OU=Nexus, O=GridDynamics, L=Unspecified, ST=Unspecified, C=US\" -ext \"SAN=DNS:{{ nexus_domain_name }},IP:{{ ansible_host }}\" -ext \"BC=ca:true\""
   ignore_errors: yes
-  when: not stat_result.exists
+  when: not stat_result.stat.exists
 
 - name: change owner
   ansible.builtin.file:
@@ -25,7 +25,7 @@
 - name: gen cert
   shell: "keytool -printcert -sslserver {{ nexus_domain_name }}:{{ nexus_https_port }} -rfc > {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.cert"
   ignore_errors: yes
-  when: not stat_result.exists
+  when: not stat_result.stat.exists
 
 - name: change owner
   ansible.builtin.file:
@@ -36,7 +36,7 @@
 - name: gen keypair p12
   shell: "keytool -importkeystore -deststorepass {{ nexus_admin_password }} -srcstorepass {{ nexus_admin_password }} -srckeystore {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/keystore.jks -destkeystore {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.p12 -deststoretype PKCS12"
   ignore_errors: yes
-  when: not stat_result.exists
+  when: not stat_result.stat.exists
 
 - name: change owner
   ansible.builtin.file:
@@ -47,11 +47,11 @@
 - name: gen keypair pks12
   shell: "keytool -list -storepass {{ nexus_admin_password }} -keystore {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.p12 -storetype PKCS12"
   ignore_errors: yes
-  when: not stat_result.exists
+  when: not stat_result.stat.exists
 
 - name: openssl
   shell: "openssl pkcs12 -password pass:{{ nexus_admin_password }} -nokeys -in {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.p12 -out {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.pem"
-  when: not stat_result.exists
+  when: not stat_result.stat.exists
 
 - name: change owner
   ansible.builtin.file:
@@ -67,7 +67,7 @@
 
 - name: openssls
   shell: "openssl pkcs12 -password pass:{{ nexus_admin_password }} -nocerts -nodes -in {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.p12 -out {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.key"
-  when: not stat_result.exists
+  when: not stat_result.stat.exists
 
 - name: change nexus properties
   lineinfile:
