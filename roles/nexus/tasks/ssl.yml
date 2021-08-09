@@ -18,7 +18,7 @@
 
 - name: change owner
   ansible.builtin.file:
-      path: {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/keystore.jks
+      path: "{{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/keystore.jks"
       owner: "{{ nexus_os_user ***REMOVED******REMOVED***"
       group: "{{ nexus_os_group ***REMOVED******REMOVED***"
 
@@ -29,7 +29,7 @@
 
 - name: change owner
   ansible.builtin.file:
-      path: {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.cert
+      path: "{{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.cert"
       owner: "{{ nexus_os_user ***REMOVED******REMOVED***"
       group: "{{ nexus_os_group ***REMOVED******REMOVED***"
 
@@ -40,7 +40,7 @@
 
 - name: change owner
   ansible.builtin.file:
-      path: {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.p12
+      path: "{{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.p12"
       owner: "{{ nexus_os_user ***REMOVED******REMOVED***"
       group: "{{ nexus_os_group ***REMOVED******REMOVED***"
 
@@ -55,14 +55,14 @@
 
 - name: change owner
   ansible.builtin.file:
-      path: {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.pem
+      path: "{{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.pem"
       owner: "{{ nexus_os_user ***REMOVED******REMOVED***"
       group: "{{ nexus_os_group ***REMOVED******REMOVED***"
 
 - name: Download ssl sertificate
   ansible.builtin.fetch:
-    src: {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.pem
-    dest: ~/Documents/ssls/
+    src: "{{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.pem"
+    dest: "~/Documents/"
     flat: yes
 
 - name: openssls
