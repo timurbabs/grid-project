@@ -75,14 +75,6 @@
     groups: docker
     append: yes
 
-- name: Open secured port for Nexus
-  copy:
-    content: |
-      {
-         "insecure-registries": ["{{ hostvars.nexus_linux.ansible_host ***REMOVED******REMOVED***:{{ nexus_docker_hosted_port ***REMOVED******REMOVED***"]
-      ***REMOVED***
-    dest: /etc/docker/daemon.json
-
 - name: Restart Docker socket
   systemd:
     name: docker.socket

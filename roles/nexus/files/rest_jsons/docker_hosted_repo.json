@@ -10,8 +10,8 @@
   "docker": {
     "v1Enabled": true,
     "forceBasicAuth": false,
-    "httpPort": 8085,
-    "httpsPort": null
+    "httpPort": null,
+    "httpsPort": 8444
   ***REMOVED***,
   "component": {
     "proprietaryComponents": false
