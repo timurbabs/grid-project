@@ -112,6 +112,7 @@
   copy:
       src: "/etc/jenkins/{{ jenkins_ssl_name }}.pem"
       dest: "/etc/pki/ca-trust/source/anchors/"
+      remote_src: yes
 
 - name: trust cert
   shell: "update-ca-trust extract"

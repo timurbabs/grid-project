@@ -116,6 +116,7 @@
   copy:
       src: "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.pem"
       dest: "/etc/pki/ca-trust/source/anchors/"
+      remote_src: yes
 
 - name: trust cert
   shell: "update-ca-trust extract"
