@@ -18,7 +18,7 @@
 
 - name: change owner
   ansible.builtin.file:
-      path: /etc/jenkins/keystore.jks
+      path: "/etc/jenkins/keystore.jks"
       owner: "jenkins"
       group: "jenkins"
 
@@ -30,7 +30,7 @@
 
 - name: change owner
   ansible.builtin.file:
-      path: /etc/jenkins/{{ jenkins_ssl_name }}.cert
+      path: "/etc/jenkins/{{ jenkins_ssl_name }}.cert"
       owner: "jenkins"
       group: "jenkins"
 
@@ -41,7 +41,7 @@
 
 - name: change owner
   ansible.builtin.file:
-      path: /etc/jenkins/{{ jenkins_ssl_name }}.p12
+      path: "/etc/jenkins/{{ jenkins_ssl_name }}.p12"
       owner: "jenkins"
       group: "jenkins"
 
@@ -56,14 +56,14 @@
 
 - name: change owner
   ansible.builtin.file:
-      path: /etc/jenkins/{{ jenkins_ssl_name }}.pem
+      path: "/etc/jenkins/{{ jenkins_ssl_name }}.pem"
       owner: "jenkins"
       group: "jenkins"
 
 - name: Download ssl sertificate
   ansible.builtin.fetch:
-    src: /etc/jenkins/{{ jenkins_ssl_name }}.pem
-    dest: ~/Documents/ssls/
+    src: "/etc/jenkins/{{ jenkins_ssl_name }}.pem"
+    dest: "~/Documents/"
     flat: yes
 
 - name: openssls
