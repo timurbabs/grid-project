@@ -105,6 +105,17 @@
     line: "JENKINS_HTTPS_LISTEN_ADDRESS=\"0.0.0.0\""
   ignore_errors: yes
 
+- name: trust cert
+  shell: "update-ca-trust force-enable"
+
+- name: copy cert
+  file:
+      src: "/etc/jenkins/{{ jenkins_ssl_name ***REMOVED******REMOVED***.pem"
+      dest: "/etc/pki/ca-trust/source/anchors/"
+
+- name: trust cert
+  shell: "update-ca-trust extract"
+
 - name: restart jenkins
   ansible.builtin.systemd:
     name: jenkins
