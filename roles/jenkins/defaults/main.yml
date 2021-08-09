@@ -8,8 +8,8 @@ jenkins_protocol: http
 jenkins_port: 8080
 jenkins_https_port: 8443
 jenkins_url: "{{ jenkins_protocol ***REMOVED******REMOVED***://{{ hostvars.jenkins_linux.ansible_host ***REMOVED******REMOVED***:{{ jenkins_port ***REMOVED******REMOVED***"
-jenkins_domain_name: {{ hostvars.jenkins_linux.ansible_host_dns ***REMOVED******REMOVED***
-jenkins_private_ip: {{ hostvars.jenkins_linux.ansible_host_private_ip ***REMOVED******REMOVED***
+jenkins_domain_name: "{{ hostvars.jenkins_linux.ansible_host_dns ***REMOVED******REMOVED***"
+jenkins_private_ip: "{{ hostvars.jenkins_linux.ansible_host_private_ip ***REMOVED******REMOVED***"
 jenkins_ssl_name: "JenkinsSSL"
 
 # Jobs
