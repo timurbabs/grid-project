@@ -1,0 +1,27 @@
+---
+all:
+  children:
+    jenkins_servers:
+      hosts:
+        jenkins_linux:
+          ansible_host: 3.22.64.53
+          ansible_host_dns: ec2-3-22-64-53.us-east-2.compute.amazonaws.com
+          ansible_host_private_ip: 172.31.64.20
+    slave_servers:
+      hosts:
+        slave_linux:
+          ansible_host: 18.119.155.47
+          ansible_host_dns: ec2-18-119-155-47.us-east-2.compute.amazonaws.com
+          ansible_host_private_ip: 172.31.64.30
+    nexus_servers:
+      hosts:
+        nexus_linux:
+          ansible_host: 13.59.170.8
+          ansible_host_dns: ec2-13-59-170-8.us-east-2.compute.amazonaws.com
+          ansible_host_private_ip: 172.31.64.10
+    production_servers:
+      hosts:
+        production_linux:
+          ansible_host: 3.16.120.170
+          ansible_host_dns: ec2-3-16-120-170.us-east-2.compute.amazonaws.com
+          ansible_host_private_ip: 172.31.64.40
