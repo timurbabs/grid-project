@@ -117,6 +117,14 @@
       dest: "/etc/docker/certs.d/{{ hostvars.nexus_linux.ansible_host_dns }}:8444/"
       remote_src: yes
 
+- name: docker proxy set
+  copy:
+    content: |
+      {
+         "registry-mirrors": ["https://{{ hostvars.nexus_linux.ansible_host_dns }}:8446"]
+      }
+    dest: /etc/docker/daemon.json
+
 - name: Start Docker
   systemd:
     name: docker
