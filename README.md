@@ -1,7 +1,7 @@
 ## Capstone project
 TODO list:
 - [ ] Promotion job
-- [ ] Docker proxy
+- [x] Docker proxy
 - [ ] Job to generate other jobs
 - [ ] Multibranch pipeline
 - [ ] Bring the project structure and code to beauty using Ansible best practices
