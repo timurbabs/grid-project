@@ -25,8 +25,3 @@ all:
           ansible_host: 3.16.120.170
           ansible_host_dns: ec2-3-16-120-170.us-east-2.compute.amazonaws.com
           ansible_host_private_ip: 172.31.64.40
-    production_servers:
-        hosts:
-           ansible_host: 18.224.217.172
-           ansible_host_dns: ec2-18-224-217-172.us-east-2.compute.amazonaws.com
-           ansible_host_private_ip: 172.31.64.50

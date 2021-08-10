@@ -34,10 +34,10 @@ pipeline {
     }
     environment {
         NEXUS_VERSION = "nexus3"
-        NEXUS_PROTOCOL = "http"
-		NEXUS_URL = "{{ hostvars.nexus_linux.ansible_host }}:8081"
-        NEXUS_REPOSITORY = "petclinic-maven-hosted"
-        NEXUS_URL_CONTAINERS = "{{ hostvars.nexus_linux.ansible_host }}:8085"
+        NEXUS_PROTOCOL = "https"
+		NEXUS_URL = "{{ hostvars.nexus_linux.ansible_host_dns }}:8443"
+        NEXUS_REPOSITORY = "petclinic-maven-hosted-snapshot"
+        NEXUS_URL_CONTAINERS = "{{ hostvars.nexus_linux.ansible_host_dns }}:8444"
         NEXUS_CREDENTIAL_ID = "nexus"
         DOCKER_IMAGE_NAME = "petclinic-docker"
         DOCKER_IMAGE = ""
@@ -100,7 +100,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage("Create Docker Image") {
             steps {
                 script {
@@ -109,17 +109,17 @@ pipeline {
                 }
             }
         }
-        
+
         stage("Upload Docker Image to Nexus") {
             steps {
                 script {
-                    docker.withRegistry( 'http://'+NEXUS_URL_CONTAINERS, NEXUS_CREDENTIAL_ID ) {
+                    docker.withRegistry( NEXUS_PROTOCOL+'://'+NEXUS_URL_CONTAINERS, NEXUS_CREDENTIAL_ID ) {
                         DOCKER_IMAGE.push('latest')
                     }
                 }
             }
         }
-        
+
         stage('Throw parameters to Deployment job'){
             steps{
                 script {
