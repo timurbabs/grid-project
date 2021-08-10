@@ -11,14 +11,11 @@ resource "aws_security_group" "NexusSG" {
         }
     }
 
-    dynamic "egress" {
-        for_each = ["22", "8081", "8085", "8443", "8444", "8445"]
-        content {
-            from_port = egress.value
-            to_port = egress.value
-            protocol = "tcp"
-            cidr_blocks = ["0.0.0.0/0"]
-        }
+    egress {
+        from_port = "0"
+        to_port = "0"
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
     }
 
 }

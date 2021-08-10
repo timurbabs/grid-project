@@ -10,14 +10,11 @@ resource "aws_security_group" "DevProdSG" {
         }
     }
 
-    dynamic "egress" {
-        for_each = ["22", "8080", "8085", "8443", "8444", "8445"]
-        content {
-            from_port = egress.value
-            to_port = egress.value
-            protocol = "tcp"
-            cidr_blocks = ["0.0.0.0/0"]
-        }
+    egress {
+        from_port = "0"
+        to_port = "0"
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
     }
 
 
@@ -27,7 +24,7 @@ resource "aws_instance" "DevProd" {
     ami                     = var.devprod_ami
     instance_type           = var.devprod_instance_type
     key_name                = "tbaburin-test-linux-ohio"
-    vpc_security_group_ids  = [aws_security_group.JenkinsSG.id]
+    vpc_security_group_ids  = [aws_security_group.DevProdSG.id]
     subnet_id = aws_subnet.PetclinicNet.id
     private_ip = var.devprod_private_ip
 

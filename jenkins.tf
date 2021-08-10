@@ -2,7 +2,7 @@ resource "aws_security_group" "JenkinsSG" {
     name = "JenkinsSG"
 
     dynamic "ingress" {
-        for_each = ["22", "8080", "50000"]
+        for_each = ["22", "8080", "8443", "50000"]
         content {
             from_port = ingress.value
             to_port = ingress.value
@@ -11,14 +11,11 @@ resource "aws_security_group" "JenkinsSG" {
         }
     }
 
-    dynamic "egress" {
-        for_each = ["22", "8080", "50000"]
-        content {
-            from_port = egress.value
-            to_port = egress.value
-            protocol = "tcp"
-            cidr_blocks = ["0.0.0.0/0"]
-        }
+    egress {
+        from_port = "0"
+        to_port = "0"
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
     }
 
 }

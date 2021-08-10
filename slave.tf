@@ -10,14 +10,11 @@ resource "aws_security_group" "SlaveSG" {
         }
     }
 
-    dynamic "egress" {
-        for_each = ["22"]
-        content {
-            from_port = egress.value
-            to_port = egress.value
-            protocol = "tcp"
-            cidr_blocks = ["0.0.0.0/0"]
-        }
+    egress {
+        from_port = "0"
+        to_port = "0"
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
     }
 
 }
@@ -26,7 +23,7 @@ resource "aws_instance" "Slave" {
     ami                     = var.slave_ami
     instance_type           = var.slave_instance_type
     key_name                = "tbaburin-test-linux-ohio"
-    vpc_security_group_ids  = [aws_security_group.JenkinsSG.id]
+    vpc_security_group_ids  = [aws_security_group.SlaveSG.id]
     subnet_id = aws_subnet.PetclinicNet.id
     private_ip = var.slave_private_ip
 
