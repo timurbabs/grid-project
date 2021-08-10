@@ -48,14 +48,14 @@
 - debug:
     var: result
 
-- name: REST create maven hosted repo
+- name: REST create maven hosted snapshot repo
   shell: "curl -v -X POST -u admin:{{ nexus_admin_password ***REMOVED******REMOVED*** -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ nexus_https_port ***REMOVED******REMOVED***/service/rest/v1/repositories/maven/hosted\" -d @{{ nexus_installation_dir ***REMOVED******REMOVED***/rest_jsons/maven_hosted_snapshot_repo.json"
   register: result
 
 - debug:
     var: result
 
-- name: REST create maven hosted repo
+- name: REST create maven hosted release repo
   shell: "curl -v -X POST -u admin:{{ nexus_admin_password ***REMOVED******REMOVED*** -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ nexus_https_port ***REMOVED******REMOVED***/service/rest/v1/repositories/maven/hosted\" -d @{{ nexus_installation_dir ***REMOVED******REMOVED***/rest_jsons/maven_hosted_release_repo.json"
   register: result
 
@@ -76,8 +76,22 @@
 - debug:
     var: result
 
-- name: REST create docker hosted repo
-  shell: "curl -v -X POST -u admin:{{ nexus_admin_password ***REMOVED******REMOVED*** -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ nexus_https_port ***REMOVED******REMOVED***/service/rest/v1/repositories/docker/hosted\" -d @{{ nexus_installation_dir ***REMOVED******REMOVED***/rest_jsons/docker_hosted_repo.json"
+- name: REST create docker hosted release repo
+  shell: "curl -v -X POST -u admin:{{ nexus_admin_password ***REMOVED******REMOVED*** -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ nexus_https_port ***REMOVED******REMOVED***/service/rest/v1/repositories/docker/hosted\" -d @{{ nexus_installation_dir ***REMOVED******REMOVED***/rest_jsons/docker_hosted_release_repo.json"
+  register: result
+
+- debug:
+    var: result
+
+- name: REST create docker hosted snapshot repo
+  shell: "curl -v -X POST -u admin:{{ nexus_admin_password ***REMOVED******REMOVED*** -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ nexus_https_port ***REMOVED******REMOVED***/service/rest/v1/repositories/docker/hosted\" -d @{{ nexus_installation_dir ***REMOVED******REMOVED***/rest_jsons/docker_hosted_release_repo.json"
+  register: result
+
+- debug:
+    var: result
+
+- name: REST create docker proxy repo
+  shell: "curl -v -X POST -u admin:{{ nexus_admin_password ***REMOVED******REMOVED*** -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ nexus_https_port ***REMOVED******REMOVED***/service/rest/v1/repositories/docker/proxy\" -d @{{ nexus_installation_dir ***REMOVED******REMOVED***/rest_jsons/docker_proxy_repo.json"
   register: result
 
 - debug:

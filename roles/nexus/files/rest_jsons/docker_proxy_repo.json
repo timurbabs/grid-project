@@ -1,0 +1,45 @@
+{
+  "name": "petclinic-docker-proxy",
+  "online": true,
+  "storage": {
+    "blobStoreName": "default",
+    "strictContentTypeValidation": true,
+    "writePolicy": "ALLOW"
+  ***REMOVED***,
+  "cleanup": null,
+  "docker": {
+    "v1Enabled": true,
+    "forceBasicAuth": false,
+    "httpPort": null,
+    "httpsPort": 8446
+  ***REMOVED***,
+  "dockerProxy": {
+    "indexType": "HUB",
+    "indexUrl": null
+  ***REMOVED***,
+  "proxy": {
+    "remoteUrl": "https://registry-1.docker.io",
+    "contentMaxAge": 1440,
+    "metadataMaxAge": 1440
+  ***REMOVED***,
+  "negativeCache": {
+    "enabled": true,
+    "timeToLive": 1440
+  ***REMOVED***,
+  "httpClient": {
+    "blocked": false,
+    "autoBlock": true,
+    "connection": {
+      "retries": null,
+      "userAgentSuffix": null,
+      "timeout": null,
+      "enableCircularRedirects": false,
+      "enableCookies": false,
+      "useTrustStore": true
+    ***REMOVED***,
+    "authentication": null
+  ***REMOVED***,
+  "routingRuleName": null,
+  "format": "docker",
+  "type": "proxy"
+***REMOVED***
