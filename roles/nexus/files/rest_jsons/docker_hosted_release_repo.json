@@ -1,5 +1,5 @@
 {
-  "name": "petclinic-docker-hosted",
+  "name": "petclinic-docker-hosted-release",
   "online": true,
   "storage": {
     "blobStoreName": "default",
@@ -11,7 +11,7 @@
     "v1Enabled": true,
     "forceBasicAuth": false,
     "httpPort": null,
-    "httpsPort": 8444
+    "httpsPort": 8445
   ***REMOVED***,
   "component": {
     "proprietaryComponents": false
