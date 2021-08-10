@@ -49,7 +49,14 @@
     var: result
 
 - name: REST create maven hosted repo
-  shell: "curl -v -X POST -u admin:{{ nexus_admin_password }} -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns }}:{{ nexus_https_port }}/service/rest/v1/repositories/maven/hosted\" -d @{{ nexus_installation_dir }}/rest_jsons/maven_hosted_repo.json"
+  shell: "curl -v -X POST -u admin:{{ nexus_admin_password }} -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns }}:{{ nexus_https_port }}/service/rest/v1/repositories/maven/hosted\" -d @{{ nexus_installation_dir }}/rest_jsons/maven_hosted_snapshot_repo.json"
+  register: result
+
+- debug:
+    var: result
+
+- name: REST create maven hosted repo
+  shell: "curl -v -X POST -u admin:{{ nexus_admin_password }} -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns }}:{{ nexus_https_port }}/service/rest/v1/repositories/maven/hosted\" -d @{{ nexus_installation_dir }}/rest_jsons/maven_hosted_release_repo.json"
   register: result
 
 - debug:
