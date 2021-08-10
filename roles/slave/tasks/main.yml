@@ -80,8 +80,45 @@
     name: docker.socket
     state: restarted
 
+- name: create ssl dir
+  file:
+      path: "/etc/ssl"
+      state: "directory"
+      owner: "jenkins"
+      group: "jenkins"
+
+- name: copy ssls
+  copy:
+      src: "~/Documents/NexusSSL.pem"
+      dest: "/etc/ssl"
+
+- name: trust cert
+  shell: "update-ca-trust force-enable"
+
+- name: copy cert
+  copy:
+      src: "/etc/ssl/NexusSSL.pem"
+      dest: "/etc/pki/ca-trust/source/anchors/"
+      remote_src: yes
+
+- name: trust cert
+  shell: "update-ca-trust extract"
+
+- name: create docker directory with certs
+  file:
+      path: "/etc/docker/certs.d/{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:8444"
+      state: directory
+      owner: "jenkins"
+      group: "jenkins"
+
+- name: copy cert to docker
+  copy:
+      src: "/etc/ssl/NexusSSL.pem"
+      dest: "/etc/docker/certs.d/{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:8444/"
+      remote_src: yes
+
 - name: Start Docker
   systemd:
     name: docker
-    state: started
+    state: restarted
     enabled: true
