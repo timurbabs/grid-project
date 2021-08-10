@@ -6,19 +6,3 @@ nexus_admin_password: "112263"
 nexus_domain_name: "{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***"
 nexus_private_ip: "{{ hostvars.nexus_linux.ansible_host_private_ip ***REMOVED******REMOVED***"
 nexus_ssl_name: "NexusSSL"
-
-nexus_repos_maven_proxy:
-  - name: petclinic-maven-proxy
-    remote_url: "https://repo1.maven.org/maven2/"
-    layout_policy: permissive
-
-nexus_repos_maven_hosted:
-  - name: petclinic-maven-hosted
-    version_policy: mixed
-    layout_policy: permissive
-    deployment_policy: allow-redeploy
-
-nexus_repos_docker_hosted:
-  - name: petclinic-docker-hosted
-    http_port: "{{ nexus_docker_hosted_port ***REMOVED******REMOVED***"
-    v1_enabled: True
