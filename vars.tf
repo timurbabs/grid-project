@@ -116,3 +116,25 @@ variable "devprod_private_ip" {
     type = string
     default = "172.31.64.40"
 }
+
+#PROD
+
+variable "prod_ami" {
+    type = string
+    default = "ami-0443305dabd4be2bc"
+}
+
+variable "prod_instance_type" {
+    type = string
+    default = "t2.medium"
+}
+
+variable "prod_volume_size" {
+    type = string
+    default = "10"
+}
+
+variable "prod_private_ip" {
+    type = string
+    default = "172.31.64.50"
+}
