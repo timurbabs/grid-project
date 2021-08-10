@@ -32,7 +32,7 @@
 		label "{{ deployment_label ***REMOVED******REMOVED***"
     ***REMOVED***
     environment {
-		NEXUS_URL_CONTAINERS = "{{ hostvars.nexus_linux.ansible_host ***REMOVED******REMOVED***:{{ nexus_docker_hosted_port ***REMOVED******REMOVED***"
+		NEXUS_URL_CONTAINERS = "{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:8444"
         NEXUS_CREDENTIAL_ID = "nexus"
         DOCKER_IMAGE_NAME = "petclinic-docker"
         DOCKER_IMAGE_TAG = "latest"
@@ -51,7 +51,7 @@
                 ***REMOVED***
             ***REMOVED***
         ***REMOVED***
-    
+
         stage("Docker pull latest") {
             steps {
                 script {
