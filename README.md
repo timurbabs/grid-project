@@ -8,7 +8,7 @@ TODO list:
 
 Improvement list:
 - [ ] ApacheBench(JMeter) - load test functional behavior and measure performance
-- [ ] Terraform - AWS infrastructure as code
+- [x] Terraform - AWS infrastructure as code
 - [ ] Molecule - write tests, must have skill and tool 
 - [ ] Kubernetes - deploy using it, not Docker
 - [ ] Prometheus -  monitoring and alerting, must have skill and tool
