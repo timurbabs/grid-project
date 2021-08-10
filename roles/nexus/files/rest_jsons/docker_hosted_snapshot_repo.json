@@ -1,5 +1,5 @@
 {
-  "name": "petclinic-docker-hosted",
+  "name": "petclinic-docker-hosted-snapshot",
   "online": true,
   "storage": {
     "blobStoreName": "default",
