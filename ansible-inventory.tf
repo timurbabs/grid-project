@@ -20,11 +20,6 @@ resource "local_file" "AnsibleInventory" {
   devprod-ip = aws_eip.DevProdEIP.public_ip,
   devprod-id = aws_instance.DevProd.id,
   devprod-private-ip = aws_instance.DevProd.private_ip
-
-  prod-dns = aws_eip.ProdEIP.public_dns,
-  prod-ip = aws_eip.ProdEIP.public_ip,
-  prod-id = aws_instance.Prod.id,
-  prod-private-ip = aws_instance.Prod.private_ip
  }
  )
  filename = "inventory.yml"
