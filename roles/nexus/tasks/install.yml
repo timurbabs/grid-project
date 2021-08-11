@@ -37,7 +37,7 @@
     timeout: 300
   when: not stat_result.stat.exists
 
-- name: Unarchieving
+- name: Unarchiving
   unarchive:
     src: "{{ nexus_download_dir }}/nexus.tar.gz"
     dest: "{{ nexus_download_dir }}"
