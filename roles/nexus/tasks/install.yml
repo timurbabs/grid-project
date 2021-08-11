@@ -147,6 +147,7 @@
   ansible.builtin.systemd:
     name: nexus
     state: started
+    enabled: yes
 
 - name: Waiting for opening default port
   wait_for:
