@@ -65,6 +65,18 @@
     dest: "~/Documents/"
     flat: yes
 
+- name: Adding certificate to trustable to this pc (MacOS)
+  shell: "security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/Documents/{{ nexus_ssl_name ***REMOVED******REMOVED***.pem"
+  become: yes
+  when: ansible_os_family == "Darwin"
+  delegate_to: 127.0.0.1
+
+- name: Adding certificate to trustable to this pc (Arch)
+  shell: "trust anchor ~/Documents/{{ nexus_ssl_name ***REMOVED******REMOVED***.pem"
+  become: yes
+  when: ansible_os_family == "Archlinux"
+  delegate_to: 127.0.0.1
+
 - name: Generating key
   shell: "openssl pkcs12 -password pass:{{ nexus_admin_password ***REMOVED******REMOVED*** -nocerts -nodes -in {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.p12 -out {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name ***REMOVED******REMOVED***.key"
   when: not stat_result.stat.exists
