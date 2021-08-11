@@ -66,6 +66,18 @@
     dest: "~/Documents/"
     flat: yes
 
+- name: Adding certificate to trustable to this pc (MacOS)
+  shell: "security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/Documents/{{ jenkins_ssl_name }}.pem"
+  become: yes
+  when: ansible_os_family == "Darwin"
+  delegate_to: 127.0.0.1
+
+- name: Adding certificate to trustable to this pc (Arch)
+  shell: "trust anchor ~/Documents/{{ jenkins_ssl_name }}.pem"
+  become: yes
+  when: ansible_os_family == "Archlinux"
+  delegate_to: 127.0.0.1
+
 - name: openssls
   shell: "openssl pkcs12 -password pass:{{ jenkins_ssl_password }} -nocerts -nodes -in /etc/jenkins/{{ jenkins_ssl_name }}.p12 -out /etc/jenkins/{{ jenkins_ssl_name }}.key"
   when: not stat_result.stat.exists
