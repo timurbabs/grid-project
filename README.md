@@ -4,7 +4,7 @@ TODO list:
 - [x] Docker proxy
 - [ ] Job to generate other jobs
 - [ ] Multibranch pipeline
-- [ ] Bring the project structure and code to beauty using Ansible best practices
+- [x] Bring the project structure and code to beauty using Ansible best practices
 
 Improvement list:
 - [ ] ApacheBench(JMeter) - load test functional behavior and measure performance
