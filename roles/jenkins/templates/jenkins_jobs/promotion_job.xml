@@ -27,7 +27,7 @@
     <script>
 pipeline {
     agent {
-		label &quot;slave-1&quot;
+		label &quot;{{ promotion_label }}&quot;
     }
     parameters {
         string(defaultValue: &quot;&quot;, description: &apos;&apos;, name: &apos;VERSION&apos;)

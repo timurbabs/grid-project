@@ -23,7 +23,7 @@
       group:               "jenkins"
 
 - name:                    gen cert
-  shell:                   "keytool -printcert -sslserver {{ jenkins_domain_name }}:{{ jenkins_https_port }} -rfc > /etc/jenkins/{{ jenkins_ssl_name }}.cert"
+  shell:                   "keytool -printcert -sslserver {{ jenkins_domain_name }}:{{ jenkins_port }} -rfc > /etc/jenkins/{{ jenkins_ssl_name }}.cert"
   ignore_errors:           yes
   become_user:             root
   when:                    not stat_result.stat.exists
