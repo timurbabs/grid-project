@@ -1,15 +1,3 @@
-#Global
-
-variable "access_key" {
-  type    = string
-  default = "AKIAS2GU2XM33W2Q34JC"
-}
-
-variable "secret_key" {
-  type    = string
-  default = "kGx4I3KH8QaazRfY/j1mGCZqsKRTWoG8j7Ossf5e"
-}
-
 variable "region" {
   type    = string
   default = "us-east-2"
