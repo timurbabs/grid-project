@@ -1,8 +1,8 @@
 ---
-ansible_user: ec2-user
+ansible_user:                 ec2-user
 ansible_ssh_private_key_file: /home/tbaburin/.ssh/tbaburin-test-linux-ohio.pem
-nexus_docker_hosted_port: 8085
-nexus_admin_password: !vault |
+nexus_docker_hosted_port:     8085
+nexus_admin_password:         !vault |
   $ANSIBLE_VAULT;1.1;AES256
   38633733626239306461356336663135363735653166666235383263636632386135376536396638
   3338353761326136646164333133323561366435633261630a303730386236343935626138633730

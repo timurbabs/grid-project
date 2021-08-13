@@ -1,39 +1,39 @@
 {
-  "name": "petclinic-maven-proxy",
-  "online": true,
-  "storage": {
-    "blobStoreName": "default",
-    "strictContentTypeValidation": true,
-    "writePolicy": "ALLOW"
-  ***REMOVED***,
-  "cleanup": null,
-  "proxy": {
-    "remoteUrl": "https://repo1.maven.org/maven2/",
-    "contentMaxAge": -1,
-    "metadataMaxAge": 1440
-  ***REMOVED***,
-  "negativeCache": {
-    "enabled": true,
-    "timeToLive": 1440
-  ***REMOVED***,
-  "httpClient": {
-    "blocked": false,
-    "autoBlock": true,
-    "connection": {
-      "retries": null,
-      "userAgentSuffix": null,
-      "timeout": null,
-      "enableCircularRedirects": false,
-      "enableCookies": false,
-      "useTrustStore": false
+    "name": "petclinic-maven-proxy",
+    "online": true,
+    "storage": {
+        "blobStoreName": "default",
+        "strictContentTypeValidation": true,
+        "writePolicy": "ALLOW"
     ***REMOVED***,
-    "authentication": null
-  ***REMOVED***,
-  "routingRuleName": null,
-  "maven": {
-    "versionPolicy": "MIXED",
-    "layoutPolicy": "PERMISSIVE"
-  ***REMOVED***,
-  "format": "maven2",
-  "type": "proxy"
+    "cleanup": null,
+    "proxy": {
+        "remoteUrl": "https://repo1.maven.org/maven2/",
+        "contentMaxAge": -1,
+        "metadataMaxAge": 1440
+    ***REMOVED***,
+    "negativeCache": {
+        "enabled": true,
+        "timeToLive": 1440
+    ***REMOVED***,
+    "httpClient": {
+        "blocked": false,
+        "autoBlock": true,
+        "connection": {
+            "retries": null,
+            "userAgentSuffix": null,
+            "timeout": null,
+            "enableCircularRedirects": false,
+            "enableCookies": false,
+            "useTrustStore": false
+        ***REMOVED***,
+        "authentication": null
+    ***REMOVED***,
+    "routingRuleName": null,
+    "maven": {
+        "versionPolicy": "MIXED",
+        "layoutPolicy": "PERMISSIVE"
+    ***REMOVED***,
+    "format": "maven2",
+    "type": "proxy"
 ***REMOVED***

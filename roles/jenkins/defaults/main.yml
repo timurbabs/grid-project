@@ -1,68 +1,68 @@
 ---
 # Jenkins:
-jenkins_home: /var/lib/jenkins
-jenkins_username: admin
-jenkins_password: "{{ encrypted_jenkins_password ***REMOVED******REMOVED***"
-jenkins_ssl_password: "{{ encrypted_ssl_password ***REMOVED******REMOVED***"
-jenkins_protocol: http
-jenkins_port: 8080
-jenkins_https_port: 8443
-jenkins_url: "{{ jenkins_protocol ***REMOVED******REMOVED***://{{ hostvars.jenkins_linux.ansible_host ***REMOVED******REMOVED***:{{ jenkins_port ***REMOVED******REMOVED***"
-jenkins_domain_name: "{{ hostvars.jenkins_linux.ansible_host_dns ***REMOVED******REMOVED***"
-jenkins_private_ip: "{{ hostvars.jenkins_linux.ansible_host_private_ip ***REMOVED******REMOVED***"
-jenkins_ssl_name: "JenkinsSSL"
+jenkins_home:                     /var/lib/jenkins
+jenkins_username:                 admin
+jenkins_password:                 "{{ encrypted_jenkins_password ***REMOVED******REMOVED***"
+jenkins_ssl_password:             "{{ encrypted_ssl_password ***REMOVED******REMOVED***"
+jenkins_protocol:                 http
+jenkins_port:                     8080
+jenkins_https_port:               8443
+jenkins_url:                      "{{ jenkins_protocol ***REMOVED******REMOVED***://{{ hostvars.jenkins_linux.ansible_host ***REMOVED******REMOVED***:{{ jenkins_port ***REMOVED******REMOVED***"
+jenkins_domain_name:              "{{ hostvars.jenkins_linux.ansible_host_dns ***REMOVED******REMOVED***"
+jenkins_private_ip:               "{{ hostvars.jenkins_linux.ansible_host_private_ip ***REMOVED******REMOVED***"
+jenkins_ssl_name:                 "JenkinsSSL"
 
 # Jobs
-github_project_url: https://github.com/timurbabs/spring-petclinic.git
-branch: "*/main"
+github_project_url:               https://github.com/timurbabs/spring-petclinic.git
+branch:                           "*/main"
 
-script_path_build: Jenkinsfile_Build
-script_path_precommit: Jenkinsfile_PreCommit
-script_path_deployment: Jenkinsfile_Deployment
+script_path_build:                Jenkinsfile_Build
+script_path_precommit:            Jenkinsfile_PreCommit
+script_path_deployment:           Jenkinsfile_Deployment
 
-build_label: slave-1
-deployment_label: dev-prod
-pre_commit_label: slave-1
+build_label:                      slave-1
+deployment_label:                 dev-prod
+pre_commit_label:                 slave-1
 
 # Credentials
 password_credentials:
   nexus_credentials:
-    name: nexus
-    description: Credentials for Nexus artifactors storage
-    username: admin
-    password: "{{ nexus_admin_password ***REMOVED******REMOVED***"
+    name:                         nexus
+    description:                  Credentials for Nexus artifactors storage
+    username:                     admin
+    password:                     "{{ nexus_admin_password ***REMOVED******REMOVED***"
 
 ssh_credentials:
   slaves_credentials:
-    name: slaves
-    description: Credentials for slaves that runs on AWS
-    username: jenkins
-    private_key: "{{ encrypted_private_key_slaves ***REMOVED******REMOVED***"
-    passphrase: "{{ encrypted_slaves_ssh_passphrase ***REMOVED******REMOVED***"
+    name:                         slaves
+    description:                  Credentials for slaves that runs on AWS
+    username:                     jenkins
+    private_key:                  "{{ encrypted_private_key_slaves ***REMOVED******REMOVED***"
+    passphrase:                   "{{ encrypted_slaves_ssh_passphrase ***REMOVED******REMOVED***"
 
 # Slaves
 ssh_slaves:
   slave_configuration:
-    name: slave-1
-    root_directory: /home/jenkins
-    label: slave-1
-    number_executors: 2
-    credentialsId: slaves
-    host: "{{ hostvars.slave_linux.ansible_host ***REMOVED******REMOVED***"
+    name:                         slave-1
+    root_directory:               /home/jenkins
+    label:                        slave-1
+    number_executors:             2
+    credentialsId:                slaves
+    host:                         "{{ hostvars.slave_linux.ansible_host ***REMOVED******REMOVED***"
   slave_production:
-    name: dev-prod
-    root_directory: /home/jenkins
-    label: dev-prod
-    number_executors: 2
-    credentialsId: slaves
-    host: "{{ hostvars.production_linux.ansible_host ***REMOVED******REMOVED***"
+    name:                         dev-prod
+    root_directory:               /home/jenkins
+    label:                        dev-prod
+    number_executors:             2
+    credentialsId:                slaves
+    host:                         "{{ hostvars.production_linux.ansible_host ***REMOVED******REMOVED***"
 
 # Run jobs
 run_jobs:
   pre_commit:
-    job_name: PreCommit
+    job_name:                     PreCommit
   build:
-    job_name: Build
+    job_name:                     Build
 
 # Jenkins Plugins
 jenkins_plugins:
@@ -170,7 +170,7 @@ jenkins_plugins:
   - ghprb
 
 # Encrypted data
-encrypted_private_key_slaves: !vault |
+encrypted_private_key_slaves:     !vault |
   $ANSIBLE_VAULT;1.1;AES256
   61376232303731306136396332343037666537383838343238633430306532306232333030316164
   3962313137316530613265393862623265643764323339320a303831323564663261306661393063
@@ -310,7 +310,7 @@ encrypted_private_key_slaves: !vault |
   35366435646339643061333565643666623038616137633839656330383435323939323133613334
   3931
 
-encrypted_jenkins_password: !vault |
+encrypted_jenkins_password:       !vault |
   $ANSIBLE_VAULT;1.1;AES256
   39343137393534313336333764383062373232366631383762363535306634633762306461633935
   3535656236303765363835656131356638663934376565380a333331336633363232376232336132
@@ -318,7 +318,7 @@ encrypted_jenkins_password: !vault |
   6462383664356630650a323564303933356561306532303666383237663735626132393765356136
   3761
 
-encrypted_slaves_ssh_passphrase: !vault |
+encrypted_slaves_ssh_passphrase:  !vault |
   $ANSIBLE_VAULT;1.1;AES256
   31353931633031623563633965316535623338613663323234313036326232376161306236363539
   3134343238613339343661393862333034663431613963650a313066363865313866643132613136
@@ -326,7 +326,7 @@ encrypted_slaves_ssh_passphrase: !vault |
   3462633365666530390a323938326565313166363738613565616137646265333761613334643165
   3739
 
-encrypted_ssl_password: !vault |
+encrypted_ssl_password:           !vault |
           $ANSIBLE_VAULT;1.1;AES256
           35666439313136666631393965616239393730623832353034633231353965663837623934303466
           3739353962336639353536346132616530653165383733370a313135386133646361613735646231

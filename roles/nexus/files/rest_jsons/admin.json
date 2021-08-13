@@ -1,13 +1,13 @@
 {
-  "userId": "admin",
-  "firstName": "Administrator",
-  "lastName": "User",
-  "emailAddress": "admin@example.org",
-  "source": "default",
-  "status": "active",
-  "readOnly": false,
-  "roles": [
-    "nx-admin"
-  ],
-  "externalRoles": []
+    "userId": "admin",
+    "firstName": "Administrator",
+    "lastName": "User",
+    "emailAddress": "admin@example.org",
+    "source": "default",
+    "status": "active",
+    "readOnly": false,
+    "roles": [
+        "nx-admin"
+    ],
+    "externalRoles": []
 ***REMOVED***

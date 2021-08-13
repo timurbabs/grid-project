@@ -1,31 +1,31 @@
 ---
-- name: Create jenkins user
+- name:                      Create jenkins user
   user:
-    name: jenkins
-    comment: "Jenkins slave user"
-    home: "{{ jenkins_home ***REMOVED******REMOVED***"
-    shell: /bin/bash
+    name:                    jenkins
+    comment:                 "Jenkins slave user"
+    home:                    "{{ jenkins_home ***REMOVED******REMOVED***"
+    shell:                   /bin/bash
 
-- name: Create .ssh folder
+- name:                      Create .ssh folder
   file:
-    path: "{{ jenkins_home ***REMOVED******REMOVED***/.ssh"
-    state: directory
-    mode: 0700
-    owner: jenkins
+    path:                    "{{ jenkins_home ***REMOVED******REMOVED***/.ssh"
+    state:                   directory
+    mode:                    0700
+    owner:                   jenkins
 
-- name: Add passwordless connection for Jenkins
+- name:                      Add passwordless connection for Jenkins
   authorized_key:
-    user: jenkins
-    key: "{{ pulbic_key ***REMOVED******REMOVED***"
+    user:                    jenkins
+    key:                     "{{ pulbic_key ***REMOVED******REMOVED***"
 
-- name: Update authorized keys rights
+- name:                      Update authorized keys rights
   file:
-    path: "{{ jenkins_home ***REMOVED******REMOVED***/.ssh/authorized_keys"
-    state: file
-    mode: 0600
-    owner: jenkins
+    path:                    "{{ jenkins_home ***REMOVED******REMOVED***/.ssh/authorized_keys"
+    state:                   file
+    mode:                    0600
+    owner:                   jenkins
 
-- name: Install recommended packages
+- name:                      Install recommended packages
   yum:
     name:
       - maven
@@ -33,100 +33,100 @@
       - git
       - docker
 
-- name: Check if swap file exists
+- name:                      Check if swap file exists
   stat:
-    path: swapfile
-  register: swap_file_check
+    path:                    swapfile
+  register:                  swap_file_check
 
-- name: Create swap file
-  command: "dd if=/dev/zero of=swapfile bs=1M count={{ swap_file_size_gb ***REMOVED******REMOVED***K"
-  when: not swap_file_check.stat.exists
+- name:                      Create swap file
+  command:                   "dd if=/dev/zero of=swapfile bs=1M count={{ swap_file_size_gb ***REMOVED******REMOVED***K"
+  when:                      not swap_file_check.stat.exists
 
-- name: Change swap file permissions
+- name:                      Change swap file permissions
   file:
-    path: swapfile
-    owner: root
-    group: root
-    mode: 0600
-  when: not swap_file_check.stat.exists
+    path:                    swapfile
+    owner:                   root
+    group:                   root
+    mode:                    0600
+  when:                      not swap_file_check.stat.exists
 
-- name: Make swap file
-  command: mkswap swapfile
-  when: not swap_file_check.stat.exists
+- name:                      Make swap file
+  command:                   mkswap swapfile
+  when:                      not swap_file_check.stat.exists
 
-- name: Mount swap file
-  command: swapon swapfile
-  when: not swap_file_check.stat.exists
+- name:                      Mount swap file
+  command:                   swapon swapfile
+  when:                      not swap_file_check.stat.exists
 
-- name: Create .m2 folder
+- name:                      Create .m2 folder
   file:
-    path: "{{ jenkins_home ***REMOVED******REMOVED***/.m2"
-    state: directory
-    owner: jenkins
+    path:                    "{{ jenkins_home ***REMOVED******REMOVED***/.m2"
+    state:                   directory
+    owner:                   jenkins
 
-- name: Copy maven configuration
+- name:                      Copy maven configuration
   template:
-    src: templates/settings.xml
-    dest: "{{ jenkins_home ***REMOVED******REMOVED***/.m2/"
+    src:                     templates/settings.xml
+    dest:                    "{{ jenkins_home ***REMOVED******REMOVED***/.m2/"
 
-- name: Add Jenkins to Docker group
+- name:                      Add Jenkins to Docker group
   user:
-    name: jenkins
-    groups: docker
-    append: yes
+    name:                    jenkins
+    groups:                  docker
+    append:                  yes
 
-- name: Restart Docker socket
+- name:                      Restart Docker socket
   systemd:
-    name: docker.socket
-    state: restarted
+    name:                    docker.socket
+    state:                   restarted
 
-- name: create ssl dir
+- name:                      create ssl dir
   file:
-      path: "/etc/ssl"
-      state: "directory"
-      owner: "jenkins"
-      group: "jenkins"
+      path:                  "/etc/ssl"
+      state:                 "directory"
+      owner:                 "jenkins"
+      group:                 "jenkins"
 
-- name: copy ssls
+- name:                      copy ssls
   copy:
-      src: "~/Documents/NexusSSL.pem"
-      dest: "/etc/ssl"
+      src:                   "~/Documents/NexusSSL.pem"
+      dest:                  "/etc/ssl"
 
-- name: trust cert
-  shell: "update-ca-trust force-enable"
+- name:                      trust cert
+  shell:                     "update-ca-trust force-enable"
 
-- name: copy cert
+- name:                      copy cert
   copy:
-      src: "/etc/ssl/NexusSSL.pem"
-      dest: "/etc/pki/ca-trust/source/anchors/"
-      remote_src: yes
+      src:                   "/etc/ssl/NexusSSL.pem"
+      dest:                  "/etc/pki/ca-trust/source/anchors/"
+      remote_src:            yes
 
-- name: trust cert
-  shell: "update-ca-trust extract"
+- name:                      trust cert
+  shell:                     "update-ca-trust extract"
 
-- name: create docker directory with certs
+- name:                      create docker directory with certs
   file:
-      path: "/etc/docker/certs.d/{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:8444"
-      state: directory
-      owner: "jenkins"
-      group: "jenkins"
+      path:                  "/etc/docker/certs.d/{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:8444"
+      state:                 directory
+      owner:                 "jenkins"
+      group:                 "jenkins"
 
-- name: copy cert to docker
+- name:                      copy cert to docker
   copy:
-      src: "/etc/ssl/NexusSSL.pem"
-      dest: "/etc/docker/certs.d/{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:8444/"
-      remote_src: yes
+      src:                   "/etc/ssl/NexusSSL.pem"
+      dest:                  "/etc/docker/certs.d/{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:8444/"
+      remote_src:            yes
 
-- name: docker proxy set
+- name:                      docker proxy set
   copy:
-    content: |
+    content:                 |
       {
          "registry-mirrors": ["https://{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:8446"]
       ***REMOVED***
-    dest: /etc/docker/daemon.json
+    dest:                    /etc/docker/daemon.json
 
-- name: Start Docker
+- name:                      Start Docker
   systemd:
-    name: docker
-    state: restarted
-    enabled: true
+    name:                    docker
+    state:                   restarted
+    enabled:                 true

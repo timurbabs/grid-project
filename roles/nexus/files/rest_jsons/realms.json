@@ -1,5 +1,5 @@
 [
-  "NexusAuthenticatingRealm",
-  "NexusAuthorizingRealm",
-  "DockerToken"
+    "NexusAuthenticatingRealm",
+    "NexusAuthorizingRealm",
+    "DockerToken"
 ]
