@@ -1,11 +1,11 @@
 ---
-- name: Install & Configure Nexus
+- name:   Install & Configure Nexus
   become: yes
-  hosts: nexus_servers
+  hosts:  nexus_servers
   roles:
     - nexus
 
-- name: Configure Jenkins Slaves
+- name:   Configure Jenkins Slaves
   become: yes
   hosts:
     - slave_servers
@@ -13,8 +13,8 @@
   roles:
     - slave
 
-- name: Install & Configure Jenkins
+- name:   Install & Configure Jenkins
   become: yes
-  hosts: jenkins_servers
+  hosts:  jenkins_servers
   roles:
     - jenkins

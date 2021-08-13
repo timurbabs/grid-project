@@ -1,21 +1,21 @@
 {
-  "name": "petclinic-docker-hosted-snapshot",
-  "online": true,
-  "storage": {
-    "blobStoreName": "default",
-    "strictContentTypeValidation": true,
-    "writePolicy": "ALLOW"
-  },
-  "cleanup": null,
-  "docker": {
-    "v1Enabled": true,
-    "forceBasicAuth": false,
-    "httpPort": null,
-    "httpsPort": 8444
-  },
-  "component": {
-    "proprietaryComponents": false
-  },
-  "format": "docker",
-  "type": "hosted"
+    "name": "petclinic-docker-hosted-snapshot",
+    "online": true,
+    "storage": {
+        "blobStoreName": "default",
+        "strictContentTypeValidation": true,
+        "writePolicy": "ALLOW"
+    },
+    "cleanup": null,
+    "docker": {
+        "v1Enabled": true,
+        "forceBasicAuth": false,
+        "httpPort": null,
+        "httpsPort": 8444
+    },
+    "component": {
+        "proprietaryComponents": false
+    },
+    "format": "docker",
+    "type": "hosted"
 }

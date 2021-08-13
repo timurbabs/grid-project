@@ -1,139 +1,139 @@
 ---
-- name: Create directory for SSL certificates
+- name:                    Create directory for SSL certificates
   ansible.builtin.file:
-      path: "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl"
-      state: directory
-      owner: "{{ nexus_os_user }}"
-      group: "{{ nexus_os_group }}"
+      path:                "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl"
+      state:               directory
+      owner:               "{{ nexus_os_user }}"
+      group:               "{{ nexus_os_group }}"
 
-- name: Checking if keystore already exists
+- name:                    Checking if keystore already exists
   stat:
-    path: "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/keystore.jks"
-  register: stat_result
+    path:                  "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/keystore.jks"
+  register:                stat_result
 
-- name: Generating keystore
-  shell: "keytool -genkeypair -keystore {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/keystore.jks -storepass {{ nexus_admin_password }} -keypass {{ nexus_admin_password }} -alias {{ nexus_ssl_name }} -keyalg RSA -keysize 2048 -validity 5000 -dname \"CN=Nexus, OU=Nexus, O=GridDynamics, L=Unspecified, ST=Unspecified, C=US\" -ext \"SAN=DNS:{{ nexus_domain_name }},IP:{{ ansible_host }}\" -ext \"BC=ca:true\""
-  ignore_errors: yes
-  when: not stat_result.stat.exists
+- name:                    Generating keystore
+  shell:                   "keytool -genkeypair -keystore {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/keystore.jks -storepass {{ nexus_admin_password }} -keypass {{ nexus_admin_password }} -alias {{ nexus_ssl_name }} -keyalg RSA -keysize 2048 -validity 5000 -dname \"CN=Nexus, OU=Nexus, O=GridDynamics, L=Unspecified, ST=Unspecified, C=US\" -ext \"SAN=DNS:{{ nexus_domain_name }},IP:{{ ansible_host }}\" -ext \"BC=ca:true\""
+  ignore_errors:           yes
+  when:                    not stat_result.stat.exists
 
-- name: Changing privileges
+- name:                    Changing privileges
   ansible.builtin.file:
-      path: "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/keystore.jks"
-      owner: "{{ nexus_os_user }}"
-      group: "{{ nexus_os_group }}"
+      path:                "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/keystore.jks"
+      owner:               "{{ nexus_os_user }}"
+      group:               "{{ nexus_os_group }}"
 
-- name: Generating certificate
-  shell: "keytool -printcert -sslserver {{ nexus_domain_name }}:{{ nexus_https_port }} -rfc > {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.cert"
-  ignore_errors: yes
-  when: not stat_result.stat.exists
+- name:                    Generating certificate
+  shell:                   "keytool -printcert -sslserver {{ nexus_domain_name }}:{{ nexus_https_port }} -rfc > {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.cert"
+  ignore_errors:           yes
+  when:                    not stat_result.stat.exists
 
-- name: Changing privileges
+- name:                    Changing privileges
   ansible.builtin.file:
-      path: "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.cert"
-      owner: "{{ nexus_os_user }}"
-      group: "{{ nexus_os_group }}"
+      path:                "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.cert"
+      owner:               "{{ nexus_os_user }}"
+      group:               "{{ nexus_os_group }}"
 
-- name: Generating keystore .p12
-  shell: "keytool -importkeystore -deststorepass {{ nexus_admin_password }} -srcstorepass {{ nexus_admin_password }} -srckeystore {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/keystore.jks -destkeystore {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.p12 -deststoretype PKCS12"
-  ignore_errors: yes
-  when: not stat_result.stat.exists
+- name:                    Generating keystore .p12
+  shell:                   "keytool -importkeystore -deststorepass {{ nexus_admin_password }} -srcstorepass {{ nexus_admin_password }} -srckeystore {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/keystore.jks -destkeystore {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.p12 -deststoretype PKCS12"
+  ignore_errors:           yes
+  when:                    not stat_result.stat.exists
 
-- name: Changing privileges
+- name:                    Changing privileges
   ansible.builtin.file:
-      path: "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.p12"
-      owner: "{{ nexus_os_user }}"
-      group: "{{ nexus_os_group }}"
+      path:                "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.p12"
+      owner:               "{{ nexus_os_user }}"
+      group:               "{{ nexus_os_group }}"
 
-- name: Generating keystor .pks12
-  shell: "keytool -list -storepass {{ nexus_admin_password }} -keystore {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.p12 -storetype PKCS12"
-  ignore_errors: yes
-  when: not stat_result.stat.exists
+- name:                    Generating keystor .pks12
+  shell:                   "keytool -list -storepass {{ nexus_admin_password }} -keystore {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.p12 -storetype PKCS12"
+  ignore_errors:           yes
+  when:                    not stat_result.stat.exists
 
-- name: Generating certificate .pem
-  shell: "openssl pkcs12 -password pass:{{ nexus_admin_password }} -nokeys -in {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.p12 -out {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.pem"
-  when: not stat_result.stat.exists
+- name:                    Generating certificate .pem
+  shell:                   "openssl pkcs12 -password pass:{{ nexus_admin_password }} -nokeys -in {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.p12 -out {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.pem"
+  when:                    not stat_result.stat.exists
 
-- name: Changing privileges
+- name:                    Changing privileges
   ansible.builtin.file:
-      path: "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.pem"
-      owner: "{{ nexus_os_user }}"
-      group: "{{ nexus_os_group }}"
+      path:                "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.pem"
+      owner:               "{{ nexus_os_user }}"
+      group:               "{{ nexus_os_group }}"
 
-- name: Downloading SSL certificate to this PC
+- name:                    Downloading SSL certificate to this PC
   ansible.builtin.fetch:
-    src: "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.pem"
-    dest: "~/Documents/"
-    flat: yes
+    src:                   "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.pem"
+    dest:                  "~/Documents/"
+    flat:                  yes
 
-- name: Adding certificate to trustable to this pc (MacOS)
-  shell: "security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/Documents/{{ nexus_ssl_name }}.pem"
-  become: yes
-  when: ansible_os_family == "Darwin"
-  delegate_to: 127.0.0.1
+- name:                    Adding certificate to trustable to this pc (MacOS)
+  shell:                   "security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/Documents/{{ nexus_ssl_name }}.pem"
+  become:                  yes
+  when:                    ansible_os_family == "Darwin"
+  delegate_to:             127.0.0.1
 
-- name: Adding certificate to trustable to this pc (Arch)
-  shell: "trust anchor ~/Documents/{{ nexus_ssl_name }}.pem"
-  become: yes
-  when: ansible_os_family == "Archlinux"
-  delegate_to: 127.0.0.1
+- name:                    Adding certificate to trustable to this pc (Arch)
+  shell:                   "trust anchor ~/Documents/{{ nexus_ssl_name }}.pem"
+  become:                  yes
+  when:                    ansible_os_family == "Archlinux"
+  delegate_to:             127.0.0.1
 
-- name: Generating key
-  shell: "openssl pkcs12 -password pass:{{ nexus_admin_password }} -nocerts -nodes -in {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.p12 -out {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.key"
-  when: not stat_result.stat.exists
+- name:                    Generating key
+  shell:                   "openssl pkcs12 -password pass:{{ nexus_admin_password }} -nocerts -nodes -in {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.p12 -out {{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.key"
+  when:                    not stat_result.stat.exists
 
-- name: Changing nexus protocol to https
+- name:                    Changing nexus protocol to https
   lineinfile:
-    dest: "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/nexus.properties"
-    regexp: "^# nexus-args=.*"
-    line: "nexus-args=${jetty.etc}/jetty.xml,${jetty.etc}/jetty-https.xml,${jetty.etc}/jetty-requestlog.xml"
-  ignore_errors: yes
-  when: not stat_result.stat.exists
+    dest:                  "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/nexus.properties"
+    regexp:                "^# nexus-args=.*"
+    line:                  "nexus-args=${jetty.etc}/jetty.xml,${jetty.etc}/jetty-https.xml,${jetty.etc}/jetty-requestlog.xml"
+  ignore_errors:           yes
+  when:                    not stat_result.stat.exists
 
-- name: Adding SSL directory path to Nexus
+- name:                    Adding SSL directory path to Nexus
   lineinfile:
-    dest: "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/nexus.properties"
-    line: "ssl.etc=${karaf.data}/etc/ssl"
-    create: yes
-  when: not stat_result.stat.exists
+    dest:                  "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/nexus.properties"
+    line:                  "ssl.etc=${karaf.data}/etc/ssl"
+    create:                yes
+  when:                    not stat_result.stat.exists
 
-- name: Changing Nexus port
+- name:                    Changing Nexus port
   lineinfile:
-    dest: "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/nexus.properties"
-    regexp: "^application-port=.*"
-    line: "application-port-ssl={{ nexus_https_port }}"
-  when: not stat_result.stat.exists
+    dest:                  "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/nexus.properties"
+    regexp:                "^application-port=.*"
+    line:                  "application-port-ssl={{ nexus_https_port }}"
+  when:                    not stat_result.stat.exists
 
-- name: Cleaning up
+- name:                    Cleaning up
   file:
-      path: "{{ nexus_installation_dir }}/nexus/etc/jetty/jetty-https.xml"
-      state: absent
-  when: not stat_result.stat.exists
+      path:                "{{ nexus_installation_dir }}/nexus/etc/jetty/jetty-https.xml"
+      state:               absent
+  when:                    not stat_result.stat.exists
 
-- name: Coping new jetty config file
+- name:                    Coping new jetty config file
   template:
-      src: "jetty-https.j2"
-      dest: "{{ nexus_installation_dir }}/nexus/etc/jetty/jetty-https.xml"
-  when: not stat_result.stat.exists
+      src:                 "jetty-https.j2"
+      dest:                "{{ nexus_installation_dir }}/nexus/etc/jetty/jetty-https.xml"
+  when:                    not stat_result.stat.exists
 
-- name: Changing privileges
+- name:                    Changing privileges
   ansible.builtin.file:
-      path: "{{ nexus_installation_dir }}/nexus/etc/jetty/jetty-https.xml"
-      owner: "{{ nexus_os_user }}"
-      group: "{{ nexus_os_group }}"
+      path:                "{{ nexus_installation_dir }}/nexus/etc/jetty/jetty-https.xml"
+      owner:               "{{ nexus_os_user }}"
+      group:               "{{ nexus_os_group }}"
 
-- name: Adding certificate to trustable
-  shell: "update-ca-trust force-enable"
+- name:                    Adding certificate to trustable
+  shell:                   "update-ca-trust force-enable"
 
-- name: Adding certificate to trustable
+- name:                    Adding certificate to trustable
   copy:
-      src: "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.pem"
-      dest: "/etc/pki/ca-trust/source/anchors/"
-      remote_src: yes
+      src:                 "{{ nexus_installation_dir }}/sonatype-work/nexus3/etc/ssl/{{ nexus_ssl_name }}.pem"
+      dest:                "/etc/pki/ca-trust/source/anchors/"
+      remote_src:          yes
 
-- name: Adding certificate to trustable
-  shell: "update-ca-trust extract"
+- name:                    Adding certificate to trustable
+  shell:                   "update-ca-trust extract"
 
-- name: Restarting Nexus
+- name:                    Restarting Nexus
   ansible.builtin.systemd:
-    name: nexus
-    state: restarted
+    name:                  nexus
+    state:                 restarted

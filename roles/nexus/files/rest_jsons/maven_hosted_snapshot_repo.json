@@ -1,16 +1,16 @@
 {
-  "name": "petclinic-maven-hosted-snapshot",
-  "online": true,
-  "storage": {
-    "blobStoreName": "default",
-    "strictContentTypeValidation": "true",
-    "writePolicy": "ALLOW"
-  },
-  "component": {
-    "proprietaryComponents": "true"
-  },
-  "maven": {
-    "versionPolicy": "SNAPSHOT",
-    "layoutPolicy": "PERMISSIVE"
-  }
+    "name": "petclinic-maven-hosted-snapshot",
+    "online": true,
+    "storage": {
+        "blobStoreName": "default",
+        "strictContentTypeValidation": "true",
+        "writePolicy": "ALLOW"
+    },
+    "component": {
+        "proprietaryComponents": "true"
+    },
+    "maven": {
+        "versionPolicy": "SNAPSHOT",
+        "layoutPolicy": "PERMISSIVE"
+    }
 }

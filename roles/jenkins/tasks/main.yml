@@ -1,9 +1,9 @@
 ---
-- name: Install Jenkins
+- name:    Install Jenkins
   include: install.yml
 
-- name: Configure Jenkins
+- name:    Configure Jenkins
   include: configure.yml
 
-- name: set ssl
+- name:    set ssl
   include: ssl.yml

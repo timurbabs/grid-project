@@ -1,14 +1,14 @@
 ---
-nexus_download_dir: "/app"
-nexus_download_url: "https://download.sonatype.com/nexus/3/latest-unix.tar.gz"
+nexus_download_dir:    "/app"
+nexus_download_url:    "https://download.sonatype.com/nexus/3/latest-unix.tar.gz"
 
-nexus_admin_password: !vault |
+nexus_admin_password:  !vault |
           $ANSIBLE_VAULT;1.1;AES256
           35666439313136666631393965616239393730623832353034633231353965663837623934303466
           3739353962336639353536346132616530653165383733370a313135386133646361613735646231
           34633938646634346566633432333838393861373739636562336664383562643265326639333362
           3963393534363533650a303563303432353832623762316465353964333434616635396363666266
           3132
-nexus_domain_name: "{{ hostvars.nexus_linux.ansible_host_dns }}"
-nexus_private_ip: "{{ hostvars.nexus_linux.ansible_host_private_ip }}"
-nexus_ssl_name: "NexusSSL"
+nexus_domain_name:     "{{ hostvars.nexus_linux.ansible_host_dns }}"
+nexus_private_ip:      "{{ hostvars.nexus_linux.ansible_host_private_ip }}"
+nexus_ssl_name:        "NexusSSL"
