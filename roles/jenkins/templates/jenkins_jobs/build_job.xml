@@ -1,74 +1,60 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <flow-definition plugin="workflow-job@2.41">
-    <actions>
-        <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.9.1"/>
-        <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.9.1">
-            <jobProperties/>
-            <triggers>
-                <string>com.cloudbees.jenkins.GitHubPushTrigger</string>
-            </triggers>
-            <parameters/>
-            <options/>
-        </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
-    </actions>
-    <description></description>
-    <keepDependencies>false</keepDependencies>
-    <properties>
-        <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.33.1">
-            <projectUrl>{{ github_project_url ***REMOVED******REMOVED***</projectUrl>
-            <displayName></displayName>
-        </com.coravy.hudson.plugins.github.GithubProjectProperty>
-        <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
-            <triggers>
-                <com.cloudbees.jenkins.GitHubPushTrigger plugin="github@1.33.1">
-                    <spec></spec>
-                </com.cloudbees.jenkins.GitHubPushTrigger>
-            </triggers>
-        </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
-    </properties>
-    <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.93">
-        <script>
-            pipeline {
-                agent {
-                    label & quot;
-                    slave - 1 & quot;
-                ***REMOVED***
-                triggers {
-                    githubPush()
-                ***REMOVED***
-                environment {
-                    NEXUS_VERSION = &quot;
-                    nexus3 & quot;
-                    NEXUS_PROTOCOL = &quot;
-                    https & quot;
-                    NEXUS_URL = &quot;
-                    {{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED*** : 8443 & quot;
-                    NEXUS_REPOSITORY = &quot;
-                    petclinic - maven - hosted - snapshot & quot;
-                    NEXUS_URL_CONTAINERS = &quot;
-                    {{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED*** : 8444 & quot;
-                    NEXUS_CREDENTIAL_ID = &quot;
-                    nexus & quot;
-                    DOCKER_IMAGE_NAME = &quot;
-                    petclinic - docker & quot;
-                    DOCKER_IMAGE = &quot;
-                    &quot;
-                ***REMOVED***
-                stages {
-                    stage(& quot;
-                    Clone code from GitHub & quot;) {
-                        steps {
-                            git branch : &apos;
-                            main & apos;,
-                            url: &apos;
-                            {{ github_project_url ***REMOVED******REMOVED*** & apos;
-                        ***REMOVED***
-                    ***REMOVED***
-                    stage(& quot;
-                    Maven Build & quot;) {
-                        steps {
-                            script {
-                                    sh & quot;./mvnw clean package&quot;
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.9.1"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.9.1">
+      <jobProperties/>
+      <triggers>
+        <string>com.cloudbees.jenkins.GitHubPushTrigger</string>
+      </triggers>
+      <parameters/>
+      <options/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+  </actions>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.33.1">
+      <projectUrl>{{ github_project_url ***REMOVED******REMOVED***</projectUrl>
+      <displayName></displayName>
+    </com.coravy.hudson.plugins.github.GithubProjectProperty>
+    <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+      <triggers>
+        <com.cloudbees.jenkins.GitHubPushTrigger plugin="github@1.33.1">
+          <spec></spec>
+        </com.cloudbees.jenkins.GitHubPushTrigger>
+      </triggers>
+    </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.93">
+    <script>
+pipeline {
+    agent {
+		label &quot;slave-1&quot;
+    ***REMOVED***
+    triggers {
+        githubPush()
+    ***REMOVED***
+    environment {
+        NEXUS_VERSION = &quot;nexus3&quot;
+        NEXUS_PROTOCOL = &quot;https&quot;
+		NEXUS_URL = &quot;{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:8443&quot;
+        NEXUS_REPOSITORY = &quot;petclinic-maven-hosted-snapshot&quot;
+        NEXUS_URL_CONTAINERS = &quot;{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:8444&quot;
+        NEXUS_CREDENTIAL_ID = &quot;nexus&quot;
+        DOCKER_IMAGE_NAME = &quot;petclinic-docker&quot;
+        DOCKER_IMAGE = &quot;&quot;
+    ***REMOVED***
+    stages {
+        stage(&quot;Clone code from GitHub&quot;) {
+            steps {
+					git branch: &apos;main&apos;, url: &apos;{{ github_project_url ***REMOVED******REMOVED***&apos;
+            ***REMOVED***
+        ***REMOVED***
+        stage(&quot;Maven Build&quot;) {
+            steps {
+                script {
+                    sh &quot;./mvnw clean package&quot;
                 ***REMOVED***
             ***REMOVED***
         ***REMOVED***
@@ -76,140 +62,79 @@
             steps {
                 script {
                     pom = readMavenPom file: &quot;pom.xml&quot;;
-                    filesByGlob = findFiles(glob: &quot;target/ *.$ {
-                                        pom.packaging
-                                    ***REMOVED*** & quot;
-                                );
-                                echo & quot;
-                                $ {
-                                    filesByGlob[0].name
-                                ***REMOVED***
-                                $ {
-                                    filesByGlob[0].path
-                                ***REMOVED***
-                                $ {
-                                    filesByGlob[0].directory
-                                ***REMOVED***
-                                $ {
-                                    filesByGlob[0].length
-                                ***REMOVED***
-                                $ {
-                                    filesByGlob[0].lastModified
-                                ***REMOVED*** & quot;
-                                artifactPath = filesByGlob[0].path;
-                                artifactExists = fileExists artifactPath;
-                                if (artifactExists) {
-                                    echo & quot;
-                                    ***File : $ {
-                                        artifactPath
-                                    ***REMOVED***,
-                                    group: $ {
-                                        pom.groupId
-                                    ***REMOVED***,
-                                    packaging: $ {
-                                        pom.packaging
-                                    ***REMOVED***,
-                                    version $ {
-                                        pom.version
-                                ***REMOVED*** & quot;;
-                                nexusArtifactUploader(nexusVersion : NEXUS_VERSION, protocol : NEXUS_PROTOCOL, nexusUrl : NEXUS_URL, groupId : pom.groupId, version : pom.version, repository : NEXUS_REPOSITORY, credentialsId : NEXUS_CREDENTIAL_ID, artifacts : [
-                                    [artifactId: pom.artifactId,
-                                    classifier: &apos;
-                                    &apos;,
-                                    file: artifactPath,
-                                    type: pom.packaging],
-                                    [artifactId: pom.artifactId,
-                                    classifier: &apos;
-                                    &apos;,
-                                    file: &quot;
-                                    pom.xml & quot;,
-                                    type: &quot;
-                                    pom & quot;]
-                                ]);
-                            ***REMOVED*** else {
-                                error & quot;
-                                ***File : $ {
-                                    artifactPath
-                                ***REMOVED***,
-                                could not be found & quot;;
-                            ***REMOVED***
-                        ***REMOVED***
-                    ***REMOVED***
-                ***REMOVED***
-
-                stage(& quot;
-                Create DockerFile & quot;) {
-                    steps {
-                        script {
-                            pom = readMavenPom file : &quot;
-                            pom.xml & quot;;
-                            def data = &apos;
-                            FROM openjdk : 11 \nWORKDIR / \nCOPY./target/ & apos;
-                            +pom.artifactId + &apos;
-                            - &apos;
-                            +pom.version + &apos;.jar & apos;
-                            + &apos;
-                            /target/\nEXPOSE 8080 \nCMD java - jar / target /& apos;
-                            +pom.artifactId + &apos;
-                            - &apos;
-                            +pom.version + &apos;.jar & apos;
-                            writeFile(file : &apos;
-                            Dockerfile & apos;, text : data)
-                        ***REMOVED***
-                    ***REMOVED***
-                ***REMOVED***
-
-                stage(& quot;
-                Create Docker Image & quot;) {
-                    steps {
-                        script {
-                            pom = readMavenPom file : &quot;
-                            pom.xml & quot;;
-                            DOCKER_IMAGE = docker.build(& quot;
-                            $ {
-                                DOCKER_IMAGE_NAME
-                            ***REMOVED*** - $ {
-                                pom.version
-                            ***REMOVED*** & quot;)
-                        ***REMOVED***
-                    ***REMOVED***
-                ***REMOVED***
-
-                stage(& quot;
-                Upload Docker Image to Nexus & quot;) {
-                    steps {
-                        script {
-                            docker.withRegistry(& apos;
-                            https : //&apos;+NEXUS_URL_CONTAINERS, NEXUS_CREDENTIAL_ID ) {
-                                    DOCKER_IMAGE.push(& apos;
-                            latest & apos;)
-                        ***REMOVED***
-                    ***REMOVED***
-                ***REMOVED***
-            ***REMOVED***
-
-            stage(& apos;
-            Throw parameters to Deployment job & apos;) {
-                steps {
-                    script {
-                        pom = readMavenPom file : &quot;
-                        pom.xml & quot;;
-                        build job : &apos;
-                        Deployment & apos;,
-                        wait: false,
-                        parameters: [string(name : &apos;
-                            VERSION & apos;, value : &quot;
-                            $ {
-                                pom.version
-                            ***REMOVED*** & quot;)]
+                    filesByGlob = findFiles(glob: &quot;target/*.${pom.packaging***REMOVED***&quot;);
+                    echo &quot;${filesByGlob[0].name***REMOVED*** ${filesByGlob[0].path***REMOVED*** ${filesByGlob[0].directory***REMOVED*** ${filesByGlob[0].length***REMOVED*** ${filesByGlob[0].lastModified***REMOVED***&quot;
+                    artifactPath = filesByGlob[0].path;
+                    artifactExists = fileExists artifactPath;
+                    if(artifactExists) {
+                        echo &quot;*** File: ${artifactPath***REMOVED***, group: ${pom.groupId***REMOVED***, packaging: ${pom.packaging***REMOVED***, version ${pom.version***REMOVED***&quot;;
+                        nexusArtifactUploader(
+                            nexusVersion: NEXUS_VERSION,
+                            protocol: NEXUS_PROTOCOL,
+                            nexusUrl: NEXUS_URL,
+                            groupId: pom.groupId,
+                            version: pom.version,
+                            repository: NEXUS_REPOSITORY,
+                            credentialsId: NEXUS_CREDENTIAL_ID,
+                            artifacts: [
+                                [artifactId: pom.artifactId,
+                                classifier: &apos;&apos;,
+                                file: artifactPath,
+                                type: pom.packaging],
+                                [artifactId: pom.artifactId,
+                                classifier: &apos;&apos;,
+                                file: &quot;pom.xml&quot;,
+                                type: &quot;pom&quot;]
+                            ]
+                        );
+                    ***REMOVED*** else {
+                        error &quot;*** File: ${artifactPath***REMOVED***, could not be found&quot;;
                     ***REMOVED***
                 ***REMOVED***
             ***REMOVED***
         ***REMOVED***
+
+        stage(&quot;Create DockerFile&quot;) {
+            steps {
+                script {
+                    pom = readMavenPom file: &quot;pom.xml&quot;;
+                    def data = &apos;FROM openjdk:11\nWORKDIR /\nCOPY ./target/&apos;+pom.artifactId+&apos;-&apos;+pom.version+&apos;.jar&apos;+&apos; /target/\nEXPOSE 8080\nCMD java -jar /target/&apos;+pom.artifactId+&apos;-&apos;+pom.version+&apos;.jar&apos;
+                    writeFile(file: &apos;Dockerfile&apos;, text: data)
+                ***REMOVED***
+            ***REMOVED***
+        ***REMOVED***
+
+        stage(&quot;Create Docker Image&quot;) {
+            steps {
+                script {
+                    pom = readMavenPom file: &quot;pom.xml&quot;;
+                    DOCKER_IMAGE = docker.build(&quot;${DOCKER_IMAGE_NAME***REMOVED***-${pom.version***REMOVED***&quot;)
+                ***REMOVED***
+            ***REMOVED***
+        ***REMOVED***
+
+        stage(&quot;Upload Docker Image to Nexus&quot;) {
+            steps {
+                script {
+                    docker.withRegistry( &apos;https://&apos;+NEXUS_URL_CONTAINERS, NEXUS_CREDENTIAL_ID ) {
+                        DOCKER_IMAGE.push(&apos;latest&apos;)
+                    ***REMOVED***
+                ***REMOVED***
+            ***REMOVED***
+        ***REMOVED***
+
+        stage(&apos;Throw parameters to Deployment job&apos;){
+            steps{
+                script {
+                    pom = readMavenPom file: &quot;pom.xml&quot;;
+                    build job: &apos;Deployment&apos;, wait: false, parameters: [string(name: &apos;VERSION&apos;, value: &quot;${pom.version***REMOVED***&quot;)]
+                ***REMOVED***
+            ***REMOVED***
+        ***REMOVED***
     ***REMOVED***
-        </script>
-        <sandbox>true</sandbox>
-    </definition>
-    <triggers/>
-    <disabled>false</disabled>
+***REMOVED***</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
 </flow-definition>
