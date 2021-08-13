@@ -4,7 +4,7 @@
       <!--This sends everything else to /public -->
       <id>nexus</id>
       <mirrorOf>*</mirrorOf>
-	  <url>{{ nexus_proxy ***REMOVED******REMOVED***</url>
+      <url>{{ nexus_proxy ***REMOVED******REMOVED***</url>
     </mirror>
   </mirrors>
   <profiles>
@@ -20,7 +20,7 @@
           <snapshots><enabled>true</enabled></snapshots>
         </repository>
       </repositories>
-     <pluginRepositories>
+      <pluginRepositories>
         <pluginRepository>
           <id>central</id>
           <url>http://central</url>
@@ -34,4 +34,11 @@
     <!--make the profile active all the time -->
     <activeProfile>nexus</activeProfile>
   </activeProfiles>
+  <servers>
+    <server>
+      <id>nexus</id>
+      <username>admin</username>
+      <password>112263</password>
+    </server>
+  </servers>
 </settings>
