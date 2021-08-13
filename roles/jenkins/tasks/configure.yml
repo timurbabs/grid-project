@@ -35,6 +35,7 @@
       PreCommit:                    templates/jenkins_jobs/pre_commit_job.xml,
       Deployment:                   templates/jenkins_jobs/deployment_job.xml,
       Build:                        templates/jenkins_jobs/build_job.xml,
+      Promotion:                    templates/jenkins_jobs/promotion_job.xml,
     ***REMOVED***
 
 - name:                             Upload SSH credentials

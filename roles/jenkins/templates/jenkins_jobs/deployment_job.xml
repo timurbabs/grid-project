@@ -29,7 +29,7 @@
   <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.93">
     <script>pipeline {
     agent {
-		label &quot;dev-prod&quot;
+		label &quot;{{ deployment_label ***REMOVED******REMOVED***&quot;
     ***REMOVED***
     environment {
 		NEXUS_URL_CONTAINERS = &quot;{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:8444&quot;

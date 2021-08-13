@@ -30,7 +30,7 @@
     <script>
 pipeline {
     agent {
-		label &quot;slave-1&quot;
+		label &quot;{{ build_label ***REMOVED******REMOVED***&quot;
     ***REMOVED***
     triggers {
         githubPush()

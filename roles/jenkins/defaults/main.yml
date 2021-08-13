@@ -4,10 +4,9 @@ jenkins_home:                     /var/lib/jenkins
 jenkins_username:                 admin
 jenkins_password:                 "{{ encrypted_jenkins_password ***REMOVED******REMOVED***"
 jenkins_ssl_password:             "{{ encrypted_ssl_password ***REMOVED******REMOVED***"
-jenkins_protocol:                 http
-jenkins_port:                     8080
-jenkins_https_port:               8443
-jenkins_url:                      "{{ jenkins_protocol ***REMOVED******REMOVED***://{{ hostvars.jenkins_linux.ansible_host ***REMOVED******REMOVED***:{{ jenkins_port ***REMOVED******REMOVED***"
+jenkins_protocol:                 https
+jenkins_port:                     8443
+jenkins_url:                      "{{ jenkins_protocol ***REMOVED******REMOVED***://{{ hostvars.jenkins_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ jenkins_port ***REMOVED******REMOVED***"
 jenkins_domain_name:              "{{ hostvars.jenkins_linux.ansible_host_dns ***REMOVED******REMOVED***"
 jenkins_private_ip:               "{{ hostvars.jenkins_linux.ansible_host_private_ip ***REMOVED******REMOVED***"
 jenkins_ssl_name:                 "JenkinsSSL"
@@ -16,13 +15,10 @@ jenkins_ssl_name:                 "JenkinsSSL"
 github_project_url:               https://github.com/timurbabs/spring-petclinic.git
 branch:                           "*/main"
 
-script_path_build:                Jenkinsfile_Build
-script_path_precommit:            Jenkinsfile_PreCommit
-script_path_deployment:           Jenkinsfile_Deployment
-
 build_label:                      slave-1
 deployment_label:                 dev-prod
 pre_commit_label:                 slave-1
+promotion_label:                  slave-1
 
 # Credentials
 password_credentials:
@@ -48,14 +44,14 @@ ssh_slaves:
     label:                        slave-1
     number_executors:             2
     credentialsId:                slaves
-    host:                         "{{ hostvars.slave_linux.ansible_host ***REMOVED******REMOVED***"
+    host:                         "{{ hostvars.slave_linux.ansible_host_dns ***REMOVED******REMOVED***"
   slave_production:
     name:                         dev-prod
     root_directory:               /home/jenkins
     label:                        dev-prod
     number_executors:             2
     credentialsId:                slaves
-    host:                         "{{ hostvars.production_linux.ansible_host ***REMOVED******REMOVED***"
+    host:                         "{{ hostvars.production_linux.ansible_host_dns ***REMOVED******REMOVED***"
 
 # Run jobs
 run_jobs:
