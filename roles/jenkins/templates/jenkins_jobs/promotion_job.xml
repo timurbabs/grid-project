@@ -4,27 +4,24 @@
     <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.9.1"/>
     <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.9.1">
       <jobProperties/>
-      <triggers>
-        <string>com.cloudbees.jenkins.GitHubPushTrigger</string>
-      </triggers>
-      <parameters/>
+      <triggers/>
+      <parameters>
+        <string>VERSION</string>
+      </parameters>
       <options/>
     </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
   </actions>
   <description></description>
   <keepDependencies>false</keepDependencies>
   <properties>
-    <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.33.1">
-      <projectUrl>{{ github_project_url }}</projectUrl>
-      <displayName></displayName>
-    </com.coravy.hudson.plugins.github.GithubProjectProperty>
-    <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
-      <triggers>
-        <com.cloudbees.jenkins.GitHubPushTrigger plugin="github@1.33.1">
-          <spec></spec>
-        </com.cloudbees.jenkins.GitHubPushTrigger>
-      </triggers>
-    </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>VERSION</name>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
   </properties>
   <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.93">
     <script>
@@ -32,15 +29,15 @@ pipeline {
     agent {
 		label &quot;slave-1&quot;
     }
-    triggers {
-        githubPush()
+    parameters {
+        string(defaultValue: &quot;&quot;, description: &apos;&apos;, name: &apos;VERSION&apos;)
     }
     environment {
         NEXUS_VERSION = &quot;nexus3&quot;
         NEXUS_PROTOCOL = &quot;https&quot;
 		NEXUS_URL = &quot;{{ hostvars.nexus_linux.ansible_host_dns }}:8443&quot;
-        NEXUS_REPOSITORY = &quot;petclinic-maven-hosted-snapshot&quot;
-        NEXUS_URL_CONTAINERS = &quot;{{ hostvars.nexus_linux.ansible_host_dns }}:8444&quot;
+        NEXUS_REPOSITORY = &quot;petclinic-maven-hosted-release&quot;
+        NEXUS_URL_CONTAINERS = &quot;{{ hostvars.nexus_linux.ansible_host_dns }}:8445&quot;
         NEXUS_CREDENTIAL_ID = &quot;nexus&quot;
         DOCKER_IMAGE_NAME = &quot;petclinic-docker&quot;
         DOCKER_IMAGE = &quot;&quot;
@@ -73,7 +70,7 @@ pipeline {
                             protocol: NEXUS_PROTOCOL,
                             nexusUrl: NEXUS_URL,
                             groupId: pom.groupId,
-                            version: pom.version,
+                            version: VERSION,
                             repository: NEXUS_REPOSITORY,
                             credentialsId: NEXUS_CREDENTIAL_ID,
                             artifacts: [
@@ -98,21 +95,21 @@ pipeline {
             steps {
                 script {
                     pom = readMavenPom file: &quot;pom.xml&quot;;
-                    def data = &apos;FROM openjdk:11\nWORKDIR /\nCOPY ./target/&apos;+pom.artifactId+&apos;-&apos;+pom.version+&apos;.jar&apos;+&apos; /target/\nEXPOSE 8080\nCMD java -jar /target/&apos;+pom.artifactId+&apos;-&apos;+pom.version+&apos;.jar&apos;
+                    def data = &apos;FROM openjdk:11\nWORKDIR /\nCOPY ./target/&apos;+pom.artifactId+&apos;-&apos;+VERSION+&apos;.jar&apos;+&apos; /target/\nEXPOSE 8080\nCMD java -jar /target/&apos;+pom.artifactId+&apos;-&apos;+VERSION+&apos;.jar&apos;
                     writeFile(file: &apos;Dockerfile&apos;, text: data)
                 }
             }
         }
-        
+
         stage(&quot;Create Docker Image&quot;) {
             steps {
                 script {
                     pom = readMavenPom file: &quot;pom.xml&quot;;
-                    DOCKER_IMAGE = docker.build(&quot;${DOCKER_IMAGE_NAME}-${pom.version}&quot;)
+                    DOCKER_IMAGE = docker.build(&quot;${DOCKER_IMAGE_NAME}-${VERSION}&quot;)
                 }
             }
         }
-        
+
         stage(&quot;Upload Docker Image to Nexus&quot;) {
             steps {
                 script {
@@ -122,17 +119,9 @@ pipeline {
                 }
             }
         }
-        
-        stage(&apos;Throw parameters to Deployment job&apos;){
-            steps{
-                script {
-                    pom = readMavenPom file: &quot;pom.xml&quot;;
-                    build job: &apos;Deployment&apos;, wait: false, parameters: [string(name: &apos;VERSION&apos;, value: &quot;${pom.version}&quot;)]
-                }
-            }
-        }
     }
-}</script>
+}
+</script>
     <sandbox>true</sandbox>
   </definition>
   <triggers/>
