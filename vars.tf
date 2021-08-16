@@ -2,12 +2,7 @@
 
 ***REMOVED***
 ***REMOVED***
-  default = "AKIAS2GU2XM33W2Q34JC"
 ***REMOVED***
-
-***REMOVED***
-***REMOVED***
-  default = "kGx4I3KH8QaazRfY/j1mGCZqsKRTWoG8j7Ossf5e"
 ***REMOVED***
 
 ***REMOVED***
@@ -22,7 +17,12 @@
 
 ***REMOVED***
 ***REMOVED***
-  default = "drozhdestvenskii"
+***REMOVED***
+***REMOVED***
+
+***REMOVED***
+***REMOVED***
+***REMOVED***
 ***REMOVED***
 
 
