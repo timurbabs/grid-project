@@ -48,7 +48,7 @@ variable "owner" {
   default = "YOUR_NAME_HERE"
 }
 ```
-##Run terraform.
+## Run terraform.
 
 ```sh
 terraform init
@@ -56,23 +56,23 @@ terraform plan
 terraform apply
 ```
 
-##Run Ansible Playbook
+## Run Ansible Playbook
 Default Ansible Vault password: "25447"
 
 ```sh
  ansible-playbook playbook.yml --ask-vault-pass
 ```
 
-##Connect to Nexus
+## Connect to Nexus
 
 At first: add certificate ~/Documents/NexusSSL.pem to truststore.
 Use Nexus public DNS name from inventory.yml and port 8443 to access Nexus.
 
-##Connect to Jenkins
+## Connect to Jenkins
 
 At first: add certificate ~/Documents/JenkinsSSL.pem to truststore.
 Use Jenins public DNS name from inventory.yml and port 8443 to access Jenkins.
 
-##Connect to Petclinic
+## Connect to Petclinic
 
 Use DevProd public ip address from inventory.yml and port 8080 to access PetClinic.
