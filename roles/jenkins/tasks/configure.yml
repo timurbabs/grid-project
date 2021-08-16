@@ -5,7 +5,7 @@
     state:                          present
     url_username:                   "{{ jenkins_username ***REMOVED******REMOVED***"
     url_password:                   "{{ jenkins_password ***REMOVED******REMOVED***"
-    url:                            "{{ jenkins_url ***REMOVED******REMOVED***"
+    url:                            "{{ jenkins_ip ***REMOVED******REMOVED***"
   with_items:                       "{{ jenkins_plugins ***REMOVED******REMOVED***"
   notify:
     - "Restart Jenkins"
@@ -20,7 +20,7 @@
     state:                          enabled
     url_username:                   "{{ jenkins_username ***REMOVED******REMOVED***"
     url_password:                   "{{ jenkins_password ***REMOVED******REMOVED***"
-    url:                            "{{ jenkins_url ***REMOVED******REMOVED***"
+    url:                            "{{ jenkins_ip ***REMOVED******REMOVED***"
   with_items:                       "{{ jenkins_plugins ***REMOVED******REMOVED***"
 
 - name:                             Upload jobs
@@ -28,7 +28,7 @@
     config:                         "{{ lookup('template', item.value) ***REMOVED******REMOVED***"
     name:                           "{{ item.key ***REMOVED******REMOVED***"
     password:                       "{{ jenkins_password ***REMOVED******REMOVED***"
-    url:                            "{{ jenkins_url ***REMOVED******REMOVED***"
+    url:                            "{{ jenkins_ip ***REMOVED******REMOVED***"
     user:                           "{{ jenkins_username ***REMOVED******REMOVED***"
   with_dict:
     {
@@ -40,7 +40,7 @@
 
 - name:                             Upload SSH credentials
   jenkins_script:
-    url:                            "{{ jenkins_url ***REMOVED******REMOVED***"
+    url:                            "{{ jenkins_ip ***REMOVED******REMOVED***"
     script:                         '{{ lookup("template", "templates/jenkins_groovy/credentials/secret_ssh.groovy") ***REMOVED******REMOVED***'
     args:                           "{{ item.value ***REMOVED******REMOVED***"
     user:                           "{{ jenkins_username ***REMOVED******REMOVED***"
@@ -51,7 +51,7 @@
 
 - name:                             Upload username and password credentials
   jenkins_script:
-    url:                            "{{ jenkins_url ***REMOVED******REMOVED***"
+    url:                            "{{ jenkins_ip ***REMOVED******REMOVED***"
     script:                         '{{ lookup("template", "templates/jenkins_groovy/credentials/secret_password.groovy") ***REMOVED******REMOVED***'
     args:                           "{{ item.value ***REMOVED******REMOVED***"
     user:                           "{{ jenkins_username ***REMOVED******REMOVED***"
@@ -62,7 +62,7 @@
 
 - name:                             Upload Slaves
   jenkins_script:
-    url:                            "{{ jenkins_url ***REMOVED******REMOVED***"
+    url:                            "{{ jenkins_ip ***REMOVED******REMOVED***"
     script:                         '{{ lookup("template", "templates/jenkins_groovy/slaves/slave.groovy") ***REMOVED******REMOVED***'
     args:                           "{{ item.value ***REMOVED******REMOVED***"
     user:                           "{{ jenkins_username ***REMOVED******REMOVED***"
@@ -73,7 +73,7 @@
 
 - name:                             Run jobs
   jenkins_script:
-    url:                            "{{ jenkins_url ***REMOVED******REMOVED***"
+    url:                            "{{ jenkins_ip ***REMOVED******REMOVED***"
     script:                         '{{ lookup("template", "templates/jenkins_groovy/jobs/run_jobs.groovy") ***REMOVED******REMOVED***'
     args:                           "{{ item.value ***REMOVED******REMOVED***"
     user:                           "{{ jenkins_username ***REMOVED******REMOVED***"

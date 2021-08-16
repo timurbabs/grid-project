@@ -6,6 +6,7 @@ jenkins_password:                 "{{ encrypted_jenkins_password ***REMOVED*****
 jenkins_ssl_password:             "{{ encrypted_ssl_password ***REMOVED******REMOVED***"
 jenkins_protocol:                 https
 jenkins_port:                     8443
+jenkins_ip:                       "http://{{ hostvars.jenkins_linux.ansible_host ***REMOVED******REMOVED***:8080"
 jenkins_url:                      "{{ jenkins_protocol ***REMOVED******REMOVED***://{{ hostvars.jenkins_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ jenkins_port ***REMOVED******REMOVED***"
 jenkins_domain_name:              "{{ hostvars.jenkins_linux.ansible_host_dns ***REMOVED******REMOVED***"
 jenkins_private_ip:               "{{ hostvars.jenkins_linux.ansible_host_private_ip ***REMOVED******REMOVED***"
