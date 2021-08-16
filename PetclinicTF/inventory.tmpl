@@ -1,0 +1,27 @@
+---
+all:
+  children:
+    jenkins_servers:
+      hosts:
+        jenkins_linux:
+          ansible_host: ${jenkins-ip***REMOVED***
+          ansible_host_dns: ${jenkins-dns***REMOVED***
+          ansible_host_private_ip: ${jenkins-private-ip***REMOVED***
+    slave_servers:
+      hosts:
+        slave_linux:
+          ansible_host: ${slave-ip***REMOVED***
+          ansible_host_dns: ${slave-dns***REMOVED***
+          ansible_host_private_ip: ${slave-private-ip***REMOVED***
+    nexus_servers:
+      hosts:
+        nexus_linux:
+          ansible_host: ${nexus-ip***REMOVED***
+          ansible_host_dns: ${nexus-dns***REMOVED***
+          ansible_host_private_ip: ${nexus-private-ip***REMOVED***
+    dev_production_servers:
+      hosts:
+        dev_production_linux:
+          ansible_host: ${devprod-ip***REMOVED***
+          ansible_host_dns: ${devprod-dns***REMOVED***
+          ansible_host_private_ip: ${devprod-private-ip***REMOVED***
