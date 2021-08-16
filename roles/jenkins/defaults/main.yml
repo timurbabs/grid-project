@@ -51,7 +51,7 @@ ssh_slaves:
     label:                        dev-prod
     number_executors:             2
     credentialsId:                slaves
-    host:                         "{{ hostvars.production_linux.ansible_host_dns }}"
+    host:                         "{{ hostvars.dev_production_linux.ansible_host_dns }}"
 
 # Run jobs
 run_jobs:
