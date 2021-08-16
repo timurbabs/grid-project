@@ -19,7 +19,7 @@ Improvement list:
 
 ## Installation
 
-Dillinger requires [Terraform](https://www.terraform.io/) v0.12+, [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) v2.11+ to run.
+Requires [Terraform](https://www.terraform.io/) v0.12+, [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) v2.11+ to run.
 
 Clonning repository
 ```sh
