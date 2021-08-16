@@ -2,12 +2,12 @@
 
 variable "access_key" {
   type    = string
-  default = "AKIAS2GU2XM33W2Q34JC"
+  default = ""
 }
 
 variable "secret_key" {
   type    = string
-  default = "kGx4I3KH8QaazRfY/j1mGCZqsKRTWoG8j7Ossf5e"
+  default = ""
 }
 
 variable "region" {
@@ -22,7 +22,7 @@ variable "availability_zone" {
 
 variable "owner" {
   type    = string
-  default = "drozhdestvenskii"
+  default = ""
 }
 
 
