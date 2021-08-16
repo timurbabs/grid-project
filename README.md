@@ -48,7 +48,7 @@ Also change owner of AWS property in grid-project/vars.tf
   default = "YOUR_NAME_HERE"
 ***REMOVED***
 ```
-## Run terraform.
+## Run terraform
 
 ```sh
 terraform init
