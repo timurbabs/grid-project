@@ -48,7 +48,7 @@ variable "owner" {
   default = "YOUR_NAME_HERE"
 }
 ```
-## Run terraform.
+## Run terraform
 
 ```sh
 terraform init
