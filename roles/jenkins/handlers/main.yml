@@ -8,7 +8,7 @@
 
 - name:               Wait until Jenkins is available
   uri:
-    url:              "{{ jenkins_url }}"
+    url:              "{{ jenkins_ip }}"
     url_username:     "{{ jenkins_username }}"
     url_password:     "{{ jenkins_password }}"
     validate_certs:   False
