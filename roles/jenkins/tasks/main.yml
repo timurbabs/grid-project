@@ -5,5 +5,5 @@
 - name:    Configure Jenkins
   include: configure.yml
 
-# - name:    set ssl
-#   include: ssl.yml
+- name:    set ssl
+  include: ssl.yml

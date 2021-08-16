@@ -8,7 +8,7 @@
 
 - name:               Wait until Jenkins is available
   uri:
-    url:              "{{ jenkins_url ***REMOVED******REMOVED***"
+    url:              "{{ jenkins_ip ***REMOVED******REMOVED***"
     url_username:     "{{ jenkins_username ***REMOVED******REMOVED***"
     url_password:     "{{ jenkins_password ***REMOVED******REMOVED***"
     validate_certs:   False
