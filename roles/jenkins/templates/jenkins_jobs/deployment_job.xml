@@ -51,11 +51,12 @@
                 ***REMOVED***
             ***REMOVED***
         ***REMOVED***
-
         stage(&quot;Docker pull latest&quot;) {
             steps {
                 script {
-                    sh &apos;docker pull ${NEXUS_URL_CONTAINERS***REMOVED***/${DOCKER_IMAGE_NAME***REMOVED***-${VERSION***REMOVED***:${DOCKER_IMAGE_TAG***REMOVED***&apos;
+                    docker.withRegistry( 'https://'+NEXUS_URL_CONTAINERS, NEXUS_CREDENTIAL_ID ) {
+                        sh 'docker pull ${NEXUS_URL_CONTAINERS***REMOVED***/${DOCKER_IMAGE_NAME***REMOVED***-${VERSION***REMOVED***'
+                    ***REMOVED***
                 ***REMOVED***
             ***REMOVED***
         ***REMOVED***
