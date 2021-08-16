@@ -5,7 +5,7 @@
     state:                          present
     url_username:                   "{{ jenkins_username }}"
     url_password:                   "{{ jenkins_password }}"
-    url:                            "{{ jenkins_url }}"
+    url:                            "{{ jenkins_ip }}"
   with_items:                       "{{ jenkins_plugins }}"
   notify:
     - "Restart Jenkins"
@@ -20,7 +20,7 @@
     state:                          enabled
     url_username:                   "{{ jenkins_username }}"
     url_password:                   "{{ jenkins_password }}"
-    url:                            "{{ jenkins_url }}"
+    url:                            "{{ jenkins_ip }}"
   with_items:                       "{{ jenkins_plugins }}"
 
 - name:                             Upload jobs
@@ -28,7 +28,7 @@
     config:                         "{{ lookup('template', item.value) }}"
     name:                           "{{ item.key }}"
     password:                       "{{ jenkins_password }}"
-    url:                            "{{ jenkins_url }}"
+    url:                            "{{ jenkins_ip }}"
     user:                           "{{ jenkins_username }}"
   with_dict:
     {
@@ -40,7 +40,7 @@
 
 - name:                             Upload SSH credentials
   jenkins_script:
-    url:                            "{{ jenkins_url }}"
+    url:                            "{{ jenkins_ip }}"
     script:                         '{{ lookup("template", "templates/jenkins_groovy/credentials/secret_ssh.groovy") }}'
     args:                           "{{ item.value }}"
     user:                           "{{ jenkins_username }}"
@@ -51,7 +51,7 @@
 
 - name:                             Upload username and password credentials
   jenkins_script:
-    url:                            "{{ jenkins_url }}"
+    url:                            "{{ jenkins_ip }}"
     script:                         '{{ lookup("template", "templates/jenkins_groovy/credentials/secret_password.groovy") }}'
     args:                           "{{ item.value }}"
     user:                           "{{ jenkins_username }}"
@@ -62,7 +62,7 @@
 
 - name:                             Upload Slaves
   jenkins_script:
-    url:                            "{{ jenkins_url }}"
+    url:                            "{{ jenkins_ip }}"
     script:                         '{{ lookup("template", "templates/jenkins_groovy/slaves/slave.groovy") }}'
     args:                           "{{ item.value }}"
     user:                           "{{ jenkins_username }}"
@@ -73,7 +73,7 @@
 
 - name:                             Run jobs
   jenkins_script:
-    url:                            "{{ jenkins_url }}"
+    url:                            "{{ jenkins_ip }}"
     script:                         '{{ lookup("template", "templates/jenkins_groovy/jobs/run_jobs.groovy") }}'
     args:                           "{{ item.value }}"
     user:                           "{{ jenkins_username }}"
