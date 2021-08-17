@@ -13,7 +13,7 @@ resource "google_compute_instance" "Nexus" {
     }
   }
   network_interface {
-    network = google_compute_network.PetclinicVPC.id
+    network    = google_compute_network.PetclinicVPC.id
     subnetwork = google_compute_subnetwork.PetclinicSubnet.id
     access_config {
       nat_ip = google_compute_address.NexusIP.address

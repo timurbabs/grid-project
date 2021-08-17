@@ -1,5 +1,5 @@
 resource "google_compute_network" "PetclinicVPC" {
-  name = "petclinic-vpc"
+  name                    = "petclinic-vpc"
   auto_create_subnetworks = false
 }
 

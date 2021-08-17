@@ -1,7 +1,7 @@
 provider "google" {
-  project = "petclinic-323209"
+  project     = "petclinic-323209"
   credentials = file("key.json")
-  region     = var.region
+  region      = var.region
 }
 
 module "Petclinic" {
