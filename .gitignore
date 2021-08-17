@@ -1,4 +1,7 @@
 .terraform
 .DS_Store
 .terraform.lock.hcl
-
+creds.csv
+key.json
+terraform.tfstate
+terraform.tfstate.backup
