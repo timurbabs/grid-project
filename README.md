@@ -28,20 +28,10 @@ cd grid-project
 ```
 
 Generate AWS key in your AWS account.
-Change Access and Secret keys in grid-project/vars.tf
-```
-***REMOVED***
-***REMOVED***
-  default = "YOUR_ACCESS_KEY_HERE"
-***REMOVED***
+Download your Access and Secret keys to grid-project/creds.csv
 
-***REMOVED***
-***REMOVED***
-  default = "YOUR_SECRET_KEY_HERE"
-***REMOVED***
-```
 
-Also change owner of AWS property in grid-project/vars.tf
+Change owner of AWS property in grid-project/vars.tf
 ```
 ***REMOVED***
 ***REMOVED***
