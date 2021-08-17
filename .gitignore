@@ -5,3 +5,4 @@ inventory.yml
 terraform.tfstate
 terraform.tfstate.backup
 creds.csv
+key.json
