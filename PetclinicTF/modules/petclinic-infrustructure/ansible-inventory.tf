@@ -1,5 +1,5 @@
 resource "local_file" "AnsibleInventory" {
-  content = templatefile("./PetclinicTF/inventory.tmpl",
+  content = templatefile("./PetclinicTF/modules/petclinic-infrustructure/inventory.tmpl",
     {
       nexus-dns        = aws_eip.NexusEIP.public_dns,
       nexus-ip         = aws_eip.NexusEIP.public_ip,
