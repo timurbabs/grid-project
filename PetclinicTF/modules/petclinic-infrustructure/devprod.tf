@@ -1,5 +1,5 @@
 resource "aws_security_group" "DevProdSG" {
-  name = "DevProdSG"
+  name = "${var.StageTag***REMOVED***DevProdSG"
   dynamic "ingress" {
     for_each = ["22", "8080", "8085", "8443", "8444", "8445"]
     content {
@@ -26,7 +26,6 @@ resource "aws_instance" "DevProd" {
   key_name               = "tbaburin-test-linux-ohio"
   vpc_security_group_ids = [aws_security_group.DevProdSG.id]
   subnet_id              = aws_subnet.PetclinicNet.id
-  private_ip             = var.devprod_private_ip
 
   root_block_device {
     volume_size           = var.devprod_volume_size
@@ -34,7 +33,7 @@ resource "aws_instance" "DevProd" {
   ***REMOVED***
 
   tags = {
-    Name  = "DevProd"
+    Name  = "${var.StageTag***REMOVED***DevProd"
     Owner = var.owner
   ***REMOVED***
 ***REMOVED***
@@ -42,11 +41,11 @@ resource "aws_instance" "DevProd" {
 resource "aws_eip" "DevProdEIP" {
   instance = aws_instance.DevProd.id
   tags = {
-    Name = "DevProdEIP"
+    Name = "${var.StageTag***REMOVED***DevProdEIP"
   ***REMOVED***
 ***REMOVED***
 
-resource "aws_ami_from_instance" "DevProdAMIStock" {
-  name               = "DevProdAMIStock"
-  source_instance_id = aws_instance.DevProd.id
-***REMOVED***
+# resource "aws_ami_from_instance" "DevProdAMIStock" {
+#   name               = "DevProdAMIStock"
+#   source_instance_id = aws_instance.DevProd.id
+# ***REMOVED***

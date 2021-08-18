@@ -1,5 +1,5 @@
 resource "aws_security_group" "SlaveSG" {
-  name = "SlaveSG"
+  name = "${var.StageTag***REMOVED***SlaveSG"
   dynamic "ingress" {
     for_each = ["22"]
     content {
@@ -33,7 +33,7 @@ resource "aws_instance" "Slave" {
   ***REMOVED***
 
   tags = {
-    Name  = "Slave"
+    Name  = "${var.StageTag***REMOVED***Slave"
     Owner = var.owner
   ***REMOVED***
 ***REMOVED***
@@ -41,11 +41,11 @@ resource "aws_instance" "Slave" {
 resource "aws_eip" "SlaveEIP" {
   instance = aws_instance.Slave.id
   tags = {
-    Name = "SlaveEIP"
+    Name = "${var.StageTag***REMOVED***SlaveEIP"
   ***REMOVED***
 ***REMOVED***
 
-resource "aws_ami_from_instance" "SlaveAMIStock" {
-  name               = "SlaveAMIStock"
-  source_instance_id = aws_instance.Slave.id
-***REMOVED***
+# resource "aws_ami_from_instance" "SlaveAMIStock" {
+#   name               = "SlaveAMIStock"
+#   source_instance_id = aws_instance.Slave.id
+# ***REMOVED***
