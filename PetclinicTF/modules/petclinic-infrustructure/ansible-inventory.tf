@@ -22,5 +22,5 @@ resource "local_file" "AnsibleInventory" {
       devprod-private-ip = aws_instance.DevProd.private_ip
     }
   )
-  filename = "./inventory.yml"
+  filename = "./${var.StageTag}Inventory.yml"
 }
