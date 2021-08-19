@@ -25,7 +25,6 @@ resource "aws_instance" "Slave" {
   key_name               = "tbaburin-test-linux-ohio"
   vpc_security_group_ids = [aws_security_group.SlaveSG.id]
   subnet_id              = aws_subnet.PetclinicNet.id
-  private_ip             = var.slave_private_ip
 
   root_block_device {
     volume_size           = var.slave_volume_size
