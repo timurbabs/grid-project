@@ -16,12 +16,12 @@ module "ArtifactRegistry" {
 }
 
 module "DevCluster" {
-  source = "./terraform/PC-cluster"
+  source          = "./terraform/PC-cluster"
   ClusterRole_arn = var.ClusterRole_arn
-  PoolRole_arn = var.PoolRole_arn
-  VPC = var.VPC
-  CIDR_a = var.CIDR_a
-  CIDR_b = var.CIDR_b
-  Region = var.Region
-  SSHKey = var.SSHKey
+  PoolRole_arn    = var.PoolRole_arn
+  VPC             = var.VPC
+  CIDR_a          = var.CIDR_a
+  CIDR_b          = var.CIDR_b
+  Region          = var.Region
+  SSHKey          = var.SSHKey
 }

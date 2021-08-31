@@ -7,11 +7,11 @@ variable "CredsFileName" {
 }
 
 variable "ClusterRole_arn" {
-    default = "arn:aws:iam::193719876407:role/EKS"
+  default = "arn:aws:iam::193719876407:role/EKS"
 }
 
 variable "PoolRole_arn" {
-    default = "arn:aws:iam::193719876407:role/EKS-nodes"
+  default = "arn:aws:iam::193719876407:role/EKS-nodes"
 }
 
 variable "VPC" {

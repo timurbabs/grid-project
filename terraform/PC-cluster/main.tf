@@ -22,12 +22,12 @@ variable "CIDR_b" {
 }
 
 module "Cluster" {
-    source = "../modules/cluster"
-    ClusterRole_arn = var.ClusterRole_arn
-    PoolRole_arn = var.PoolRole_arn
-    CIDR_a = var.CIDR_a
-    CIDR_b = var.CIDR_b
-    VPC = var.VPC
-    Region = var.Region
-    SSHKey = var.SSHKey
+  source          = "../modules/cluster"
+  ClusterRole_arn = var.ClusterRole_arn
+  PoolRole_arn    = var.PoolRole_arn
+  CIDR_a          = var.CIDR_a
+  CIDR_b          = var.CIDR_b
+  VPC             = var.VPC
+  Region          = var.Region
+  SSHKey          = var.SSHKey
 }

@@ -3,6 +3,6 @@ variable "RegistryName" {
 }
 
 module "Registry" {
-    source = "../modules/artifact-registry"
-    RegistryName = var.RegistryName
+  source       = "../modules/artifact-registry"
+  RegistryName = var.RegistryName
 }

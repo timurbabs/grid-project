@@ -3,6 +3,6 @@ variable "RegistryName" {
 }
 
 module "Registry" {
-    source = "../modules/docker-registry"
-    RegistryName = var.RegistryName
+  source       = "../modules/docker-registry"
+  RegistryName = var.RegistryName
 }
