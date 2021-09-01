@@ -13,4 +13,8 @@ resource "aws_codeartifact_domain" "PetclinicArtifactDomain" {
 resource "aws_codeartifact_repository" "ArtifactRegistry" {
   repository = var.RegistryName
   domain     = aws_codeartifact_domain.PetclinicArtifactDomain.domain
+
+  external_connections {
+    external_connection_name = "public:maven-central"
+  }
 }
