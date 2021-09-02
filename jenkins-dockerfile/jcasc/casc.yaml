@@ -15,12 +15,12 @@ jenkins:
   clouds:
       - kubernetes:
           name: "kubernetes"
-          serverUrl: "https://192.168.99.120:8443"
-          serverCertificate: "serverCertificate"
-          credentialsId: "advanced-k8s-credentials"
+          serverUrl: "https://192.168.99.120:8443" #TODO
+          serverCertificate: "serverCertificate" #TODO
+          credentialsId: "advanced-k8s-credentials" #TODO
           namespace: "jenkins"
-          jenkinsUrl: "http://jenkins/"
-  
+          jenkinsUrl: "http://jenkins/" #TODO
+
           templates:
             - name: "java"
               namespace: "jenkins"
@@ -32,7 +32,7 @@ jenkins:
                 - hostPathVolume:
                     mountPath: "mountPath"
                     hostPath: "hostPath"
-  
+
               containers:
                 - name: "name"
                   image: "image"
@@ -48,7 +48,7 @@ jenkins:
                   resourceLimitMemory: "resourceLimitMemory"
               imagePullSecrets:
                 - name: "imagePullSecrets"
-  
+
               envVars:
                 - envVar:
                     key: "FOO"
