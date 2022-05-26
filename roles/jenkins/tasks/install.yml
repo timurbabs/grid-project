@@ -1,0 +1,51 @@
+---
+- name:        Install Jenkins Repository
+  get_url:
+    url:       http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+    dest:      /etc/yum.repos.d/jenkins.repo
+
+- name:        Import Jenkins Key
+  rpm_key:
+    state:     present
+    key:       https://pkg.jenkins.io/redhat/jenkins.io.key
+
+- name:        Install recommended packages with Jenkins
+  yum:
+    name:
+      - git
+      - maven
+      - java-1.8.0-openjdk
+      - jenkins
+      - pip
+    state:     present
+
+- name:        Install recommended python libraries
+  pip:
+    name:
+      - python-jenkins
+    state:     present
+  become_user: root
+
+- name:        Create initialization scripts directory
+  file:
+    path:      "{{ jenkins_home ***REMOVED******REMOVED***/init.groovy.d"
+    state:     directory
+    owner:     jenkins
+    group:     jenkins
+    mode:      0775
+
+- name:        Put initialization script
+  template:
+    src:       jenkins_groovy/initialization/security.groovy
+    dest:      "{{ jenkins_home ***REMOVED******REMOVED***/init.groovy.d/"
+    mode:      0775
+
+- name:        Start & Enable Jenkins
+  systemd:
+    name:      jenkins
+    state:     started
+    enabled:   true
+  notify:      "Wait Jenkins"
+
+- name:        Flush handlers
+  meta:        flush_handlers

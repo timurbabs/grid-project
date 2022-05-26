@@ -1,0 +1,135 @@
+---
+- name:                    Check ssl exists
+  stat:
+    path:                  "/etc/jenkins/keystore.jks"
+  register:                stat_result
+
+- name:                    create ssl directory
+  ansible.builtin.file:
+      path:                "/etc/jenkins"
+      state:               directory
+      owner:               "jenkins"
+      group:               "jenkins"
+
+- name:                    gen keypair
+  shell:                   "keytool -genkeypair -keystore /etc/jenkins/keystore.jks -storepass {{ jenkins_ssl_password ***REMOVED******REMOVED*** -keypass {{ jenkins_ssl_password ***REMOVED******REMOVED*** -alias {{ jenkins_ssl_name ***REMOVED******REMOVED*** -keyalg RSA -keysize 2048 -validity 5000 -dname \"CN=Jenkins, OU=Jenkins, O=GridDynamics, L=Unspecified, ST=Unspecified, C=US\" -ext \"SAN=DNS:{{ jenkins_domain_name ***REMOVED******REMOVED***,IP:{{ ansible_host ***REMOVED******REMOVED***\" -ext \"BC=ca:true\""
+  ignore_errors:           yes
+  when:                    not stat_result.stat.exists
+
+- name:                    change owner
+  ansible.builtin.file:
+      path:                "/etc/jenkins/keystore.jks"
+      owner:               "jenkins"
+      group:               "jenkins"
+
+- name:                    gen cert
+  shell:                   "keytool -printcert -sslserver {{ jenkins_domain_name ***REMOVED******REMOVED***:{{ jenkins_port ***REMOVED******REMOVED*** -rfc > /etc/jenkins/{{ jenkins_ssl_name ***REMOVED******REMOVED***.cert"
+  ignore_errors:           yes
+  become_user:             root
+  when:                    not stat_result.stat.exists
+
+- name:                    change owner
+  ansible.builtin.file:
+      path:                "/etc/jenkins/{{ jenkins_ssl_name ***REMOVED******REMOVED***.cert"
+      owner:               "jenkins"
+      group:               "jenkins"
+
+- name:                    gen keypair p12
+  shell:                   "keytool -importkeystore -deststorepass {{ jenkins_ssl_password ***REMOVED******REMOVED*** -srcstorepass {{ jenkins_ssl_password ***REMOVED******REMOVED*** -srckeystore /etc/jenkins/keystore.jks -destkeystore /etc/jenkins/{{ jenkins_ssl_name ***REMOVED******REMOVED***.p12 -deststoretype PKCS12"
+  ignore_errors:           yes
+  when:                    not stat_result.stat.exists
+
+- name:                    change owner
+  ansible.builtin.file:
+      path:                "/etc/jenkins/{{ jenkins_ssl_name ***REMOVED******REMOVED***.p12"
+      owner:               "jenkins"
+      group:               "jenkins"
+
+- name:                    gen keypair pks12
+  shell:                   "keytool -list -storepass {{ jenkins_ssl_password ***REMOVED******REMOVED*** -keystore /etc/jenkins/{{ jenkins_ssl_name ***REMOVED******REMOVED***.p12 -storetype PKCS12"
+  ignore_errors:           yes
+  when:                    not stat_result.stat.exists
+
+- name:                    openssl
+  shell:                   "openssl pkcs12 -password pass:{{ jenkins_ssl_password ***REMOVED******REMOVED*** -nokeys -in /etc/jenkins/{{ jenkins_ssl_name ***REMOVED******REMOVED***.p12 -out /etc/jenkins/{{ jenkins_ssl_name ***REMOVED******REMOVED***.pem"
+  when:                    not stat_result.stat.exists
+
+- name:                    change owner
+  ansible.builtin.file:
+      path:                "/etc/jenkins/{{ jenkins_ssl_name ***REMOVED******REMOVED***.pem"
+      owner:               "jenkins"
+      group:               "jenkins"
+
+- name:                    Download ssl sertificate
+  ansible.builtin.fetch:
+    src:                   "/etc/jenkins/{{ jenkins_ssl_name ***REMOVED******REMOVED***.pem"
+    dest:                  "~/Documents/"
+    flat:                  yes
+
+- name:                    Adding certificate to trustable to this pc (MacOS)
+  shell:                   "security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/Documents/{{ jenkins_ssl_name ***REMOVED******REMOVED***.pem"
+  become:                  yes
+  when:                    ansible_os_family == "Darwin"
+  delegate_to:             127.0.0.1
+
+- name:                    Adding certificate to trustable to this pc (Arch)
+  shell:                   "trust anchor ~/Documents/{{ jenkins_ssl_name ***REMOVED******REMOVED***.pem"
+  become:                  yes
+  when:                    ansible_os_family == "Archlinux"
+  delegate_to:             127.0.0.1
+
+- name:                    openssls
+  shell:                   "openssl pkcs12 -password pass:{{ jenkins_ssl_password ***REMOVED******REMOVED*** -nocerts -nodes -in /etc/jenkins/{{ jenkins_ssl_name ***REMOVED******REMOVED***.p12 -out /etc/jenkins/{{ jenkins_ssl_name ***REMOVED******REMOVED***.key"
+  when:                    not stat_result.stat.exists
+
+- name:                    change jenkins properties
+  lineinfile:
+    dest:                  "/etc/sysconfig/jenkins"
+    regexp:                "^JENKINS_PORT=.*"
+    line:                  "JENKINS_PORT=\"-1\""
+  ignore_errors:           yes
+
+- name:                    change jenkins properties
+  lineinfile:
+    dest:                  "/etc/sysconfig/jenkins"
+    regexp:                "^JENKINS_HTTPS_PORT=.*"
+    line:                  "JENKINS_HTTPS_PORT=\"8443\""
+  ignore_errors:           yes
+
+- name:                    change jenkins properties
+  lineinfile:
+    dest:                  "/etc/sysconfig/jenkins"
+    regexp:                "^JENKINS_HTTPS_KEYSTORE=.*"
+    line:                  "JENKINS_HTTPS_KEYSTORE=\"/etc/jenkins/keystore.jks\""
+  ignore_errors:           yes
+
+- name:                    change jenkins properties
+  lineinfile:
+    dest:                  "/etc/sysconfig/jenkins"
+    regexp:                "^JENKINS_HTTPS_KEYSTORE_PASSWORD=.*"
+    line:                  "JENKINS_HTTPS_KEYSTORE_PASSWORD=\"{{ jenkins_ssl_password ***REMOVED******REMOVED***\""
+  ignore_errors:           yes
+
+- name:                    change jenkins properties
+  lineinfile:
+    dest:                  "/etc/sysconfig/jenkins"
+    regexp:                "^JENKINS_HTTPS_LISTEN_ADDRESS=.*"
+    line:                  "JENKINS_HTTPS_LISTEN_ADDRESS=\"0.0.0.0\""
+  ignore_errors:           yes
+
+- name:                    trust cert
+  shell:                   "update-ca-trust force-enable"
+
+- name:                    copy cert
+  copy:
+      src:                 "/etc/jenkins/{{ jenkins_ssl_name ***REMOVED******REMOVED***.pem"
+      dest:                "/etc/pki/ca-trust/source/anchors/"
+      remote_src:          yes
+
+- name:                    trust cert
+  shell:                   "update-ca-trust extract"
+
+- name:                    restart jenkins
+  ansible.builtin.systemd:
+    name:                  jenkins
+    state:                 restarted

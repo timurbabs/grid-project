@@ -1,0 +1,16 @@
+galaxy_info:
+  author: Timur Baburin
+  description: Jenkins installation & configuration for our tasks
+  company: Grid Dynamics
+  role_name: jenkins_task # if absent directory name hosting role is used instead
+  namespace: timurbabs # if absent, author is used instead
+
+  platforms:
+    - name: Centos
+      versions:
+        - 8
+  license: GPL-2.0
+  min_ansible_version: 2.1
+  galaxy_tags: []
+
+dependencies: []

@@ -1,0 +1,76 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.41">
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.9.1"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.9.1">
+      <jobProperties/>
+      <triggers/>
+      <parameters>
+        <string>VERSION</string>
+      </parameters>
+      <options/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+  </actions>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>VERSION</name>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+    <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+      <triggers/>
+    </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.93">
+    <script>pipeline {
+    agent {
+		label &quot;{{ deployment_label ***REMOVED******REMOVED***&quot;
+    ***REMOVED***
+    environment {
+		NEXUS_URL_CONTAINERS = &quot;{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:8444&quot;
+        NEXUS_CREDENTIAL_ID = &quot;nexus&quot;
+        DOCKER_IMAGE_NAME = &quot;petclinic-docker&quot;
+        DOCKER_IMAGE_TAG = &quot;latest&quot;
+    ***REMOVED***
+    parameters {
+        string(defaultValue: &quot;&quot;, description: &apos;&apos;, name: &apos;VERSION&apos;)
+    ***REMOVED***
+    stages {
+        stage(&quot;Docker stop all&quot;) {
+            steps {
+                script {
+                    check = sh(returnStdout: true, script: &apos;docker ps -a -q| wc -l&apos;).trim()
+                    if (check != &apos;0&apos;){
+                        sh &apos;docker stop $(docker ps -a -q)&apos;
+                    ***REMOVED***
+                ***REMOVED***
+            ***REMOVED***
+        ***REMOVED***
+        stage(&quot;Docker pull latest&quot;) {
+            steps {
+                script {
+                    docker.withRegistry( 'https://'+NEXUS_URL_CONTAINERS, NEXUS_CREDENTIAL_ID ) {
+                        sh 'docker pull ${NEXUS_URL_CONTAINERS***REMOVED***/${DOCKER_IMAGE_NAME***REMOVED***-${VERSION***REMOVED***'
+                    ***REMOVED***
+                ***REMOVED***
+            ***REMOVED***
+        ***REMOVED***
+        stage(&quot;Docker run&quot;) {
+            steps {
+                script {
+                    sh &apos;docker run -d --network host --privileged=true -p 8080:8080 ${NEXUS_URL_CONTAINERS***REMOVED***/${DOCKER_IMAGE_NAME***REMOVED***-${VERSION***REMOVED***:${DOCKER_IMAGE_TAG***REMOVED***&apos;
+                ***REMOVED***
+            ***REMOVED***
+        ***REMOVED***
+    ***REMOVED***
+***REMOVED***</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
