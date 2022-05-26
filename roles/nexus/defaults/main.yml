@@ -9,6 +9,6 @@ nexus_admin_password:  !vault |
           34633938646634346566633432333838393861373739636562336664383562643265326639333362
           3963393534363533650a303563303432353832623762316465353964333434616635396363666266
           3132
-nexus_domain_name:     "{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***"
-nexus_private_ip:      "{{ hostvars.nexus_linux.ansible_host_private_ip ***REMOVED******REMOVED***"
+nexus_domain_name:     "{{ hostvars.nexus_linux.ansible_host_dns }}"
+nexus_private_ip:      "{{ hostvars.nexus_linux.ansible_host_private_ip }}"
 nexus_ssl_name:        "NexusSSL"

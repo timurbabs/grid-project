@@ -1,12 +1,12 @@
 ---
 - name:                             Upload plugins
   community.general.jenkins_plugin:
-    name:                           "{{ item ***REMOVED******REMOVED***"
+    name:                           "{{ item }}"
     state:                          present
-    url_username:                   "{{ jenkins_username ***REMOVED******REMOVED***"
-    url_password:                   "{{ jenkins_password ***REMOVED******REMOVED***"
-    url:                            "{{ jenkins_ip ***REMOVED******REMOVED***"
-  with_items:                       "{{ jenkins_plugins ***REMOVED******REMOVED***"
+    url_username:                   "{{ jenkins_username }}"
+    url_password:                   "{{ jenkins_password }}"
+    url:                            "{{ jenkins_ip }}"
+  with_items:                       "{{ jenkins_plugins }}"
   notify:
     - "Restart Jenkins"
     - "Wait Jenkins"
@@ -16,68 +16,68 @@
 
 - name:                             Enable plugins
   community.general.jenkins_plugin:
-    name:                           "{{ item ***REMOVED******REMOVED***"
+    name:                           "{{ item }}"
     state:                          enabled
-    url_username:                   "{{ jenkins_username ***REMOVED******REMOVED***"
-    url_password:                   "{{ jenkins_password ***REMOVED******REMOVED***"
-    url:                            "{{ jenkins_ip ***REMOVED******REMOVED***"
-  with_items:                       "{{ jenkins_plugins ***REMOVED******REMOVED***"
+    url_username:                   "{{ jenkins_username }}"
+    url_password:                   "{{ jenkins_password }}"
+    url:                            "{{ jenkins_ip }}"
+  with_items:                       "{{ jenkins_plugins }}"
 
 - name:                             Upload jobs
   community.general.jenkins_job:
-    config:                         "{{ lookup('template', item.value) ***REMOVED******REMOVED***"
-    name:                           "{{ item.key ***REMOVED******REMOVED***"
-    password:                       "{{ jenkins_password ***REMOVED******REMOVED***"
-    url:                            "{{ jenkins_ip ***REMOVED******REMOVED***"
-    user:                           "{{ jenkins_username ***REMOVED******REMOVED***"
+    config:                         "{{ lookup('template', item.value) }}"
+    name:                           "{{ item.key }}"
+    password:                       "{{ jenkins_password }}"
+    url:                            "{{ jenkins_ip }}"
+    user:                           "{{ jenkins_username }}"
   with_dict:
     {
       PreCommit:                    templates/jenkins_jobs/pre_commit_job.xml,
       Deployment:                   templates/jenkins_jobs/deployment_job.xml,
       Build:                        templates/jenkins_jobs/build_job.xml,
       Promotion:                    templates/jenkins_jobs/promotion_job.xml,
-    ***REMOVED***
+    }
 
 - name:                             Upload SSH credentials
   jenkins_script:
-    url:                            "{{ jenkins_ip ***REMOVED******REMOVED***"
-    script:                         '{{ lookup("template", "templates/jenkins_groovy/credentials/secret_ssh.groovy") ***REMOVED******REMOVED***'
-    args:                           "{{ item.value ***REMOVED******REMOVED***"
-    user:                           "{{ jenkins_username ***REMOVED******REMOVED***"
-    password:                       "{{ jenkins_password ***REMOVED******REMOVED***"
+    url:                            "{{ jenkins_ip }}"
+    script:                         '{{ lookup("template", "templates/jenkins_groovy/credentials/secret_ssh.groovy") }}'
+    args:                           "{{ item.value }}"
+    user:                           "{{ jenkins_username }}"
+    password:                       "{{ jenkins_password }}"
     validate_certs:                 false
     timeout:                        "120"
-  with_dict:                        "{{ ssh_credentials ***REMOVED******REMOVED***"
+  with_dict:                        "{{ ssh_credentials }}"
 
 - name:                             Upload username and password credentials
   jenkins_script:
-    url:                            "{{ jenkins_ip ***REMOVED******REMOVED***"
-    script:                         '{{ lookup("template", "templates/jenkins_groovy/credentials/secret_password.groovy") ***REMOVED******REMOVED***'
-    args:                           "{{ item.value ***REMOVED******REMOVED***"
-    user:                           "{{ jenkins_username ***REMOVED******REMOVED***"
-    password:                       "{{ jenkins_password ***REMOVED******REMOVED***"
+    url:                            "{{ jenkins_ip }}"
+    script:                         '{{ lookup("template", "templates/jenkins_groovy/credentials/secret_password.groovy") }}'
+    args:                           "{{ item.value }}"
+    user:                           "{{ jenkins_username }}"
+    password:                       "{{ jenkins_password }}"
     validate_certs:                 false
     timeout:                        "120"
-  with_dict:                        "{{ password_credentials ***REMOVED******REMOVED***"
+  with_dict:                        "{{ password_credentials }}"
 
 - name:                             Upload Slaves
   jenkins_script:
-    url:                            "{{ jenkins_ip ***REMOVED******REMOVED***"
-    script:                         '{{ lookup("template", "templates/jenkins_groovy/slaves/slave.groovy") ***REMOVED******REMOVED***'
-    args:                           "{{ item.value ***REMOVED******REMOVED***"
-    user:                           "{{ jenkins_username ***REMOVED******REMOVED***"
-    password:                       "{{ jenkins_password ***REMOVED******REMOVED***"
+    url:                            "{{ jenkins_ip }}"
+    script:                         '{{ lookup("template", "templates/jenkins_groovy/slaves/slave.groovy") }}'
+    args:                           "{{ item.value }}"
+    user:                           "{{ jenkins_username }}"
+    password:                       "{{ jenkins_password }}"
     validate_certs:                 false
     timeout:                        "120"
-  with_dict:                        "{{ ssh_slaves ***REMOVED******REMOVED***"
+  with_dict:                        "{{ ssh_slaves }}"
 
 - name:                             Run jobs
   jenkins_script:
-    url:                            "{{ jenkins_ip ***REMOVED******REMOVED***"
-    script:                         '{{ lookup("template", "templates/jenkins_groovy/jobs/run_jobs.groovy") ***REMOVED******REMOVED***'
-    args:                           "{{ item.value ***REMOVED******REMOVED***"
-    user:                           "{{ jenkins_username ***REMOVED******REMOVED***"
-    password:                       "{{ jenkins_password ***REMOVED******REMOVED***"
+    url:                            "{{ jenkins_ip }}"
+    script:                         '{{ lookup("template", "templates/jenkins_groovy/jobs/run_jobs.groovy") }}'
+    args:                           "{{ item.value }}"
+    user:                           "{{ jenkins_username }}"
+    password:                       "{{ jenkins_password }}"
     validate_certs:                 false
     timeout:                        "120"
-  with_dict:                        "{{ run_jobs ***REMOVED******REMOVED***"
+  with_dict:                        "{{ run_jobs }}"

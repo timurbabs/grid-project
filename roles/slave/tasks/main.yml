@@ -3,12 +3,12 @@
   user:
     name:                    jenkins
     comment:                 "Jenkins slave user"
-    home:                    "{{ jenkins_home ***REMOVED******REMOVED***"
+    home:                    "{{ jenkins_home }}"
     shell:                   /bin/bash
 
 - name:                      Create .ssh folder
   file:
-    path:                    "{{ jenkins_home ***REMOVED******REMOVED***/.ssh"
+    path:                    "{{ jenkins_home }}/.ssh"
     state:                   directory
     mode:                    0700
     owner:                   jenkins
@@ -16,11 +16,11 @@
 - name:                      Add passwordless connection for Jenkins
   authorized_key:
     user:                    jenkins
-    key:                     "{{ pulbic_key ***REMOVED******REMOVED***"
+    key:                     "{{ pulbic_key }}"
 
 - name:                      Update authorized keys rights
   file:
-    path:                    "{{ jenkins_home ***REMOVED******REMOVED***/.ssh/authorized_keys"
+    path:                    "{{ jenkins_home }}/.ssh/authorized_keys"
     state:                   file
     mode:                    0600
     owner:                   jenkins
@@ -39,7 +39,7 @@
   register:                  swap_file_check
 
 - name:                      Create swap file
-  command:                   "dd if=/dev/zero of=swapfile bs=1M count={{ swap_file_size_gb ***REMOVED******REMOVED***K"
+  command:                   "dd if=/dev/zero of=swapfile bs=1M count={{ swap_file_size_gb }}K"
   when:                      not swap_file_check.stat.exists
 
 - name:                      Change swap file permissions
@@ -60,14 +60,14 @@
 
 - name:                      Create .m2 folder
   file:
-    path:                    "{{ jenkins_home ***REMOVED******REMOVED***/.m2"
+    path:                    "{{ jenkins_home }}/.m2"
     state:                   directory
     owner:                   jenkins
 
 - name:                      Copy maven configuration
   template:
     src:                     templates/settings.xml
-    dest:                    "{{ jenkins_home ***REMOVED******REMOVED***/.m2/"
+    dest:                    "{{ jenkins_home }}/.m2/"
 
 - name:                      Add Jenkins to Docker group
   user:
@@ -106,7 +106,7 @@
 
 - name:                      create docker directory with certs
   file:
-      path:                  "/etc/docker/certs.d/{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:8444"
+      path:                  "/etc/docker/certs.d/{{ hostvars.nexus_linux.ansible_host_dns }}:8444"
       state:                 directory
       owner:                 "jenkins"
       group:                 "jenkins"
@@ -114,15 +114,15 @@
 - name:                      copy cert to docker
   copy:
       src:                   "/etc/ssl/NexusSSL.pem"
-      dest:                  "/etc/docker/certs.d/{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:8444/"
+      dest:                  "/etc/docker/certs.d/{{ hostvars.nexus_linux.ansible_host_dns }}:8444/"
       remote_src:            yes
 
 - name:                      docker proxy set
   copy:
     content:                 |
       {
-         "registry-mirrors": ["https://{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:8446"]
-      ***REMOVED***
+         "registry-mirrors": ["https://{{ hostvars.nexus_linux.ansible_host_dns }}:8446"]
+      }
     dest:                    /etc/docker/daemon.json
 
 - name:                      Start Docker

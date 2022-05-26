@@ -5,6 +5,6 @@ resource "aws_subnet" "PetclinicNet" {
 
 
   tags = {
-    Name = "${var.StageTag***REMOVED***PetclinicNet"
-  ***REMOVED***
-***REMOVED***
+    Name = "${var.StageTag}PetclinicNet"
+  }
+}

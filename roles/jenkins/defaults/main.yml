@@ -2,14 +2,14 @@
 # Jenkins:
 jenkins_home:                     /var/lib/jenkins
 jenkins_username:                 admin
-jenkins_password:                 "{{ encrypted_jenkins_password ***REMOVED******REMOVED***"
-jenkins_ssl_password:             "{{ encrypted_ssl_password ***REMOVED******REMOVED***"
+jenkins_password:                 "{{ encrypted_jenkins_password }}"
+jenkins_ssl_password:             "{{ encrypted_ssl_password }}"
 jenkins_protocol:                 https
 jenkins_port:                     8443
-jenkins_ip:                       "http://{{ hostvars.jenkins_linux.ansible_host ***REMOVED******REMOVED***:8080"
-jenkins_url:                      "{{ jenkins_protocol ***REMOVED******REMOVED***://{{ hostvars.jenkins_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ jenkins_port ***REMOVED******REMOVED***"
-jenkins_domain_name:              "{{ hostvars.jenkins_linux.ansible_host_dns ***REMOVED******REMOVED***"
-jenkins_private_ip:               "{{ hostvars.jenkins_linux.ansible_host_private_ip ***REMOVED******REMOVED***"
+jenkins_ip:                       "http://{{ hostvars.jenkins_linux.ansible_host }}:8080"
+jenkins_url:                      "{{ jenkins_protocol }}://{{ hostvars.jenkins_linux.ansible_host_dns }}:{{ jenkins_port }}"
+jenkins_domain_name:              "{{ hostvars.jenkins_linux.ansible_host_dns }}"
+jenkins_private_ip:               "{{ hostvars.jenkins_linux.ansible_host_private_ip }}"
 jenkins_ssl_name:                 "JenkinsSSL"
 
 # Jobs
@@ -27,15 +27,15 @@ password_credentials:
     name:                         nexus
     description:                  Credentials for Nexus artifactors storage
     username:                     admin
-    password:                     "{{ nexus_admin_password ***REMOVED******REMOVED***"
+    password:                     "{{ nexus_admin_password }}"
 
 ssh_credentials:
   slaves_credentials:
     name:                         slaves
     description:                  Credentials for slaves that runs on AWS
     username:                     jenkins
-    private_key:                  "{{ encrypted_private_key_slaves ***REMOVED******REMOVED***"
-    passphrase:                   "{{ encrypted_slaves_ssh_passphrase ***REMOVED******REMOVED***"
+    private_key:                  "{{ encrypted_private_key_slaves }}"
+    passphrase:                   "{{ encrypted_slaves_ssh_passphrase }}"
 
 # Slaves
 ssh_slaves:
@@ -45,14 +45,14 @@ ssh_slaves:
     label:                        slave-1
     number_executors:             2
     credentialsId:                slaves
-    host:                         "{{ hostvars.slave_linux.ansible_host_dns ***REMOVED******REMOVED***"
+    host:                         "{{ hostvars.slave_linux.ansible_host_dns }}"
   slave_production:
     name:                         dev-prod
     root_directory:               /home/jenkins
     label:                        dev-prod
     number_executors:             2
     credentialsId:                slaves
-    host:                         "{{ hostvars.dev_production_linux.ansible_host_dns ***REMOVED******REMOVED***"
+    host:                         "{{ hostvars.dev_production_linux.ansible_host_dns }}"
 
 # Run jobs
 run_jobs:

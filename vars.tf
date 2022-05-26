@@ -1,26 +1,26 @@
-***REMOVED***
+#Global
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+variable "access_key" {
+  type    = string
+  default = ""
+}
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+variable "secret_key" {
+  type    = string
+  default = ""
+}
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+variable "region" {
+  type    = string
+  default = "us-east-2"
+}
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+variable "availability_zone" {
+  type    = string
+  default = "us-east-2b"
+}
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+variable "owner" {
+  type    = string
+  default = ""
+}

@@ -9,9 +9,9 @@ import hudson.plugins.sshslaves.verifiers.*
 SshHostKeyVerificationStrategy hostKeyVerificationStrategy = new ManuallyTrustedKeyVerificationStrategy(false)
 
 ComputerLauncher launcher = new hudson.plugins.sshslaves.SSHLauncher(
-        "${host***REMOVED***",
+        "${host}",
         22,
-        "${credentialsId***REMOVED***",
+        "${credentialsId}",
         (String)null,
         (String)null,
         (String)null, 
@@ -23,11 +23,11 @@ ComputerLauncher launcher = new hudson.plugins.sshslaves.SSHLauncher(
 )
 
 Slave agent = new DumbSlave(
-        "${name***REMOVED***",
-        "${root_directory***REMOVED***",
+        "${name}",
+        "${root_directory}",
         launcher)
-agent.numExecutors = ${number_executors***REMOVED***
-agent.labelString = "${label***REMOVED***"
+agent.numExecutors = ${number_executors}
+agent.labelString = "${label}"
 agent.mode = Node.Mode.NORMAL
 agent.retentionStrategy = new RetentionStrategy.Always()
 

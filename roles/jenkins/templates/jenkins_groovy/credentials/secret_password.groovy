@@ -12,10 +12,10 @@ store = instance.getExtensionList(
 
 usernameAndPassword = new UsernamePasswordCredentialsImpl(
   CredentialsScope.GLOBAL,
-  "${name***REMOVED***",
-  "${description***REMOVED***",
-  "${username***REMOVED***",
-  "${password***REMOVED***"
+  "${name}",
+  "${description}",
+  "${username}",
+  "${password}"
 )
 
 store.addCredentials(domain, usernameAndPassword)

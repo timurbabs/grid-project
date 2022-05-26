@@ -1,7 +1,7 @@
 ---
 - name:     Checking settings file
   stat:
-    path:   "{{ nexus_installation_dir ***REMOVED******REMOVED***/nexus/bin/nexus"
+    path:   "{{ nexus_installation_dir }}/nexus/bin/nexus"
   register: stat_result
 
 - name:     Check that Nexus installation is correct
@@ -16,9 +16,9 @@
 - name:     Copying repositories settings
   copy:
     src:    "rest_jsons"
-    dest:   "{{ nexus_installation_dir ***REMOVED******REMOVED***"
-    owner:  "{{ nexus_os_user ***REMOVED******REMOVED***"
-    group:  "{{ nexus_os_group ***REMOVED******REMOVED***"
+    dest:   "{{ nexus_installation_dir }}"
+    owner:  "{{ nexus_os_user }}"
+    group:  "{{ nexus_os_group }}"
     mode:   0644
 
 - name:     Waiting for opening HTTPS port
@@ -28,11 +28,11 @@
 
 - name:     Checking if admin password file exists
   stat:
-    path:   "{{ nexus_download_dir ***REMOVED******REMOVED***/nexus/bin/nexus"
+    path:   "{{ nexus_download_dir }}/nexus/bin/nexus"
   register: adm_pass_exists
 
 - name:     Changing admin password
-  shell: "curl -v -X PUT -u admin:\"$(cat {{ nexus_installation_dir ***REMOVED******REMOVED***/sonatype-work/nexus3/admin.password)\" --header \"Content-Type: text/plain\" \"https://{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ nexus_https_port ***REMOVED******REMOVED***/service/rest/v1/security/users/admin/change-password\" --data \"{{ nexus_admin_password ***REMOVED******REMOVED***\""
+  shell: "curl -v -X PUT -u admin:\"$(cat {{ nexus_installation_dir }}/sonatype-work/nexus3/admin.password)\" --header \"Content-Type: text/plain\" \"https://{{ hostvars.nexus_linux.ansible_host_dns }}:{{ nexus_https_port }}/service/rest/v1/security/users/admin/change-password\" --data \"{{ nexus_admin_password }}\""
   register: result
   when:     adm_pass_exists.stat.exists
 
@@ -40,49 +40,49 @@
     var:    result
 
 - name:     Create maven hosted snapshot repository using REST API
-  shell: "curl -v -X POST -u admin:{{ nexus_admin_password ***REMOVED******REMOVED*** -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ nexus_https_port ***REMOVED******REMOVED***/service/rest/v1/repositories/maven/hosted\" -d @{{ nexus_installation_dir ***REMOVED******REMOVED***/rest_jsons/maven_hosted_snapshot_repo.json"
+  shell: "curl -v -X POST -u admin:{{ nexus_admin_password }} -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns }}:{{ nexus_https_port }}/service/rest/v1/repositories/maven/hosted\" -d @{{ nexus_installation_dir }}/rest_jsons/maven_hosted_snapshot_repo.json"
   register: result
 
 - debug:
     var:    result
 
 - name:     Create maven hosted release repository using REST API
-  shell: "curl -v -X POST -u admin:{{ nexus_admin_password ***REMOVED******REMOVED*** -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ nexus_https_port ***REMOVED******REMOVED***/service/rest/v1/repositories/maven/hosted\" -d @{{ nexus_installation_dir ***REMOVED******REMOVED***/rest_jsons/maven_hosted_release_repo.json"
+  shell: "curl -v -X POST -u admin:{{ nexus_admin_password }} -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns }}:{{ nexus_https_port }}/service/rest/v1/repositories/maven/hosted\" -d @{{ nexus_installation_dir }}/rest_jsons/maven_hosted_release_repo.json"
   register: result
 
 - debug:
     var:    result
 
 - name:     Create maven proxy repository using REST API
-  shell: "curl -v -X POST -u admin:{{ nexus_admin_password ***REMOVED******REMOVED*** -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ nexus_https_port ***REMOVED******REMOVED***/service/rest/v1/repositories/maven/proxy\" -d @{{ nexus_installation_dir ***REMOVED******REMOVED***/rest_jsons/maven_proxy_repo.json"
+  shell: "curl -v -X POST -u admin:{{ nexus_admin_password }} -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns }}:{{ nexus_https_port }}/service/rest/v1/repositories/maven/proxy\" -d @{{ nexus_installation_dir }}/rest_jsons/maven_proxy_repo.json"
   register: result
 
 - debug:
     var:    result
 
 - name:     Adding Docker realm using REST API
-  shell: "curl -v -X PUT -u admin:{{ nexus_admin_password ***REMOVED******REMOVED*** -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ nexus_https_port ***REMOVED******REMOVED***/service/rest/v1/security/realms/active\" -d @{{ nexus_installation_dir ***REMOVED******REMOVED***/rest_jsons/realms.json"
+  shell: "curl -v -X PUT -u admin:{{ nexus_admin_password }} -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns }}:{{ nexus_https_port }}/service/rest/v1/security/realms/active\" -d @{{ nexus_installation_dir }}/rest_jsons/realms.json"
   register: result
 
 - debug:
     var:    result
 
 - name:     Create docker hosted release repository using REST API
-  shell: "curl -v -X POST -u admin:{{ nexus_admin_password ***REMOVED******REMOVED*** -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ nexus_https_port ***REMOVED******REMOVED***/service/rest/v1/repositories/docker/hosted\" -d @{{ nexus_installation_dir ***REMOVED******REMOVED***/rest_jsons/docker_hosted_release_repo.json"
+  shell: "curl -v -X POST -u admin:{{ nexus_admin_password }} -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns }}:{{ nexus_https_port }}/service/rest/v1/repositories/docker/hosted\" -d @{{ nexus_installation_dir }}/rest_jsons/docker_hosted_release_repo.json"
   register: result
 
 - debug:
     var:    result
 
 - name:     Create docker hosted snapshot repository using REST API
-  shell: "curl -v -X POST -u admin:{{ nexus_admin_password ***REMOVED******REMOVED*** -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ nexus_https_port ***REMOVED******REMOVED***/service/rest/v1/repositories/docker/hosted\" -d @{{ nexus_installation_dir ***REMOVED******REMOVED***/rest_jsons/docker_hosted_snapshot_repo.json"
+  shell: "curl -v -X POST -u admin:{{ nexus_admin_password }} -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns }}:{{ nexus_https_port }}/service/rest/v1/repositories/docker/hosted\" -d @{{ nexus_installation_dir }}/rest_jsons/docker_hosted_snapshot_repo.json"
   register: result
 
 - debug:
     var:    result
 
 - name:     Create docker proxy repository using REST API
-  shell: "curl -v -X POST -u admin:{{ nexus_admin_password ***REMOVED******REMOVED*** -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ nexus_https_port ***REMOVED******REMOVED***/service/rest/v1/repositories/docker/proxy\" -d @{{ nexus_installation_dir ***REMOVED******REMOVED***/rest_jsons/docker_proxy_repo.json"
+  shell: "curl -v -X POST -u admin:{{ nexus_admin_password }} -H \"accept: application/json\" --header \"Content-Type: application/json\" \"https://{{ hostvars.nexus_linux.ansible_host_dns }}:{{ nexus_https_port }}/service/rest/v1/repositories/docker/proxy\" -d @{{ nexus_installation_dir }}/rest_jsons/docker_proxy_repo.json"
   register: result
 
 - debug:

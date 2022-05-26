@@ -13,9 +13,9 @@ store = instance.getExtensionList(
 
 secretText = new StringCredentialsImpl(
   CredentialsScope.GLOBAL,
-  "${name***REMOVED***",
-  "${description***REMOVED***",
-  Secret.fromString("${text***REMOVED***")
+  "${name}",
+  "${description}",
+  Secret.fromString("${text}")
 )
 
 store.addCredentials(domain, secretText)

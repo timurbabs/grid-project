@@ -28,7 +28,7 @@
 
 - name:        Create initialization scripts directory
   file:
-    path:      "{{ jenkins_home ***REMOVED******REMOVED***/init.groovy.d"
+    path:      "{{ jenkins_home }}/init.groovy.d"
     state:     directory
     owner:     jenkins
     group:     jenkins
@@ -37,7 +37,7 @@
 - name:        Put initialization script
   template:
     src:       jenkins_groovy/initialization/security.groovy
-    dest:      "{{ jenkins_home ***REMOVED******REMOVED***/init.groovy.d/"
+    dest:      "{{ jenkins_home }}/init.groovy.d/"
     mode:      0775
 
 - name:        Start & Enable Jenkins

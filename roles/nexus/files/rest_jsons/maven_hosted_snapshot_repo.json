@@ -5,12 +5,12 @@
         "blobStoreName": "default",
         "strictContentTypeValidation": "true",
         "writePolicy": "ALLOW"
-    ***REMOVED***,
+    },
     "component": {
         "proprietaryComponents": "true"
-    ***REMOVED***,
+    },
     "maven": {
         "versionPolicy": "SNAPSHOT",
         "layoutPolicy": "PERMISSIVE"
-    ***REMOVED***
-***REMOVED***
+    }
+}

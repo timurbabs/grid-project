@@ -13,7 +13,7 @@ if(!inputFile.exists()) {
 		def instance = Jenkins.getInstance()
 		def hudsonRealm = new HudsonPrivateSecurityRealm(false)
 		
-		hudsonRealm.createAccount('{{ jenkins_username ***REMOVED******REMOVED***','{{ jenkins_password ***REMOVED******REMOVED***')
+		hudsonRealm.createAccount('{{ jenkins_username }}','{{ jenkins_password }}')
 		instance.setSecurityRealm(hudsonRealm)
 		instance.save()
-***REMOVED***
+}

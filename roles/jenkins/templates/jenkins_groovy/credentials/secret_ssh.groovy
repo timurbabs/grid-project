@@ -12,17 +12,17 @@ store = instance.getExtensionList(
 
 privateKey = new BasicSSHUserPrivateKey.DirectEntryPrivateKeySource(
   '''
-${private_key***REMOVED***
+${private_key}
   '''
 )
 
 sshKey = new BasicSSHUserPrivateKey(
   CredentialsScope.GLOBAL,
-  "${name***REMOVED***",
-  "${username***REMOVED***",
+  "${name}",
+  "${username}",
   privateKey,
-  "${passphrase***REMOVED***",
-  "${description***REMOVED***"
+  "${passphrase}",
+  "${description}"
 )
 
 store.addCredentials(domain, sshKey)

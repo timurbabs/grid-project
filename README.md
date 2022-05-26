@@ -15,8 +15,6 @@ Improvement list:
 
 
 # PetClinic
-## _Readme.md_
-
 ## Installation
 
 Requires [Terraform](https://www.terraform.io/) v0.12+, [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) v2.11+ to run.
@@ -33,10 +31,10 @@ Download your Access and Secret keys to grid-project/creds.csv
 
 Change owner of AWS property in grid-project/vars.tf
 ```
-***REMOVED***
-***REMOVED***
+variable "owner" {
+  type    = string
   default = "YOUR_NAME_HERE"
-***REMOVED***
+}
 ```
 ## Run terraform
 

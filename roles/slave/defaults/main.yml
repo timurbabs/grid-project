@@ -4,7 +4,7 @@ jenkins_home:           /home/jenkins
 nexus_protocol:         https://
 nexus_port:             8443
 nexus_proxy_repository: /repository/petclinic-maven-proxy/
-nexus_proxy:            "{{ nexus_protocol ***REMOVED******REMOVED***{{ hostvars.nexus_linux.ansible_host_dns ***REMOVED******REMOVED***:{{ nexus_port ***REMOVED******REMOVED***{{ nexus_proxy_repository ***REMOVED******REMOVED***"
+nexus_proxy:            "{{ nexus_protocol }}{{ hostvars.nexus_linux.ansible_host_dns }}:{{ nexus_port }}{{ nexus_proxy_repository }}"
 swap_file_size_gb:      2
 
 # Encrypted public key

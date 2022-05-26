@@ -1,5 +1,5 @@
 resource "aws_security_group" "DevProdSG" {
-  name = "${var.StageTag***REMOVED***DevProdSG"
+  name = "${var.StageTag}DevProdSG"
   dynamic "ingress" {
     for_each = ["22", "8080", "8085", "8443", "8444", "8445"]
     content {
@@ -7,18 +7,18 @@ resource "aws_security_group" "DevProdSG" {
       to_port     = ingress.value
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
-    ***REMOVED***
-  ***REMOVED***
+    }
+  }
 
   egress {
     from_port   = "0"
     to_port     = "0"
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
-  ***REMOVED***
+  }
 
 
-***REMOVED***
+}
 
 resource "aws_instance" "DevProd" {
   ami                    = var.devprod_ami
@@ -30,22 +30,22 @@ resource "aws_instance" "DevProd" {
   root_block_device {
     volume_size           = var.devprod_volume_size
     delete_on_termination = true
-  ***REMOVED***
+  }
 
   tags = {
-    Name  = "${var.StageTag***REMOVED***DevProd"
+    Name  = "${var.StageTag}DevProd"
     Owner = var.owner
-  ***REMOVED***
-***REMOVED***
+  }
+}
 
 resource "aws_eip" "DevProdEIP" {
   instance = aws_instance.DevProd.id
   tags = {
-    Name = "${var.StageTag***REMOVED***DevProdEIP"
-  ***REMOVED***
-***REMOVED***
+    Name = "${var.StageTag}DevProdEIP"
+  }
+}
 
 # resource "aws_ami_from_instance" "DevProdAMIStock" {
 #   name               = "DevProdAMIStock"
 #   source_instance_id = aws_instance.DevProd.id
-# ***REMOVED***
+# }
